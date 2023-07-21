@@ -1,7 +1,0 @@
-**/**
-!dist/**
-dist/test/**
-!README.md
-!src/**
-tsconfig.json
-*.tsbuildinfo

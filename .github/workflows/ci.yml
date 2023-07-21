@@ -1,28 +1,32 @@
-name: CI
+name: Code CI
 
 on:
-  push: ~
-  pull_request: ~
-  schedule:
-    - cron:  '0 12 * * *'
+  push:
+  pull_request:
 
 jobs:
-  build_and_test:
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [12.x, 15.x]
-        os: ['ubuntu-latest', 'windows-latest']
-
-    runs-on: ${{ matrix.os }}
+  build:
+    name: Build and test code
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies
-      run: npm ci
-    - name: Build & lint & test
-      run: npm run all
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Setup node and restore cached dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test -- --ci

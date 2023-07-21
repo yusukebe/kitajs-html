@@ -240,20 +240,39 @@ describe('compile', () => {
   )
 
   testEqual(
-    template({ parameterOne: '123', p3a: 321, test: 'red', last:1 }),
+    template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 }),
     '<h1 class="123 321"></h1><span>Header ` `  \\````Text</span><button class="red-color" type="button">Button Text</button>1'
   )
 
-  console.log(template.toString())
-
   testEqual(
-    template({ parameterOne: '123', p3a: 321, test: 'cyan', last:1 }),
+    template({ parameterOne: '123', p3a: 321, test: 'cyan', last: 1 }),
     <>
       <h1 class="123 321"></h1>
       <span>Header ` ` \````Text</span>
       <button class="cyan-color" type="button">
         Button Text
-      </button>1
+      </button>
+      1
     </>
   )
 })
+
+function Script({ children }: { children: () => void }): string {
+  return (
+    <script>
+      {String(children)
+        .replace(/^[\n\s]*\([\n\s]*\)[\n\s]*=[\n\s]*>[\n\s]*{[\n\s]*/m, '')
+        .replace(/[\n\s]*}[\n\s]*$/m, '')}
+    </script>
+  )
+}
+
+console.log(
+  <Script>
+    {() => {
+      console.log('test')
+
+      document.createElement('div')
+    }}
+  </Script>
+)

@@ -1,6 +1,14 @@
 declare namespace JSX {
   type Element = string
 
+  interface IntrinsicAttributes {
+    key?: string | number
+  }
+
+  interface ElementChildrenAttribute {
+    children?: any
+  }
+
   interface HtmlTag {
     accesskey?: string
     class?: string
@@ -16,6 +24,7 @@ declare namespace JSX {
     tabindex?: string
     title?: string
     translate?: string | boolean
+    children?: any
   }
 
   interface HtmlAnchorTag extends HtmlTag {

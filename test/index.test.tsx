@@ -1,4 +1,4 @@
-import html from '../lib/index'
+import html from '../index'
 import { expect } from 'chai'
 const logger = require('html-differ/lib/logger')
 const HtmlDiffer = require('html-differ').HtmlDiffer
@@ -256,23 +256,3 @@ describe('compile', () => {
     </>
   )
 })
-
-function Script({ children }: { children: () => void }): string {
-  return (
-    <script>
-      {String(children)
-        .replace(/^[\n\s]*\([\n\s]*\)[\n\s]*=[\n\s]*>[\n\s]*{[\n\s]*/m, '')
-        .replace(/[\n\s]*}[\n\s]*$/m, '')}
-    </script>
-  )
-}
-
-console.log(
-  <Script>
-    {() => {
-      console.log('test')
-
-      document.createElement('div')
-    }}
-  </Script>
-)

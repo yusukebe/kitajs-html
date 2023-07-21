@@ -27,5 +27,8 @@
   "packageManager": "pnpm@7.27.0",
   "engines": {
     "node": ">=12"
+  },
+  "dependencies": {
+    "javascript-stringify": "^2.1.0"
   }
 }

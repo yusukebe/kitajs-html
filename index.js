@@ -218,7 +218,12 @@ function createElement (name, attributes, ...contents) {
   if (!attributes) {
     attributes = { children: contents }
   } else if (!attributes.children) {
-    attributes.children = contents
+    if (contents.length === 1) {
+      // @ts-expect-error - this indexing is safe.
+      attributes.children = contents[0]
+    } else {
+      attributes.children = contents
+    }
   }
 
   // @ts-expect-error - Fragments are rendered as crateElement(createFragment, null, CHILDREN)

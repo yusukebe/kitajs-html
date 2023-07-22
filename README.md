@@ -1,52 +1,75 @@
-# @kitajs/html
+<br />
 
-Build HTML string templates blazingly fast. Type safe using plain TypeScript with a minimal runtime footprint. No need to learn a template language, if you know TypeScript, you're set.
+[![Issues](https://img.shields.io/github/issues/kitajs/html?logo=github&label=Issues)](https://github.com/kitajs/html/issues)
+[![Stars](https://img.shields.io/github/stars/kitajs/html?logo=github&label=Stars)](https://github.com/kitajs/html/stargazers)
+[![License](https://img.shields.io/github/license/kitajs/html?logo=githu&label=License)](https://github.com/kitajs/html/blob/main/LICENSE)
+[![Codecov](https://codecov.io/gh/kitajs/html/branch/main/graph/badge.svg?token=ML0KGCU0VM)](https://codecov.io/gh/kitajs/html)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farthurfiorette%2Ftinylibs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Farthurfiorette%2Ftinylibs?ref=badge_shield)
+[![Join the chat at https://gitter.im/tinylibs-js-org/community](https://badges.gitter.im/tinylibs-js-org/community.svg)](https://gitter.im/tinylibs-js-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Speed Blazing](https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-brightgreen.svg)](https://twitter.com/acdlite/status/974390255393505280)
 
-This:
+[![Latest Version](https://img.shields.io/npm/v/@kitajs/html)](https://www.npmjs.com/package/@kitajs/html)
+[![Downloads](https://img.shields.io/npm/dw/@kitajs/html)](https://www.npmjs.com/package/@kitajs/html)
+[![JsDelivr](https://data.jsdelivr.com/v1/package/npm/@kitajs/html/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@kitajs/html)
+[![Bundlephobia](https://img.shields.io/bundlephobia/minzip/@kitajs/html/latest?style=flat)](https://bundlephobia.com/package/@kitajs/html@latest)
+[![Packagephobia](https://packagephobia.com/badge?p=@kitajs/html@latest)](https://packagephobia.com/result?p=@kitajs/html@latest)
+
+<br />
+
+<div align="center">
+  <pre>
+  <h1>🏛️<br />KitaJS HTML</h1>
+  </pre>
+  <br />
+</div>
+
+<h3 align="center">
+  <code>KitaJS HTML</code> is a 0 dependencies fast and concise HTML generator for JavaScript with JSX syntax.
+  <br />
+  <br />
+</h3>
+
+<br />
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Installing](#installing)
+- [Getting Started](#getting-started)
+- [Sanitization](#sanitization)
+- [Compiling html](#compiling-html)
+- [Fragments](#fragments)
+- [Supported HTML](#supported-html)
+- [Kebab case](#kebab-case)
+- [Performance](#performance)
+- [How it works](#how-it-works)
+
+<br />
+
+## Installing
+
+```sh
+npm install @kitajs/html # or yarn add @kitajs/html
+```
+
+<br />
+
+## Getting Started
+
+Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
 ```tsx
-const item = 'item'
-const icon = 'icon-add'
+// index.tsx
 
-const list: string = (
-  <ul>
-    <li>{item}</li>
-  </ul>
-)
+// Always remember to import html from '@kitajs/html'
+import html from '@kitajs/html'
 
-const button: string = (
-  <button onclick="handleClick">
-    <i class={icon}></i>
-  </button>
-)
-
-console.log(list)
-console.log(button)
+console.log(<div>Hello World</div>)
 ```
 
-Prints:
+```jsonc
+// tsconfig.json
 
-```html
-<ul>
-  <li>item</li>
-</ul>
-
-<button onclick="handleClick">
-  <i class="icon-add"></i>
-</button>
-```
-
-## Getting started
-
-Install:
-
-```bash
-npm install --save @kitajs/html
-```
-
-Configure your TypeScript compiler for JSX:
-
-```json
 {
   "compilerOptions": {
     "jsx": "react",
@@ -55,56 +78,85 @@ Configure your TypeScript compiler for JSX:
 }
 ```
 
-> Note: Always remember to add a import html from '@kitajs/html' in the top of your file.
+This tells typescript to transpile all JSX syntax to calls to our `html.createElement` function.
 
-Although we're configuring the compiler to use [React](https://facebook.github.io/react), this is not what is being used.
-Instead, we redirect all jsx element to this library `html.createElement`.
+This package just transpiles JSX to a HTML string, you can imagine doing something like this, but better:
 
-Now create a \*.ts**x** file. For example: `example.tsx` with the following content:
+```ts
+// without @kitajs/html
+const html = `<div> Hello World!<div>` ❌
+```
+
+```tsx
+// with @kitajs/html
+const html = (<div>Hello World!<div>) ✅
+// Also results into a string, but with type checked.
+```
+
+<br />
+
+## Sanitization
+
+This package is a HTML builder, **_not an HTML sanitizer_**. This means that it does not sanitize any input, and you should sanitize where its needed. However, we escape all attribute values to avoid breaking out of the html attribute/tag.
+
+```tsx
+const script = '<script>alert("hacked!")</script>'
+
+const html = (
+  <>
+    <div style={'"&<>\''}></div>
+    <div>{script}</div>
+  </>
+)
+```
+
+Will result into this html below but **minified**:
+
+```html
+<!-- formatted html to make it easier to read -->
+<div style="&quot;&amp;&lt;&gt;'"></div>
+<div>
+  <script>
+    alert('hacked!')
+  </script>
+</div>
+```
+
+<br />
+
+## Compiling html
+
+When you have static html, is simple to get amazing performances, just save it to a constant and reuse it. However, if you need to hydrate the html with dynamic values in a super fast way, you can use the `compile` property to compile the html and reuse it later.
 
 ```tsx
 import html from '@kitajs/html'
 
-const w = 'world'
-const helloWorld: string = (
-  <p>
-    Hello <strong>{w}</strong>
-  </p>
-)
-```
-
-However, the following piece of code will **NOT** compile:
-
-```tsx
-;<foo></foo> // => Error: Property 'foo' does not exist on type 'JSX.IntrinsicElements'.
-;<a foo="bar"></a> // => Error:  Property 'foo' does not exist on type 'HtmlAnchorTag'
-```
-
-## Performance
-
-This, overall, is already a super fast "string builder" package, but you can use the compile method to get even faster speeds.
-
-```tsx
-const html = html.compile<['var', 'colorTheme']>(
-  <>
-    <div>$var</div>
-    <div class="$colorTheme">2</div>
-  </>
+const compiled = html.compile<['param1', 'param2']>(
+  <div>
+    <div>$param1</div>
+    <div>$param2</div>
+    <div>$notFound</div>
+  </div>
 )
 
-console.log(html({ var: '1', colorTheme: 'dark' }))
+const html = compiled({ param1: 'Hello', param2: 'World!' })
+// formatted html to make it easier to read
+// <div>
+//   <div>Hello</div>
+//   <div>World!</div>
+//   <div>$notFound</div>
+// </div>
 ```
 
-which prints:
+This makes the html generation almost [**_3000x_**](#performance) faster than just using jsx normally.
 
-```html
-<div>1</div>
-<div class="dark">2</div>
-```
+Variables that were not passed to the `compile` function are ignored **silently**, this way you can reuse the result into another `compile` function or just because the your _"`$val`"_ was supposed to be a static value.
+
+<br />
 
 ## Fragments
 
-You can group tags using a simple fragment:
+JSX does not allow multiple root elements, but you can use a fragment to group multiple elements:
 
 ```tsx
 const html = (
@@ -115,26 +167,9 @@ const html = (
 )
 ```
 
-## Sanitization
+[Learn more about JSX syntax here!](https://react.dev/learn/writing-markup-with-jsx)
 
-Security is _NOT_ a feature. This library does _NOT_ sanitize.
-
-```ts
-const script = '<script>alert("hacked!")</script>'
-const body = <body>{script}</body>
-```
-
-Will result in:
-
-```html
-<body>
-  <script>
-    alert('hacked!')
-  </script>
-</body>
-```
-
-If you need sanitization, you can use something like [sanitize-html](https://www.npmjs.com/package/sanitize-html).
+<br />
 
 ## Supported HTML
 
@@ -145,55 +180,71 @@ All HTML elements and attributes are supported, except for the [svg](https://www
 
 Missing an element or attribute? Please create an issue or a PR to add it. It's easy to add.
 
-### Attribute types
+<br />
 
-All HTML attributes support a string value, however some attributes also support a [`number`](https://www.w3.org/TR/html51/infrastructure.html#numbers), [`Date`](https://www.w3.org/TR/html51/infrastructure.html#dates-and-times) or [`boolean`](https://www.w3.org/TR/html51/infrastructure.html#sec-boolean-attributes)(or absent value) type:
+## Kebab case
 
-```typescript
-;<meter value={1} min={0} max={5} low={1} high={4} optimum={3}></meter>
-// => <meter value="1" min="0" max="5" low="1" high="4" optimum="3"></meter>
-;<ol start={3}></ol>
-;<progress value={3} max={4}></progress>
-;<td colspan={3} rowspan={3}></td>
-;<th colspan={3} rowspan={3}></th>
-
-const date = new Date('1914-12-20T08:00')
-;<time datetime={date}></time>
-// => <time datetime="1914-12-20T08:00:00.000Z"></time>
-;<ins datetime={date}>updated</ins>
-;<del datetime={date}>old</del>
-
-// => <form> <input type="checkbox" checked> </form>
-;<form novalidate={false}>
-  <input type="checkbox" checked disabled={false}></input>
-</form>
-```
-
-### Kebab case
-
-As a browser is case insensitive when it comes to element and attribute names, it is common practice to use [kebab case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles) for this. However `<custom-element></custom-element>` is not allowed in TypeScript. Therefore we will transform `<customElement></customElement>` to `<custom-element></custom-element>`.
+HTML tags and attributes should be case insensitive, however JSX syntax does not allow `<kebab-case>` elements. Therefore we transform all `<camelCase>` tags into `<camel-case>` to allow usage of custom html tags.
 
 This transformation also works for custom attributes you define on a custom element yourself. For example:
 
-```typescript
-<customElement aCustomAttr="value"></customElement>
+```tsx
+<kebabCase kebabCase="value"></kebabCase>
 ```
 
 Becomes
 
 ```html
-<custom-element a-custom-attr="value"></custom-element>
+<kebab-case kebab-case="value"></kebab-case>
 ```
 
-## How this all works
+Note, if you are using `Typescript`, you will have to extend `JSX` namespace to allow it:
 
-The way this works is by using TypeScript's jsx support, but not for jsx/react interoperability. Instead, it defines the _normal_ html tags as `IntrinsicElements` in the JSX namespace.
+```tsx
+interface MathPower {
+  myExponential: number
+  // this property becomes the children type
+  children: number
+}
 
-At runtime, the `html.createElement` function is called for every html tag. It simply converts the given element to a string with minimal overhead.
+declare namespace JSX {
+  interface IntrinsicElements {
+    mathPower: MathPower
+  }
+}
 
-This:
+const element = <mathPower myExponential={2}>{3}</mathPower>
+// Becomes <math-power my-exponential="2">3</math-power>
+```
 
-```typescript
+<br />
+
+## Performance
+
+This package is just a string builder on steroids, as you can see [how this works](#how-it-works). However we are running a benchmark with an JSX HTML with about 10K characters to see how it performs.
+
+You can run this yourself by running `pnpm bench`.
+
+```java
+@kitajs/html:
+  13 604 ops/s, ±1.12%       | 99.97% slower
+
+@kitajs/html - compiled:
+  38 938 712 ops/s, ±2.49%   | fastest
+
+typed-html:
+  10 057 ops/s, ±1.78%       | slowest, 99.97% slower
+```
+
+<iframe src="benchmark/2023-07-22T19:45:17.300Z.chart.html" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+
+<br />
+
+## How it works
+
+This can be easily done by using Typescript's JSX support and changing the default `react` bindings to our own `html` namespace.
+
+```tsx
 <ol start={2}>
   {[1, 2].map((i) => (
     <li>{i}</li>
@@ -201,19 +252,17 @@ This:
 </ol>
 ```
 
-Compiles to:
+Is transpiled by typescript compiler at build step to:
 
-```javascript
+```js
 html.createElement(
   'ol',
   { start: 2 },
-  [1, 2].map(function (li) {
-    return html.createElement('li', null, li)
-  })
+  [1, 2].map((i) => html.createElement('li', null, i))
 )
 ```
 
-Which translates to:
+Which results into this string:
 
 ```html
 <ol start="2">
@@ -221,3 +270,5 @@ Which translates to:
   <li>2</li>
 </ol>
 ```
+
+<br />

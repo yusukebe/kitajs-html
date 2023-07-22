@@ -235,14 +235,19 @@ describe('compile', () => {
       <Header paramName="p3a"></Header>
       <span>Header ` ` \````Text</span>
       <Button>Button Text</Button>
-      $last
+      $last $notFound
     </>
+  )
+
+  console.log(
+    String(template),
+    template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 })
   )
 
   // raw
   testEqual(
     template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 }),
-    '<h1 class="123 321"></h1><span>Header ` `  \\````Text</span><button class="red-color" type="button">Button Text</button>1'
+    '<h1 class="123 321"></h1><span>Header ` `  \\````Text</span><button class="red-color" type="button">Button Text</button>1 $notFound'
   )
 
   // same output as non-compiled
@@ -254,7 +259,7 @@ describe('compile', () => {
       <button class="cyan-color" type="button">
         Button Text
       </button>
-      1
+      1 $notFound
     </>
   )
 })

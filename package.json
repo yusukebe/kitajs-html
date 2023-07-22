@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Fast and TypeSafe HTML templates using TypeScript.",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": "https://github.com/kitajs/html",
   "bugs": "https://github.com/kitajs/html/issues",
   "funding": "https://github.com/kitajs/html?sponsor=1",
   "author": "arthurfiorette <npm@arthur.place>",
   "license": "MIT",
-  "private": false,
+  "sideEffects": false,
   "scripts": {
     "test": "tsc && mocha",
     "bench": "tsc && node dist/benchmark",
@@ -30,8 +31,5 @@
   "packageManager": "pnpm@7.27.0",
   "engines": {
     "node": ">=12"
-  },
-  "dependencies": {
-    "javascript-stringify": "^2.1.0"
   }
 }

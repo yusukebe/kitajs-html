@@ -89,7 +89,7 @@ export function contentsToString(
 export function compile<A extends string[] = []>(
   this: void,
   html: string
-): (args: Record<A[number], Children>) => string
+): (args: Record<A[number], number | string | boolean>) => string
 
 export declare const Fragment: unique symbol
 

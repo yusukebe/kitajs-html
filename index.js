@@ -299,8 +299,8 @@ function compile (html) {
       continue
     }
 
-    // Skip non $ or escaped $ characters
-    if (html[index] !== '$' || html[index - 1] === '\\') {
+    // Skip non $ characters
+    if (html[index] !== '$') {
       continue
     }
 
@@ -308,7 +308,15 @@ function compile (html) {
     paramEnd = index
     while (html[++paramEnd]?.match(/[a-zA-Z0-9]/));
 
-    body += '`' + html.slice(nextStart, index) + '`+args["' + html.slice(index + 1, paramEnd) + '"]+'
+    body +=
+      '`' +
+      html.slice(nextStart, index) +
+      '`+(args["' +
+      html.slice(index + 1, paramEnd) +
+      '"] || "' +
+      html.slice(index, paramEnd) +
+      '")+'
+
     nextStart = paramEnd
     index = paramEnd
   }

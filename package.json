@@ -11,6 +11,7 @@
   "private": false,
   "scripts": {
     "test": "tsc && mocha",
+    "bench": "tsc && node dist/benchmark",
     "format": "prettier --write .",
     "lint": "standard"
   },
@@ -18,10 +19,12 @@
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.2",
+    "benny": "^3.7.1",
     "chai": "^4.3.7",
     "html-differ": "^1.4.0",
     "mocha": "^10.2.0",
     "standard": "^17.1.0",
+    "typed-html": "^3.0.1",
     "typescript": "^5.1.6"
   },
   "packageManager": "pnpm@7.27.0",

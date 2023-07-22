@@ -138,14 +138,14 @@ describe('using a number attribute', () => {
 })
 
 describe('helper components', () => {
-  const Header: html.Component<any> = (attributes, contents) => (
-    <h1 {...attributes}>{contents}</h1>
+  const Header: html.Component<any> = ({ children, ...attributes }) => (
+    <h1 {...attributes}>{children}</h1>
   )
 
-  function Button(attributes: html.PropsWithChildren<any>, contents: string) {
+  function Button(attributes: html.PropsWithChildren<any>) {
     return (
       <button type="button" class="original-class" {...attributes}>
-        {contents}
+        {attributes.children}
       </button>
     )
   }
@@ -239,11 +239,13 @@ describe('compile', () => {
     </>
   )
 
+  // raw
   testEqual(
     template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 }),
     '<h1 class="123 321"></h1><span>Header ` `  \\````Text</span><button class="red-color" type="button">Button Text</button>1'
   )
 
+  // same output as non-compiled
   testEqual(
     template({ parameterOne: '123', p3a: 321, test: 'cyan', last: 1 }),
     <>

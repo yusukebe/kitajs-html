@@ -1,12 +1,9 @@
 /// <reference path="./jsx.d.ts" />
 
-const capitalACharCode = 'A'.charCodeAt(0)
-const capitalZCharCode = 'Z'.charCodeAt(0)
-
 /**
- * A symbol used to represent a html fragment.
+ * A const used to represent a html fragment.
  */
-const Fragment = Symbol('html.Fragment')
+const Fragment = Symbol.for('kHtmlFragment')
 
 /**
  * Returns true if the character at the given index is an uppercase character.
@@ -18,7 +15,7 @@ const Fragment = Symbol('html.Fragment')
  */
 function isUpper (input, index) {
   const code = input.charCodeAt(index)
-  return code >= capitalACharCode && code <= capitalZCharCode
+  return code >= 65 /* A */ && code <= 90 /* Z */
 }
 
 /**
@@ -32,23 +29,23 @@ function toKebabCase (camel) {
 
   let index = 0
   let kebab = ''
-  let prevUpperCased = true
-  let currentUpperCased = isUpper(camel, 0)
-  let nextUpperCased
+  let prev = true
+  let curr = isUpper(camel, 0)
+  let next
 
   for (; index < length; index++) {
-    nextUpperCased = index >= length || isUpper(camel, index + 1)
+    next = isUpper(camel, index + 1)
 
     // detects the start of a new camel case word and avoid lowercasing abbreviations.
-    if (!prevUpperCased && currentUpperCased && !nextUpperCased) {
+    if (!prev && curr && !next) {
       // @ts-expect-error - this indexing is safe.
       kebab += '-' + camel[index].toLowerCase()
     } else {
       kebab += camel[index]
     }
 
-    prevUpperCased = currentUpperCased
-    currentUpperCased = nextUpperCased
+    prev = curr
+    curr = next
   }
 
   return kebab
@@ -76,24 +73,25 @@ function escapeHtml (value) {
     switch (value[index]) {
       case '&':
         escaped += '&amp;'
-        break
+        continue
       case '"':
         escaped += '&#34;'
-        break
+        continue
       case '>':
         escaped += '&gt;'
-        break
+        continue
       case '<':
         escaped += '&lt;'
-        break
+        continue
       case "'":
         escaped += '&#39;'
-        break
+        continue
       case '\u00A0':
         escaped += '&#32;'
-        break
+        continue
       default:
         escaped += value[index]
+        continue
     }
   }
 
@@ -192,7 +190,9 @@ function attributesToString (attributes) {
  * @this {void}
  */
 function contentsToString (contents) {
-  if (!contents || !contents.length) {
+  const length = contents.length
+
+  if (length === 0) {
     return ''
   }
 
@@ -200,7 +200,7 @@ function contentsToString (contents) {
   let content
   let index = 0
 
-  for (; index < contents.length; index++) {
+  for (; index < length; index++) {
     content = contents[index]
 
     if (Array.isArray(content)) {
@@ -217,46 +217,50 @@ function contentsToString (contents) {
  * Generates a html string from the given contents.
  *
  * @param {string | Function} name the name of the element to create or a function that creates the element.
- * @param {{children?: object}} [attributes] a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
- * @param  {...string} contents the inner contents of the element.
+ * @param {{children?: object} | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
+ * @param  {...string} children the inner contents of the element.
  * @returns {string} the generated html string.
  * @this {void}
  */
-function createElement (name, attributes, ...contents) {
-  // Use the contents as the children if no attributes/children are provided.
-  if (!attributes) {
-    attributes = { children: contents }
-  } else if (!attributes.children) {
-    if (contents.length === 1) {
-      // @ts-expect-error - this indexing is safe.
-      attributes.children = contents[0]
-    } else {
-      attributes.children = contents
-    }
+function createElement (name, attrs, ...children) {
+  // Adds the children to the attributes if it is not present.
+  if (attrs === null) {
+    attrs = { children }
   }
 
   // @ts-expect-error - Fragments are rendered as crateElement(createFragment, null, CHILDREN)
   if (name === Fragment) {
-    return contentsToString(contents)
+    return contentsToString(children)
   }
 
   // Calls the element creator function if the name is a function
   if (typeof name === 'function') {
-    return name(attributes, contents)
+    // In case the children attributes is not present, add it as a property.
+    if (attrs.children === undefined) {
+      // When only a single child is present, unwrap it.
+      if (children.length === 1) {
+        // @ts-expect-error - this indexing is safe.
+        attrs.children = children[0]
+      } else {
+        attrs.children = children
+      }
+    }
+
+    return name(attrs)
   }
 
   const tag = toKebabCase(name)
 
-  if (isVoidElement(tag) && !contents.length) {
-    return '<' + tag + attributesToString(attributes) + '/>'
+  if (children.length === 0 && isVoidElement(tag)) {
+    return '<' + tag + attributesToString(attrs) + '/>'
   }
 
   return (
     '<' +
     tag +
-    attributesToString(attributes) +
+    attributesToString(attrs) +
     '>' +
-    contentsToString(contents) +
+    contentsToString(children) +
     '</' +
     tag +
     '>'
@@ -306,7 +310,7 @@ function compile (html) {
 
     body += '`' + html.slice(nextStart, index) + '`+args["' + html.slice(index + 1, paramEnd) + '"]+'
     nextStart = paramEnd
-    index = nextStart
+    index = paramEnd
   }
 
   // Adds the remaining string

@@ -7,7 +7,7 @@
  * @returns {string} the escaped string.
  * @this {void}
  */
-export function escapeHtml(this: void, value: string): string;
+export function escapeHtml(this: void, value: string): string
 
 /**
  * Returns true if the element is a html void element.
@@ -61,7 +61,7 @@ export function isUpper(this: void, input: string, index: number): boolean
 export function createElement(
   this: void,
   name: string | Function,
-  attributes?: { children?: object },
+  attributes: { children?: object } | null,
   ...contents: string[]
 ): string
 
@@ -99,6 +99,5 @@ export declare type PropsWithChildren<T = {}> = { children?: Children } & T
 
 export declare type Component<T = {}> = (
   this: void,
-  props: PropsWithChildren<T>,
-  ...children: Children[]
+  props: PropsWithChildren<T>
 ) => string

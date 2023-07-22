@@ -21,7 +21,7 @@
 </div>
 
 <h3 align="center">
-  <code>KitaJS HTML</code> is a 0 dependencies fast and concise HTML generator for JavaScript with JSX syntax.
+  <code>KitaJS HTML</code> is a no dependencies, fast and concise HTML generator for JavaScript with JSX syntax.
   <br />
   <br />
 </h3>
@@ -40,6 +40,7 @@
 - [Kebab case](#kebab-case)
 - [Performance](#performance)
 - [How it works](#how-it-works)
+- [Fork credits](#fork-credits)
 
 <br />
 
@@ -302,5 +303,15 @@ Which results into this string:
   <li>2</li>
 </ol>
 ```
+
+<br />
+
+## Fork credits
+
+This repository was initially forked from [typed-html](https://github.com/nicojs/typed-html) and modified to add some features and increase performance.
+
+Initial credits to [nicojs](https://github.com/nicojs) and [contributors](https://github.com/nicojs/typed-html/graphs/contributors) for the amazing work.
+
+Licensed under the [Apache License, Version 2.0](LICENSE).
 
 <br />

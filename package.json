@@ -1,7 +1,7 @@
 {
   "name": "@kitajs/html",
   "version": "1.0.0",
-  "description": "Fast and TypeSafe HTML templates using TypeScript.",
+  "description": "Fast and type safe HTML templates using TypeScript.",
   "main": "index.js",
   "types": "index.d.ts",
   "repository": "https://github.com/kitajs/html",

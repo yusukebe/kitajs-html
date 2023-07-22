@@ -235,7 +235,7 @@ Becomes
 <kebab-case kebab-case="value"></kebab-case>
 ```
 
-Note, if you are using `Typescript`, you will have to extend `JSX` namespace to allow it:
+Note, if you are using `TypeScript`, you will have to extend `JSX` namespace to allow it:
 
 ```tsx
 interface MathPower {
@@ -279,7 +279,7 @@ typed-html:
 
 ## How it works
 
-This can be easily done by using Typescript's JSX support and changing the default `react` bindings to our own `html` namespace.
+This can be easily done by using TypeScript's JSX support and changing the default `react` bindings to our own `html` namespace.
 
 ```tsx
 <ol start={2}>

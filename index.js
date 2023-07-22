@@ -29,20 +29,22 @@ function isUpper (input, index) {
  */
 function toKebabCase (camel) {
   const length = camel.length
+
+  let index = 0
   let kebab = ''
   let prevUpperCased = true
   let currentUpperCased = isUpper(camel, 0)
-  let nextUpperCased = true
+  let nextUpperCased
 
-  for (let i = 0; i < length; i++) {
-    nextUpperCased = i >= length || isUpper(camel, i + 1)
+  for (; index < length; index++) {
+    nextUpperCased = index >= length || isUpper(camel, index + 1)
 
     // detects the start of a new camel case word and avoid lowercasing abbreviations.
     if (!prevUpperCased && currentUpperCased && !nextUpperCased) {
       // @ts-expect-error - this indexing is safe.
-      kebab += '-' + camel[i].toLowerCase()
+      kebab += '-' + camel[index].toLowerCase()
     } else {
-      kebab += camel[i]
+      kebab += camel[index]
     }
 
     prevUpperCased = currentUpperCased
@@ -55,30 +57,43 @@ function toKebabCase (camel) {
 /**
  * Escapes a string for use in an HTML attribute value.
  *
- * @param {string} value the string to escape.
+ * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
  * @returns {string} the escaped string.
  * @this {void}
  */
-function escapeAttrNodeValue (value) {
+function escapeHtml (value) {
+  // Handle non string values
+  if (typeof value !== 'string') {
+    // HTML Dates must be ISO stringified
+    value = value instanceof Date ? value.toISOString() : value.toString()
+  }
+
   const length = value.length
   let escaped = ''
+  let index = 0
 
-  for (let i = 0; i < length; i = i + 1) {
-    switch (value[i]) {
+  for (; index < length; index++) {
+    switch (value[index]) {
       case '&':
         escaped += '&amp;'
         break
       case '"':
-        escaped += '&quot;'
+        escaped += '&#34;'
+        break
+      case '>':
+        escaped += '&gt;'
+        break
+      case '<':
+        escaped += '&lt;'
         break
       case "'":
         escaped += '&#39;'
         break
       case '\u00A0':
-        escaped += '&nbsp;'
+        escaped += '&#32;'
         break
       default:
-        escaped += value[i]
+        escaped += value[index]
     }
   }
 
@@ -135,11 +150,12 @@ function attributesToString (attributes) {
   const keys = Object.keys(attributes)
   const length = keys.length
 
-  let result = ''
   let key, value, formattedName
+  let result = ''
+  let index = 0
 
-  for (let i = 0; i < length; i++) {
-    key = keys[i]
+  for (; index < length; index++) {
+    key = keys[index]
 
     // Children is a special case and should be ignored.
     if (key === 'children') {
@@ -160,15 +176,7 @@ function attributesToString (attributes) {
       continue
     }
 
-    result +=
-      ' ' +
-      formattedName +
-      '="' +
-      escapeAttrNodeValue(
-        // HTML Dates must be ISO stringified
-        value instanceof Date ? value.toISOString() : value.toString()
-      ) +
-      '"'
+    result += ' ' + formattedName + '="' + escapeHtml(value) + '"'
   }
 
   return result
@@ -184,15 +192,16 @@ function attributesToString (attributes) {
  * @this {void}
  */
 function contentsToString (contents) {
-  if (!contents) {
+  if (!contents || !contents.length) {
     return ''
   }
 
   let result = ''
   let content
+  let index = 0
 
-  for (let i = 0; i < contents.length; i++) {
-    content = contents[i]
+  for (; index < contents.length; index++) {
+    content = contents[index]
 
     if (Array.isArray(content)) {
       result += contentsToString(content)
@@ -266,8 +275,10 @@ function compile (html) {
 
   let body = 'return '
   let nextStart = 0
+  let paramEnd = 0
+  let index = 0
 
-  for (let index = 0; index < length; index++) {
+  for (; index < length; index++) {
     // Escapes the backtick character because it will be used to wrap the string
     // in a template literal.
     if (html[index] === '`') {
@@ -290,7 +301,7 @@ function compile (html) {
     }
 
     // Finds the end index of the current variable
-    let paramEnd = index
+    paramEnd = index
     while (html[++paramEnd]?.match(/[a-zA-Z0-9]/));
 
     body += '`' + html.slice(nextStart, index) + '`+args["' + html.slice(index + 1, paramEnd) + '"]+'
@@ -305,7 +316,7 @@ function compile (html) {
   return Function('args', body)
 }
 
-module.exports.escapeAttrNodeValue = escapeAttrNodeValue
+module.exports.escapeHtml = escapeHtml
 module.exports.isVoidElement = isVoidElement
 module.exports.attributesToString = attributesToString
 module.exports.toKebabCase = toKebabCase

@@ -78,14 +78,14 @@ describe('Boolean attributes', () => {
 })
 
 describe('Encoded attributes', () => {
-  it('should encode " as &quot', () => {
-    expect(<div class={'"'}></div>).to.eq('<div class="&quot;"></div>')
+  it('should encode " as &#34', () => {
+    expect(<div class={'"'}></div>).to.eq('<div class="&#34;"></div>')
   })
   it('should encode & as &amp', () => {
     expect(<div class={'&'}></div>).to.eq('<div class="&amp;"></div>')
   })
-  it('should encode \\u00A0 as &nbsp', () => {
-    expect(<div class={'\u00A0'}></div>).to.eq('<div class="&nbsp;"></div>')
+  it('should encode \\u00A0 as &#32', () => {
+    expect(<div class={'\u00A0'}></div>).to.eq('<div class="&#32;"></div>')
   })
 })
 

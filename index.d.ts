@@ -1,6 +1,15 @@
 /// <reference path="./jsx.d.ts" />
 
 /**
+ * Escapes a string for use in an HTML attribute value.
+ *
+ * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
+ * @returns {string} the escaped string.
+ * @this {void}
+ */
+export function escapeHtml(this: void, value: string): string;
+
+/**
  * Returns true if the element is a html void element.
  *
  * @param {string} tag the name of the element to check.

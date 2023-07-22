@@ -58,15 +58,6 @@ npm install @kitajs/html # or yarn add @kitajs/html
 
 Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
-```tsx
-// index.tsx
-
-// Always remember to import html from '@kitajs/html'
-import html from '@kitajs/html'
-
-console.log(<div>Hello World</div>)
-```
-
 ```jsonc
 // tsconfig.json
 
@@ -78,9 +69,55 @@ console.log(<div>Hello World</div>)
 }
 ```
 
-This tells typescript to transpile all JSX syntax to calls to our `html.createElement` function.
+```tsx
+// Always remember to import html from '@kitajs/html'
+import html from '@kitajs/html'
 
-This package just transpiles JSX to a HTML string, you can imagine doing something like this, but better:
+// Using as a simple html builder
+console.log(<div>Hello World</div>) // '<div>Hello World</div>'
+
+// Maybe your own server-side html api
+function route(request, response) {
+  return response
+    .header('Content-Type', 'text/html')
+    .send(<div>Hello World</div>)
+}
+
+// Maybe in a static html file
+fs.writeFileSync(
+  'index.html',
+  <html>
+    <head>
+      <title>Hello World</title>
+    </head>
+    <body>
+      <div>Hello World</div>
+    </body>
+  </html>
+)
+
+// Also as a component library
+function Layout({ name, children }: html.PropsWithChildren<{ name: string }>) {
+  return (
+    <html>
+      <head>
+        <title>Hello World</title>
+      </head>
+      <body>
+        <div>Hello {name}</div>
+        {children}
+      </body>
+    </html>
+  )
+}
+
+console.log(<Layout name="World">I'm in the body!</Layout>)
+
+// Anywhere you want! All JSX becomes a string
+typeof (<div>Hello World</div>) === 'string'
+```
+
+This package just provides functions to transpile JSX to a HTML string, you can imagine doing something like this before, but now with type checking and intellisense:
 
 ```ts
 // without @kitajs/html

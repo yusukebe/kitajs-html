@@ -270,8 +270,6 @@ typed-html:
   10 057 ops/s, ±1.78%       | slowest, 99.97% slower
 ```
 
-<iframe src="benchmark/2023-07-22T19:45:17.300Z.chart.html" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
-
 <br />
 
 ## How it works

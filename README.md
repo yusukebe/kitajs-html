@@ -125,8 +125,8 @@ const html = `<div> Hello World!<div>` ❌
 
 ```tsx
 // with @kitajs/html
-const html = (<div>Hello World!<div>) ✅
-// Also results into a string, but with type checked.
+const html = <div>Hello World!<div> ✅
+// Also results into a string, but with type checks.
 ```
 
 <br />

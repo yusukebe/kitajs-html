@@ -239,11 +239,6 @@ describe('compile', () => {
     </>
   )
 
-  console.log(
-    String(template),
-    template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 })
-  )
-
   // raw
   testEqual(
     template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 }),
@@ -261,5 +256,16 @@ describe('compile', () => {
       </button>
       1 $notFound
     </>
+  )
+})
+
+describe('style property', () => {
+  // same output as non-compiled
+  testEqual(
+    <>
+      <div style={{ backgroundColor: 'red' }}></div>
+      <div style="background-color: blue;"></div>
+    </>,
+    '<div style="background-color:red;"></div><div style="background-color: blue;"></div>'
   )
 })

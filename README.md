@@ -140,6 +140,7 @@ const script = '<script>alert("hacked!")</script>'
 const html = (
   <>
     <div style={'"&<>\''}></div>
+    <div style={{ backgroundColor: '"&<>\'' }}></div>
     <div>{script}</div>
   </>
 )
@@ -150,6 +151,7 @@ Will result into this html below but **minified**:
 ```html
 <!-- formatted html to make it easier to read -->
 <div style="&quot;&amp;&lt;&gt;'"></div>
+<div style="background-color:&quot;&amp;&lt;&gt;;'"></div>
 <div>
   <script>
     alert('hacked!')

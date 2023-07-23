@@ -20,7 +20,7 @@ declare namespace JSX {
     lang?: string
     draggable?: string | boolean
     spellcheck?: string | boolean
-    style?: string
+    style?: string | import('csstype').Properties
     tabindex?: string
     title?: string
     translate?: string | boolean

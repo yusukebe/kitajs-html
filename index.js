@@ -130,6 +130,35 @@ function isVoidElement (tag) {
 }
 
 /**
+ * Transforms an object of style attributes into a html style string.
+ *
+ * @param {object | string}  style
+ * @returns {string}
+ * @this {void}
+ */
+function styleToString (style) {
+  if (typeof style === 'string') {
+    return style
+  }
+
+  const keys = Object.keys(style)
+  const length = keys.length
+
+  let key
+  let index = 0
+  let result = ''
+
+  for (; index < length; index++) {
+    key = keys[index]
+
+    // @ts-expect-error - this indexing is safe.
+    result += toKebabCase(key) + ':' + escapeHtml(style[key]) + ';'
+  }
+
+  return result
+}
+
+/**
  * Transforms an object of attributes into a html attributes string.
  *
  * **This function does not support Date objects.**
@@ -162,6 +191,12 @@ function attributesToString (attributes) {
 
     // @ts-expect-error - this indexing is safe.
     value = attributes[key]
+
+    if (key === 'style') {
+      result += ' style="' + styleToString(value) + '"'
+      continue
+    }
+
     // @ts-expect-error - this indexing is safe.
     formattedName = toKebabCase(key)
 
@@ -333,6 +368,7 @@ module.exports.isVoidElement = isVoidElement
 module.exports.attributesToString = attributesToString
 module.exports.toKebabCase = toKebabCase
 module.exports.isUpper = isUpper
+module.exports.styleToString = styleToString
 module.exports.createElement = createElement
 module.exports.contentsToString = contentsToString
 module.exports.compile = compile

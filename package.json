@@ -16,6 +16,9 @@
     "format": "prettier --write .",
     "lint": "standard"
   },
+  "dependencies": {
+    "csstype": "^3.1.2"
+  },
   "devDependencies": {
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",

@@ -19,6 +19,15 @@ export function escapeHtml(this: void, value: string): string
 export function isVoidElement(this: void, tag: string): boolean
 
 /**
+ * Transforms an object of style attributes into a html style string.
+ *
+ * @param {object | string}  style
+ * @returns {string}
+ * @this {void}
+ */
+export function styleToString(this: void, tag: string): boolean
+
+/**
  * Transforms an object of attributes into a html attributes string.
  *
  * **This function does not support Date objects.**

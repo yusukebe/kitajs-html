@@ -21,7 +21,7 @@
 </div>
 
 <h3 align="center">
-  <code>KitaJS HTML</code> is a no dependencies, fast and concise HTML generator for JavaScript with JSX syntax.
+  <code>KitaJS HTML</code> is a 0 dependencies, fast and concise HTML generator for JavaScript with JSX syntax.
   <br />
   <br />
 </h3>

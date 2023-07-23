@@ -484,6 +484,7 @@ declare namespace JSX {
     section: HtmlTag
     select: HtmlSelectTag
     small: HtmlTag
+    summary: HtmlTag
     source: HtmlSourceTag
     span: HtmlTag
     strong: HtmlTag

@@ -160,6 +160,8 @@ Will result into this html below but **minified**:
 </div>
 ```
 
+It's like if React's `dangerouslySetInnerHTML` was enabled by default.
+
 <br />
 
 ## Compiling html

@@ -125,6 +125,7 @@ function isVoidElement (tag) {
     case 'source':
     case 'track':
     case 'wbr':
+    case 'tag':
       return true
     default:
       return false
@@ -259,7 +260,7 @@ function contentsToString (contents) {
  * Generates a html string from the given contents.
  *
  * @param {string | Function | typeof Fragment} name the name of the element to create or a function that creates the element.
- * @param {import('.').PropsWithChildren | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
+ * @param {import('.').PropsWithChildren<any> | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
  * @param  {...import('.').Children} children the inner contents of the element.
  * @returns {string} the generated html string.
  * @this {void}
@@ -289,9 +290,15 @@ function createElement (name, attrs, ...children) {
     return contentsToString(children)
   }
 
-  const tag = toKebabCase(name)
+  let tag = toKebabCase(name)
 
-  if (children.length === 0 && isVoidElement(tag)) {
+  // Switches the tag name when this custom `tag` is present.
+  if (name === 'tag') {
+    tag = String(attrs.of)
+    delete attrs.of
+  }
+
+  if (children.length === 0 && isVoidElement(name)) {
     return '<' + tag + attributesToString(attrs) + '/>'
   }
 

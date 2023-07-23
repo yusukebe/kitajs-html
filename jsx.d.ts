@@ -1,3 +1,8 @@
+// This file is a result from many sources, including: wikipedia, typescript dom lib, w3schools, and others.
+// Possibly there are many tags/attributes missing, but it is a good start.
+// Missing something? Please submit a issue report or a PR:
+// https://github.com/kitajs/html
+
 declare namespace JSX {
   type Element = string
 
@@ -9,7 +14,7 @@ declare namespace JSX {
     children?: any
   }
 
-  interface HtmlTag {
+  interface HtmlTag extends ElementChildrenAttribute {
     accesskey?: string
     class?: string
     contenteditable?: string
@@ -20,21 +25,21 @@ declare namespace JSX {
     lang?: string
     draggable?: string | boolean
     spellcheck?: string | boolean
-    style?: string | import('csstype').Properties
+    style?: string | import('csstype').Properties<string | number | boolean>
     tabindex?: string
     title?: string
     translate?: string | boolean
-    children?: any
   }
 
   interface HtmlAnchorTag extends HtmlTag {
     href?: string
+    hreflang?: string
     target?: string
     download?: string
+    referrerpolicy?: string
     ping?: string
     rel?: string
     media?: string
-    hreflang?: string
     type?: string
   }
 
@@ -54,8 +59,10 @@ declare namespace JSX {
   interface HtmlAudioTag extends HtmlTag {
     src?: string
     autobuffer?: string
-    autoplay?: string
-    loop?: string
+    autoplay?: string | boolean
+    preload?: string
+    muted?: string | boolean
+    loop?: string | boolean
     controls?: string
   }
 
@@ -103,12 +110,11 @@ declare namespace JSX {
     value?: string
   }
 
-  interface HtmlEmbedTag extends HtmlTag {
+  interface HtmlEmbedTag extends HtmlTag, Record<string, any> {
     src?: string
     type?: string
     width?: string
     height?: string
-    [anything: string]: string | boolean | undefined
   }
 
   interface HtmlFieldSetTag extends HtmlTag {
@@ -306,8 +312,8 @@ declare namespace JSX {
     src?: string
     type?: string
     charset?: string
-    async?: string
-    defer?: string
+    async?: string | boolean
+    defer?: string | boolean
     crossorigin?: string
     integrity?: string
     text?: string
@@ -392,6 +398,12 @@ declare namespace JSX {
     controls?: string
     width?: string
     height?: string
+  }
+
+  interface HtmlSvgTag extends HtmlTag, Record<string, any> {}
+
+  interface HtmlUnspecifiedTag extends HtmlTag, Record<string, any> {
+    of: string
   }
 
   interface IntrinsicElements {
@@ -491,6 +503,7 @@ declare namespace JSX {
     style: HtmlStyleTag
     sub: HtmlTag
     sup: HtmlTag
+    svg: HtmlSvgTag
     table: HtmlTableTag
     tbody: HtmlTag
     td: HtmlTableDataCellTag
@@ -508,6 +521,7 @@ declare namespace JSX {
     var: HtmlTag
     video: HtmlVideoTag
     wbr: HtmlTag
+    tag: HtmlUnspecifiedTag
   }
 
   interface HtmlBodyTag {

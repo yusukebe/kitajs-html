@@ -213,12 +213,14 @@ const html = (
 
 ## Supported HTML
 
-All HTML elements and attributes are supported, except for the [svg](https://www.w3.org/TR/SVG/).
+All HTML elements and attributes should be supported.
 
 - Supported html elements: https://dev.w3.org/html5/html-author/#the-elements
 - Supported html events: http://htmlcss.wikia.com/wiki/HTML5_Event_Attributes
 
-Missing an element or attribute? Please create an issue or a PR to add it. It's easy to add.
+**Missing an element or attribute?** Please create an issue or a PR to add it. It's easy to add.
+
+We also provide a `<tag of="my-custom-one">` tag that resolves to `<my-custom-one>` to allow usage of custom elements when needed in non typescript projects. For TypeScript, see [extending types](#extending-types).
 
 <br />
 

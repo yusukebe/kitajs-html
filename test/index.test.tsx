@@ -260,7 +260,6 @@ describe('compile', () => {
 })
 
 describe('style property', () => {
-  // same output as non-compiled
   testEqual(
     <>
       <div style={{ backgroundColor: 'red' }}></div>
@@ -271,7 +270,6 @@ describe('style property', () => {
 })
 
 describe('falsy values', () => {
-  // same output as non-compiled
   testEqual(
     <>
       {false}
@@ -279,5 +277,25 @@ describe('falsy values', () => {
       {undefined}
     </>,
     'false'
+  )
+})
+
+describe('custom tag', () => {
+  testEqual(<tag of="asd" attr />, '<asd attr />')
+
+  testEqual(<tag of="asd" attr></tag>, '<asd attr />')
+
+  testEqual(
+    <tag of="asd" attr>
+      1
+    </tag>,
+    '<asd attr>1</asd>'
+  )
+
+  testEqual(
+    <tag of="asd" attr>
+      {' '}
+    </tag>,
+    '<asd attr> </asd>'
   )
 })

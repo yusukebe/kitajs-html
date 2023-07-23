@@ -38,6 +38,7 @@
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
 - [Kebab case](#kebab-case)
+- [Extending types](#extending-types)
 - [Performance](#performance)
 - [How it works](#how-it-works)
 - [Fork credits](#fork-credits)
@@ -235,23 +236,41 @@ Becomes
 <kebab-case kebab-case="value"></kebab-case>
 ```
 
-Note, if you are using `TypeScript`, you will have to extend `JSX` namespace to allow it:
+<br />
+
+## Extending types
+
+Just as exemplified above, you may also want to add custom properties to your elements. You can do this by extending the `JSX` namespace.
+
+> ⚠️ Please follow the JSX convention and do not use `kebab-case` for your properties, use `camelCase` instead. We internally transform all `camelCase` properties to `kebab-case` to be compliant with the HTML and JSX standards.
 
 ```tsx
-interface MathPower {
-  myExponential: number
-  // this property becomes the children type
-  children: number
-}
-
 declare namespace JSX {
+  // Declares a new element properties and children type
+  interface MathPower {
+    // Changes properties to the math-power element
+    myExponential: number
+    // this property becomes the children type
+    children: number
+  }
+
+  // Adds a new element
   interface IntrinsicElements {
     mathPower: MathPower
   }
+
+  // Adds properties to all elements
+  interface HtmlTag {
+    hxBoost: boolean
+  }
 }
 
-const element = <mathPower myExponential={2}>{3}</mathPower>
-// Becomes <math-power my-exponential="2">3</math-power>
+const element = (
+  <mathPower myExponential={2} hxBoost>
+    {3}
+  </mathPower>
+)
+// Becomes <math-power my-exponential="2" hx-boost>3</math-power>
 ```
 
 <br />

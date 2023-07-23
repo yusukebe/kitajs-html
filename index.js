@@ -375,6 +375,7 @@ module.exports.toKebabCase = toKebabCase
 module.exports.isUpper = isUpper
 module.exports.styleToString = styleToString
 module.exports.createElement = createElement
+module.exports.h = createElement
 module.exports.contentsToString = contentsToString
 module.exports.compile = compile
 module.exports.Fragment = Fragment

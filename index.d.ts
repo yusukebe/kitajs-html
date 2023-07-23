@@ -105,6 +105,11 @@ export function compile<A extends string[] = []>(
   html: string
 ): (args: Record<A[number], number | string | boolean>) => string
 
+/**
+ * Here for interop with preact and many build systems. 
+ */
+export declare const h = createElement;
+
 export declare type Children =
   | number
   | string

@@ -2,7 +2,7 @@
 
 /**
  * A const used to represent a html fragment.
- * 
+ *
  * @typedef {import('.').Fragment}
  */
 const Fragment = Symbol.for('kHtmlFragment')
@@ -269,7 +269,6 @@ function createElement (name, attrs, ...children) {
   if (attrs === null) {
     attrs = { children }
   }
-
 
   // Calls the element creator function if the name is a function
   if (typeof name === 'function') {

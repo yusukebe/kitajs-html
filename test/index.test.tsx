@@ -269,3 +269,15 @@ describe('style property', () => {
     '<div style="background-color:red;"></div><div style="background-color: blue;"></div>'
   )
 })
+
+describe('falsy values', () => {
+  // same output as non-compiled
+  testEqual(
+    <>
+      {false}
+      {null}
+      {undefined}
+    </>,
+    'false'
+  )
+})

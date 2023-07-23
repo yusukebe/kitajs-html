@@ -2,6 +2,8 @@
 
 /**
  * A const used to represent a html fragment.
+ * 
+ * @typedef {import('.').Fragment}
  */
 const Fragment = Symbol.for('kHtmlFragment')
 
@@ -220,7 +222,7 @@ function attributesToString (attributes) {
  *
  * A raw html fragment is just an array of strings, this method concatenates .
  *
- * @param {(string | string[])[]} contents an maybe nested array of strings to concatenate.
+ * @param {import('.').Children[]} contents an maybe nested array of strings to concatenate.
  * @returns {string} the concatenated string of contents.
  * @this {void}
  */
@@ -238,6 +240,11 @@ function contentsToString (contents) {
   for (; index < length; index++) {
     content = contents[index]
 
+    // Allows null and undefined values to be ignored.
+    if (content === null || content === undefined) {
+      continue
+    }
+
     if (Array.isArray(content)) {
       result += contentsToString(content)
     } else {
@@ -251,9 +258,9 @@ function contentsToString (contents) {
 /**
  * Generates a html string from the given contents.
  *
- * @param {string | Function} name the name of the element to create or a function that creates the element.
- * @param {{children?: object} | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
- * @param  {...string} children the inner contents of the element.
+ * @param {string | Function | typeof Fragment} name the name of the element to create or a function that creates the element.
+ * @param {import('.').PropsWithChildren | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
+ * @param  {...import('.').Children} children the inner contents of the element.
  * @returns {string} the generated html string.
  * @this {void}
  */
@@ -263,10 +270,6 @@ function createElement (name, attrs, ...children) {
     attrs = { children }
   }
 
-  // @ts-expect-error - Fragments are rendered as crateElement(createFragment, null, CHILDREN)
-  if (name === Fragment) {
-    return contentsToString(children)
-  }
 
   // Calls the element creator function if the name is a function
   if (typeof name === 'function') {
@@ -274,7 +277,6 @@ function createElement (name, attrs, ...children) {
     if (attrs.children === undefined) {
       // When only a single child is present, unwrap it.
       if (children.length === 1) {
-        // @ts-expect-error - this indexing is safe.
         attrs.children = children[0]
       } else {
         attrs.children = children
@@ -282,6 +284,10 @@ function createElement (name, attrs, ...children) {
     }
 
     return name(attrs)
+  }
+
+  if (name === Fragment) {
+    return contentsToString(children)
   }
 
   const tag = toKebabCase(name)

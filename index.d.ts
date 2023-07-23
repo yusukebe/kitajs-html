@@ -1,6 +1,11 @@
 /// <reference path="./jsx.d.ts" />
 
 /**
+ * A const used to represent a html fragment.
+ */
+export declare const Fragment: unique symbol
+
+/**
  * Escapes a string for use in an HTML attribute value.
  *
  * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
@@ -21,11 +26,11 @@ export function isVoidElement(this: void, tag: string): boolean
 /**
  * Transforms an object of style attributes into a html style string.
  *
- * @param {object | string}  style
- * @returns {string}
+ * @param {object | string}  style a record of literal values to use as style attributes or a string.
+ * @returns {string} the generated html style string.
  * @this {void}
  */
-export function styleToString(this: void, tag: string): boolean
+export function styleToString(this: void, style: object | string): boolean
 
 /**
  * Transforms an object of attributes into a html attributes string.
@@ -69,9 +74,9 @@ export function isUpper(this: void, input: string, index: number): boolean
  */
 export function createElement(
   this: void,
-  name: string | Function,
-  attributes: { children?: object } | null,
-  ...contents: string[]
+  name: string | Function | typeof Fragment,
+  attributes: PropsWithChildren<any> | null,
+  ...contents: Children[]
 ): string
 
 /**
@@ -100,9 +105,13 @@ export function compile<A extends string[] = []>(
   html: string
 ): (args: Record<A[number], number | string | boolean>) => string
 
-export declare const Fragment: unique symbol
-
-export declare type Children = number | string | boolean | Children[]
+export declare type Children =
+  | number
+  | string
+  | boolean
+  | null
+  | undefined
+  | Children[]
 
 export declare type PropsWithChildren<T = {}> = { children?: Children } & T
 

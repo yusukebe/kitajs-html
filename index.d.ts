@@ -6,7 +6,7 @@
 export declare const Fragment: unique symbol
 
 /**
- * Escapes a string for use in an HTML attribute value.
+ * Escapes a string for safe use as HTML text content.
  *
  * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
  * @returns {string} the escaped string.
@@ -77,7 +77,7 @@ export function createElement(
   name: string | Function | typeof Fragment,
   attributes: PropsWithChildren<any> | null,
   ...contents: Children[]
-): string
+): JSX.Element
 
 /**
  * Joins raw string html elements into a single html string.
@@ -91,7 +91,7 @@ export function createElement(
 export function contentsToString(
   this: void,
   contents: (string | string[])[]
-): string
+): JSX.Element
 
 /**
  * Compiles html with the given arguments specified with $name syntax.
@@ -103,7 +103,7 @@ export function contentsToString(
 export function compile<A extends string[] = []>(
   this: void,
   html: string
-): (args: Record<A[number], number | string | boolean>) => string
+): (args: Record<A[number], number | string | boolean>) => JSX.Element
 
 /**
  * Here for interop with preact and many build systems.
@@ -123,4 +123,4 @@ export declare type PropsWithChildren<T = {}> = { children?: Children } & T
 export declare type Component<T = {}> = (
   this: void,
   props: PropsWithChildren<T>
-) => string
+) => JSX.Element

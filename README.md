@@ -38,9 +38,11 @@
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
 - [Kebab case](#kebab-case)
+- [Async Components](#async-components)
 - [Extending types](#extending-types)
 - [Performance](#performance)
 - [How it works](#how-it-works)
+- [Format HTML output](#format-html-output)
 - [Fork credits](#fork-credits)
 
 <br />
@@ -136,13 +138,16 @@ const html = <div>Hello World!<div> ✅
 This package is a HTML builder, **_not an HTML sanitizer_**. This means that it does not sanitize any input, and you should sanitize where its needed. However, we escape all attribute values to avoid breaking out of the html attribute/tag.
 
 ```tsx
-const script = '<script>alert("hacked!")</script>'
+import html from '@kitajs/html'
 
-const html = (
+const untrusted = '<script>alert("hacked!")</script>'
+
+console.log(
   <>
     <div style={'"&<>\''}></div>
     <div style={{ backgroundColor: '"&<>\'' }}></div>
-    <div>{script}</div>
+    <div>{html.escapeHtml(untrusted)}</div>
+    <div>{untrusted}</div>
   </>
 )
 ```
@@ -153,6 +158,7 @@ Will result into this html below but **minified**:
 <!-- formatted html to make it easier to read -->
 <div style="&quot;&amp;&lt;&gt;'"></div>
 <div style="background-color:&quot;&amp;&lt;&gt;;'"></div>
+<div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
 <div>
   <script>
     alert('hacked!')
@@ -242,6 +248,55 @@ Becomes
 
 <br />
 
+## Async Components
+
+Sadly, we cannot allow async components in JSX and keep the same string type for everything else. However, as your components are just functions that returns string, you should be fine by writing this:
+
+```jsx
+// Don't write components this way!
+
+async function AsyncComponent({ children, name }) {
+  /// await calculations here...
+  return <div>Hello {name}!</div>
+}
+
+const html = (
+  <>
+    <div>1</div>
+    {await AsyncComponent({
+      name: 'World',
+      children: <div>Oi</div>
+    })}
+  </>
+)
+```
+
+It is not ideal and I do not recommend you write async components, but it should work.
+
+```tsx
+// Prefer this syntax:
+async function render(name: string) {
+  // Fetches all async code beforehand and passes its contents to the component.
+  const user = await api.getUser(name)
+  return <Layout user={user} />
+}
+
+// Instead of this:
+async function render(name: string) {
+  // Instead of creating async components and each have their own async logic.
+  return (
+    <>
+      <Layout>
+        {await header(name)}
+        {await body(name)}
+      </Layout>
+    </>
+  )
+}
+```
+
+<br />
+
 ## Extending types
 
 Just as exemplified above, you may also want to add custom properties to your elements. You can do this by extending the `JSX` namespace.
@@ -327,6 +382,34 @@ Which results into this string:
   <li>1</li>
   <li>2</li>
 </ol>
+```
+
+<br />
+
+## Format HTML output
+
+This package emits HTML as a compact string, useful for over the wire environments. However, if your use case really needs the output
+HTML to be pretty printed, you can use an external JS library to do so, like [html-prettify](https://www.npmjs.com/package/html-prettify).
+
+```jsx
+import html from '@kitajs/html'
+import prettify from 'html-prettify'
+
+const html = (
+  <div>
+    <div>1</div>
+    <div>2</div>
+  </div>
+)
+
+console.log(html)
+// <div><div>1</div><div>2</div></div>
+
+console.log(prettify(html))
+// <div>
+//   <div>1</div>
+//   <div>2</div>
+// </div>
 ```
 
 <br />

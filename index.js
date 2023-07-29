@@ -76,14 +76,14 @@ function escapeHtml (value) {
       case '&':
         escaped += '&amp;'
         continue
-      case '"':
-        escaped += '&#34;'
-        continue
       case '>':
         escaped += '&gt;'
         continue
       case '<':
         escaped += '&lt;'
+        continue
+      case '"':
+        escaped += '&#34;'
         continue
       case "'":
         escaped += '&#39;'

@@ -211,15 +211,15 @@ function attributesToString (attributes) {
 
       continue
     }
-    
+
     if (value === null || value === undefined) {
       continue
     }
-    
+
     result += ' ' + formattedName
 
     if (value !== '') {
-      result += '="' +  escapeHtml(value) + '"'
+      result += '="' + escapeHtml(value) + '"'
     }
   }
 

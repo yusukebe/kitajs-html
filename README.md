@@ -79,14 +79,14 @@ import html from '@kitajs/html'
 // Using as a simple html builder
 console.log(<div>Hello World</div>) // '<div>Hello World</div>'
 
-// Maybe your own server-side html api
+// Maybe your own server-side html frontend
 function route(request, response) {
   return response
     .header('Content-Type', 'text/html')
     .send(<div>Hello World</div>)
 }
 
-// Maybe in a static html file
+// What about generating a static html file?
 fs.writeFileSync(
   'index.html',
   <html>

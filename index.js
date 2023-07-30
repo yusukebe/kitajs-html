@@ -387,5 +387,6 @@ module.exports.contentsToString = contentsToString
 module.exports.compile = compile
 module.exports.Fragment = Fragment
 
-module.exports.__esModule = true
-module.exports.default = module.exports
+// esModule interop
+Object.defineProperty(exports, '__esModule', { value: true })
+module.exports.default = Object.assign({}, module.exports)

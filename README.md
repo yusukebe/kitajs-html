@@ -59,13 +59,15 @@ npm install @kitajs/html # or yarn add @kitajs/html
 
 Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
-```jsonc
+```js
 // tsconfig.json
 
 {
   "compilerOptions": {
     "jsx": "react",
-    "reactNamespace": "html"
+    "reactNamespace": "html",
+    "jsxFactory": "html.createElement", // optional, if you had problems
+    "jsxFragmentFactory": "html.Fragment" // optional, if you had problems
   }
 }
 ```

@@ -284,10 +284,10 @@ function createElement (name, attrs, ...children) {
     // In case the children attributes is not present, add it as a property.
     if (attrs.children === undefined) {
       // When only a single child is present, unwrap it.
-      if (children.length === 1) {
-        attrs.children = children[0]
-      } else {
+      if (children.length > 1) {
         attrs.children = children
+      } else {
+        attrs.children = children[0]
       }
     }
 
@@ -361,7 +361,8 @@ function compile (html) {
 
     // Finds the end index of the current variable
     paramEnd = index
-    while (html[++paramEnd]?.match(/[a-zA-Z0-9]/));
+    // @ts-expect-error - this indexing is safe.
+    while (html[++paramEnd] && html[paramEnd].match(/[a-zA-Z0-9]/));
 
     body +=
       '`' +

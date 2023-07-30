@@ -14,6 +14,14 @@ function Button({ children, ...attributes }: html.PropsWithChildren<any>) {
   )
 }
 
+function AssertChildren({
+  children,
+  expect
+}: html.PropsWithChildren<{ expect: any }>) {
+  assert.deepEqual(children, expect)
+  return <div>{children}</div>
+}
+
 test('React-style children', () => {
   assert.equal(
     '<h1 class="title"><span>Header Text</span></h1>',
@@ -30,5 +38,31 @@ test('React-style children', () => {
   assert.equal(
     '<button type="button" class="original-class">Button Text</button>',
     <Button>Button Text</Button>
+  )
+
+  assert.equal(
+    <>
+      <AssertChildren expect={undefined} />
+      <AssertChildren expect={undefined}></AssertChildren>
+      <AssertChildren expect={<div></div>}>
+        <div></div>
+      </AssertChildren>
+      <AssertChildren expect={'1'}>1</AssertChildren>
+      <AssertChildren expect={'1 2'}>1 2</AssertChildren>
+      <AssertChildren expect={[<div></div>, <div></div>]}>
+        <div></div>
+        <div></div>
+      </AssertChildren>
+      <AssertChildren expect={[<div></div>, '1', <div></div>]}>
+        <div></div>1<div></div>
+      </AssertChildren>
+    </>,
+    '<div></div>' +
+      '<div></div>' +
+      '<div><div></div></div>' +
+      '<div>1</div>' +
+      '<div>1 2</div>' +
+      '<div><div></div><div></div></div>' +
+      '<div><div></div>1<div></div></div>'
   )
 })

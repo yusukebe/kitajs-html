@@ -4,7 +4,7 @@
  * Fast and type safe HTML templates using JSX syntax.
  *
  * @module html
- * @license MIT
+ * @license Apache License Version 2.0
  *
  * @link https://github.com/kitajs/html
  * @link https://www.npmjs.com/package/@kitajs/html

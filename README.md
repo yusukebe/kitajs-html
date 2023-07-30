@@ -196,7 +196,7 @@ const html = compiled({ param1: 'Hello', param2: 'World!' })
 // </div>
 ```
 
-This makes the html generation almost [**_3000x_**](#performance) faster than just using jsx normally.
+This makes the html generation almost [**_2500_**](#performance) faster than just using jsx normally.
 
 Variables that were not passed to the `compile` function are ignored **silently**, this way you can reuse the result into another `compile` function or just because the your _"`$val`"_ was supposed to be a static value.
 
@@ -344,13 +344,13 @@ You can run this yourself by running `pnpm bench`.
 
 ```java
 @kitajs/html:
-  13 604 ops/s, ±1.12%       | 99.97% slower
+  16 656 ops/s, ±0.87%       | 99.96% slower
 
 @kitajs/html - compiled:
-  38 938 712 ops/s, ±2.49%   | fastest
+  42 736 829 ops/s, ±2.46%   | fastest
 
 typed-html:
-  10 057 ops/s, ±1.78%       | slowest, 99.97% slower
+  11 402 ops/s, ±2.45%       | slowest, 99.97% slower
 ```
 
 <br />

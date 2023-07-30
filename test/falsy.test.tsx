@@ -11,4 +11,9 @@ test('falsy values', () => {
     </>,
     'false'
   )
+
+  assert.equal(
+    <div id="truthy" hidden={false} spellcheck={true} translate={undefined}></div>,
+    '<div id="truthy" spellcheck></div>'
+  )
 })

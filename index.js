@@ -180,7 +180,7 @@ function attributesToString (attributes) {
   const keys = Object.keys(attributes)
   const length = keys.length
 
-  let key, value, formattedName, escaped
+  let key, value, formattedName
   let result = ''
   let index = 0
 
@@ -211,12 +211,15 @@ function attributesToString (attributes) {
 
       continue
     }
-
+    
+    if (value === null || value === undefined) {
+      continue
+    }
+    
     result += ' ' + formattedName
-    escaped = escapeHtml(value)
 
-    if (escaped !== '') {
-      result += '="' + escaped + '"'
+    if (value !== '') {
+      result += '="' +  escapeHtml(value) + '"'
     }
   }
 

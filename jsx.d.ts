@@ -192,7 +192,7 @@ declare namespace JSX {
 
   interface HtmlModTag extends HtmlTag {
     cite?: string
-    datetime?: string
+    datetime?: string | Date
   }
 
   interface KeygenTag extends HtmlTag {
@@ -378,7 +378,7 @@ declare namespace JSX {
   }
 
   interface HtmlTimeTag extends HtmlTag {
-    datetime?: string
+    datetime?: string | Date
   }
 
   interface HtmlTrackTag extends HtmlTag {

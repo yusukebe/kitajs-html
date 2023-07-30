@@ -8,8 +8,12 @@ test('falsy values', () => {
       {false}
       {null}
       {undefined}
+      {0}
+      {NaN}
+      {true}
+      false null undefined 0 NaN true
     </>,
-    'false'
+    '0true' + 'false null undefined 0 NaN true'
   )
 
   assert.equal(

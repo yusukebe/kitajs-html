@@ -249,8 +249,8 @@ function contentsToString (contents) {
   for (; index < length; index++) {
     content = contents[index]
 
-    // Allows null and undefined values to be ignored.
-    if (content === null || content === undefined) {
+    // Ignores non 0 falsy values
+    if (!content && content !== 0) {
       continue
     }
 

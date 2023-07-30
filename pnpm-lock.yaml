@@ -22,6 +22,9 @@ devDependencies:
   standard:
     specifier: ^17.1.0
     version: 17.1.0
+  tslib:
+    specifier: ^2.6.1
+    version: 2.6.1
   typed-html:
     specifier: ^3.0.1
     version: 3.0.1
@@ -1751,6 +1754,10 @@ packages:
       json5: 1.0.2
       minimist: 1.2.8
       strip-bom: 3.0.0
+    dev: true
+
+  /tslib@2.6.1:
+    resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
     dev: true
 
   /type-check@0.4.0:

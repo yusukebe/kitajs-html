@@ -24,10 +24,11 @@
     "benny": "^3.7.1",
     "prettier": "^3.0.0",
     "standard": "^17.1.0",
+    "tslib": "^2.6.1",
     "typed-html": "^3.0.1",
     "typescript": "^5.1.6"
   },
-  "packageManager": "pnpm@7.27.0",
+  "packageManager": "pnpm@8.6.11",
   "engines": {
     "node": ">=12"
   }

@@ -414,6 +414,8 @@ console.log(prettify(html))
 // </div>
 ```
 
+👉 There's an open PR to implement this feature natively, wanna work on it? Check [this PR](https://github.com/kitajs/html/pull/1).
+
 <br />
 
 ## Fork credits

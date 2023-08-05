@@ -266,7 +266,7 @@ function contentsToString (contents, escape) {
       continue
     }
 
-    if (Array.isArray(content)) {
+    if (Array.isArray(content) && content.length > 0) {
       result += contentsToString(content, escape)
     } else if (escape === true) {
       result += escapeHtml(content)

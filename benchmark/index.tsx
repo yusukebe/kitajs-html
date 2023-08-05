@@ -299,7 +299,7 @@ benny.suite(
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
-        <title>Arthur's place</title>
+        <title>{name}</title>
         <meta name="description" content="My own room in the internet!" />
         <meta
           name="keywords"
@@ -595,7 +595,7 @@ benny.suite(
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
-        <title>Arthur's place</title>
+        <title>{name}</title>
         <meta name="description" content="My own room in the internet!" />
         <meta
           name="keywords"

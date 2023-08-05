@@ -29,26 +29,29 @@ function isUpper (input, index) {
 function toKebabCase (camel) {
   const length = camel.length
 
-  let index = 0
+  let start = 0
+  let end = 0
   let kebab = ''
   let prev = true
   let curr = isUpper(camel, 0)
   let next
 
-  for (; index < length; index++) {
-    next = isUpper(camel, index + 1)
+  for (; end < length; end++) {
+    next = isUpper(camel, end + 1)
 
     // detects the start of a new camel case word and avoid lowercasing abbreviations.
     if (!prev && curr && !next) {
       // @ts-expect-error - this indexing is safe.
-      kebab += '-' + camel[index].toLowerCase()
-    } else {
-      kebab += camel[index]
+      kebab += camel.slice(start, end) + '-' + camel[end].toLowerCase()
+      start = end + 1
     }
 
     prev = curr
     curr = next
   }
+
+  // Appends the remaining string.
+  kebab += camel.slice(start, end)
 
   return kebab
 }

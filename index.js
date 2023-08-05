@@ -75,7 +75,7 @@ function escapeHtml (value) {
 
   let start = 0
   let end = 0
- 
+
   for (; end < length; end++) {
     switch (value[end]) {
       case '&':
@@ -87,7 +87,7 @@ function escapeHtml (value) {
         start = end + 1
         continue
       case '<':
-        escaped += value.slice(start, end) +'&lt;'
+        escaped += value.slice(start, end) + '&lt;'
         start = end + 1
         continue
       case '"':
@@ -95,7 +95,7 @@ function escapeHtml (value) {
         start = end + 1
         continue
       case "'":
-        escaped += value.slice(start, end) +'&#39;'
+        escaped += value.slice(start, end) + '&#39;'
         start = end + 1
         continue
       case '\u00A0':
@@ -266,7 +266,7 @@ function contentsToString (contents, escape) {
       continue
     }
 
-    if (Array.isArray(content) && content.length > 0) {
+    if (Array.isArray(content)) {
       result += contentsToString(content, escape)
     } else if (escape === true) {
       result += escapeHtml(content)
@@ -320,8 +320,10 @@ function createElement (name, attrs, ...children) {
     delete attrs.of
   }
 
-  if (children.length === 0 && isVoidElement(name)) {
-    return '<' + tag + attributesToString(attrs) + '/>'
+  if (children.length === 0) {
+    return '<' + tag + attributesToString(attrs) + (
+      isVoidElement(name) ? '/>' : ('></' + tag + '>')
+    )
   }
 
   return (

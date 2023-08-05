@@ -346,13 +346,13 @@ You can run this yourself by running `pnpm bench`.
 
 ```java
 @kitajs/html:
-  16 656 ops/s, ±0.87%       | 99.96% slower
+  24 038 ops/s, ±1.32%       | 99.93% slower
 
 @kitajs/html - compiled:
-  42 736 829 ops/s, ±2.46%   | fastest
+  34 054 217 ops/s, ±1.81%   | fastest
 
 typed-html:
-  11 402 ops/s, ±2.45%       | slowest, 99.97% slower
+  9 571 ops/s, ±1.95%        | slowest, 99.97% slower
 ```
 
 <br />

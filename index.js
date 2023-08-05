@@ -69,33 +69,41 @@ function escapeHtml (value) {
 
   const length = value.length
   let escaped = ''
-  let index = 0
 
-  for (; index < length; index++) {
-    switch (value[index]) {
+  let start = 0
+  let end = 0
+ 
+  for (; end < length; end++) {
+    switch (value[end]) {
       case '&':
-        escaped += '&amp;'
+        escaped += value.slice(start, end) + '&amp;'
+        start = end + 1
         continue
       case '>':
-        escaped += '&gt;'
+        escaped += value.slice(start, end) + '&gt;'
+        start = end + 1
         continue
       case '<':
-        escaped += '&lt;'
+        escaped += value.slice(start, end) +'&lt;'
+        start = end + 1
         continue
       case '"':
-        escaped += '&#34;'
+        escaped += value.slice(start, end) + '&#34;'
+        start = end + 1
         continue
       case "'":
-        escaped += '&#39;'
+        escaped += value.slice(start, end) +'&#39;'
+        start = end + 1
         continue
       case '\u00A0':
-        escaped += '&#32;'
-        continue
-      default:
-        escaped += value[index]
+        escaped += value.slice(start, end) + '&#32;'
+        start = end + 1
         continue
     }
   }
+
+  // Appends the remaining string.
+  escaped += value.slice(start, end)
 
   return escaped
 }

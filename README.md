@@ -137,7 +137,7 @@ const html = <div>Hello World!<div> ✅
 
 ## Sanitization
 
-This package is a HTML builder, **_not an HTML sanitizer_**. This means that it does not sanitize any input, and you should sanitize where its needed. However, we escape all attribute values to avoid breaking out of the html attribute/tag.
+This package is a HTML builder, **_not an HTML sanitizer_**. This means that it does not sanitize any input by default, and you should sanitize where its needed. However, we escape all attribute values to avoid breaking out of the html attribute/tag. You can also use the `escapeInnerHtml` to escape all contents of an element or use `html.escapeHtml` to escape any string.
 
 ```tsx
 import html from '@kitajs/html'
@@ -148,6 +148,7 @@ console.log(
   <>
     <div style={'"&<>\''}></div>
     <div style={{ backgroundColor: '"&<>\'' }}></div>
+    <div escapeInnerHtml>{untrusted}</div>
     <div>{html.escapeHtml(untrusted)}</div>
     <div>{untrusted}</div>
   </>
@@ -160,6 +161,7 @@ Will result into this html below but **minified**:
 <!-- formatted html to make it easier to read -->
 <div style="&quot;&amp;&lt;&gt;'"></div>
 <div style="background-color:&quot;&amp;&lt;&gt;;'"></div>
+<div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
 <div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
 <div>
   <script>

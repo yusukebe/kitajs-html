@@ -25,13 +25,40 @@ declare namespace JSX {
     lang?: undefined | string
     draggable?: undefined | string | boolean
     spellcheck?: undefined | string | boolean
+    tabindex?: undefined | string
+    title?: undefined | string
+    translate?: undefined | string | boolean
+
+    /**
+     * A css style attribute which also supports a `csstype` object.
+     */
     style?:
       | undefined
       | string
       | import('csstype').Properties<string | number | boolean>
-    tabindex?: undefined | string
-    title?: undefined | string
-    translate?: undefined | string | boolean
+
+    /**
+     * Tells if any inner html should be escaped.
+     *
+     * **Warning: This also escapes inner jsx tags. You should only use this in the most inner tags.**
+     *
+     * @example
+     * ```tsx
+     * <div>{'<script />'}</div>
+     * '<div><script /></div>'
+     *
+     * <div escapeInnerHtml>{'<script />'}</div>
+     * '<div>&lt;script /&gt;</div>'
+     *
+     * <div><div>{'<script />'}</div></div>
+     * '<div><div><script /></div></div>'
+     *
+     * // Escapes even inner jsx tags
+     * <div escapeInnerHtml><div>{'<script />'}</div></div>
+     * '<div>&lt;div&gt;&lt;script /&gt;&lt;/div&gt;</div>'
+     * ```
+     */
+    escapeInnerHtml?: undefined | boolean
   }
 
   interface HtmlAnchorTag extends HtmlTag {

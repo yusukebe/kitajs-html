@@ -187,8 +187,8 @@ function attributesToString (attributes) {
   for (; index < length; index++) {
     key = keys[index]
 
-    // Children is a special case and should be ignored.
-    if (key === 'children') {
+    // Skips all @kitajs/html specific attributes.
+    if (key === 'children' || key === 'escapeInnerHtml') {
       continue
     }
 
@@ -232,10 +232,11 @@ function attributesToString (attributes) {
  * A raw html fragment is just an array of strings, this method concatenates .
  *
  * @param {import('.').Children[]} contents an maybe nested array of strings to concatenate.
- * @returns {string} the concatenated string of contents.
+ * @param {boolean} [escape=false] if we should escape the contents before concatenating them.
+ * @returns {string} the concatenated and escaped string of contents.
  * @this {void}
  */
-function contentsToString (contents) {
+function contentsToString (contents, escape) {
   const length = contents.length
 
   if (length === 0) {
@@ -255,7 +256,9 @@ function contentsToString (contents) {
     }
 
     if (Array.isArray(content)) {
-      result += contentsToString(content)
+      result += contentsToString(content, escape)
+    } else if (escape === true) {
+      result += escapeHtml(content)
     } else {
       result += content
     }
@@ -315,7 +318,7 @@ function createElement (name, attrs, ...children) {
     tag +
     attributesToString(attrs) +
     '>' +
-    contentsToString(children) +
+    contentsToString(children, attrs.escapeInnerHtml) +
     '</' +
     tag +
     '>'

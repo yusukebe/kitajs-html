@@ -19,11 +19,11 @@ declare namespace html {
   /**
    * Escapes a string for safe use as HTML text content.
    *
-   * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
+   * @param {unknown} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
    * @returns {string} the escaped string.
    * @this {void}
    */
-  export function escapeHtml(this: void, value: string): string
+  export function escapeHtml(this: void, value: unknown): string
 
   /**
    * Returns true if the element is a html void element.

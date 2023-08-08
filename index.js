@@ -66,8 +66,13 @@ function toKebabCase (camel) {
 function escapeHtml (value) {
   // Handle non string values
   if (typeof value !== 'string') {
-    // HTML Dates must be ISO stringified
-    value = value instanceof Date ? value.toISOString() : value.toString()
+    // HTML Dates can just be ISO stringified
+    if(value instanceof Date) {
+      return value.toISOString()
+    }
+
+    // Calls toString() on the value
+    value = String(value)
   }
 
   const length = value.length

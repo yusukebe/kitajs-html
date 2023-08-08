@@ -67,7 +67,7 @@ function escapeHtml (value) {
   // Handle non string values
   if (typeof value !== 'string') {
     // HTML Dates can just be ISO stringified
-    if(value instanceof Date) {
+    if (value instanceof Date) {
       return value.toISOString()
     }
 

@@ -144,13 +144,19 @@ This package aims to be a HTML builder, **_not an HTML sanitizer_**. This means 
 // Attributes are always escaped by default
 <div style={'"&<>\''}></div> // <div style="&#34;&amp;&lt;&gt;&#39;"></div>
 <div style={{ backgroundColor: '"&<>\'' }}></div> // <div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div>
+```
 
+```jsx
 // Correct way to escape input content, you should only use when rendering user input
 <div safe>{untrusted}</div> // <div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
+```
 
+```jsx
 // Manual escaping with html.escapeHtml
 <div>{'<a></a>' + html.escapeHtml('<a></a>')}</div> // <div><a></a>&lt;a&gt;&lt;/a&gt;</div>
+```
 
+```jsx
 // ⚠️ unsafe input is not escaped by default
 <div>{untrusted}</div> // <div><script>alert('hacked!')</script></div>
 ```

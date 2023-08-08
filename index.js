@@ -152,7 +152,7 @@ function isVoidElement (tag) {
  */
 function styleToString (style) {
   if (typeof style === 'string') {
-    return style
+    return escapeHtml(style)
   }
 
   const keys = Object.keys(style)
@@ -199,7 +199,7 @@ function attributesToString (attributes) {
     key = keys[index]
 
     // Skips all @kitajs/html specific attributes.
-    if (key === 'children' || key === 'escapeInnerHtml') {
+    if (key === 'children' || key === 'safe') {
       continue
     }
 
@@ -331,7 +331,7 @@ function createElement (name, attrs, ...children) {
     tag +
     attributesToString(attrs) +
     '>' +
-    contentsToString(children, attrs.escapeInnerHtml) +
+    contentsToString(children, attrs.safe) +
     '</' +
     tag +
     '>'

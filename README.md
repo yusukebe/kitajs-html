@@ -34,6 +34,7 @@
 - [Installing](#installing)
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
+  - [The safe attribute](#the-safe-attribute)
 - [Compiling html](#compiling-html)
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
@@ -72,7 +73,7 @@ Install `@kitajs/html` with your favorite package manager, import it into the to
 }
 ```
 
-```tsx
+```jsx
 // Always remember to import html from '@kitajs/html'
 import html from '@kitajs/html'
 
@@ -127,7 +128,7 @@ This package just provides functions to transpile JSX to a HTML string, you can 
 const html = `<div> Hello World!<div>` ❌
 ```
 
-```tsx
+```jsx
 // with @kitajs/html
 const html = <div>Hello World!<div> ✅
 // Also results into a string, but with type checks.
@@ -137,40 +138,49 @@ const html = <div>Hello World!<div> ✅
 
 ## Sanitization
 
-This package is a HTML builder, **_not an HTML sanitizer_**. This means that it does not sanitize any input by default, and you should sanitize where its needed. However, we escape all attribute values to avoid breaking out of the html attribute/tag. You can also use the `escapeInnerHtml` to escape all contents of an element or use `html.escapeHtml` to escape any string.
+This package aims to be a HTML builder, **_not an HTML sanitizer_**. This means that no HTML content is escaped by default. However we provide a custom attribute called **_`safe`_** that will sanitize everything inside of it. You can also use the exported `html.escapeHtml` function to escape other contents arbitrarily.
 
-```tsx
-import html from '@kitajs/html'
+```jsx
+// Attributes are always escaped by default
+<div style={'"&<>\''}></div> // <div style="&#34;&amp;&lt;&gt;&#39;"></div>
+<div style={{ backgroundColor: '"&<>\'' }}></div> // <div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div>
 
-const untrusted = '<script>alert("hacked!")</script>'
+// Correct way to escape input content, you should only use when rendering user input
+<div safe>{untrusted}</div> // <div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
 
-console.log(
-  <>
-    <div style={'"&<>\''}></div>
-    <div style={{ backgroundColor: '"&<>\'' }}></div>
-    <div escapeInnerHtml>{untrusted}</div>
-    <div>{html.escapeHtml(untrusted)}</div>
-    <div>{untrusted}</div>
-  </>
-)
-```
+// Manual escaping with html.escapeHtml
+<div>{'<a></a>' + html.escapeHtml('<a></a>')}</div> // <div><a></a>&lt;a&gt;&lt;/a&gt;</div>
 
-Will result into this html below but **minified**:
-
-```html
-<!-- formatted html to make it easier to read -->
-<div style="&quot;&amp;&lt;&gt;'"></div>
-<div style="background-color:&quot;&amp;&lt;&gt;;'"></div>
-<div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
-<div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
-<div>
-  <script>
-    alert('hacked!')
-  </script>
-</div>
+// ⚠️ unsafe input is not escaped by default
+<div>{untrusted}</div> // <div><script>alert('hacked!')</script></div>
 ```
 
 It's like if React's `dangerouslySetInnerHTML` was enabled by default.
+
+### The safe attribute
+
+You should always use the `safe` attribute when you are rendering user input. This will sanitize its contents and avoid XSS attacks.
+
+```jsx
+function UserCard({ name, description, date, about }) {
+  return (
+    <div class="card">
+      <h1 safe>{name}</h1>
+      <br />
+      <p safe>{description}</p>
+      <br />
+      // controlled input, no need to sanitize
+      <time datetime={date.toIsoString()}>{date.toDateString()}</time>
+      <br />
+      <p safe>{about}</p>
+    </div>
+  )
+}
+```
+
+Note that only at the very bottom of the HTML tree is where you should use the `safe` attribute, to only escape where its needed.
+
+👉 There's an open issue to integrate this within a typescript plugin to emit warnings and alerts to use the safe attribute everywhere a variable is used. Wanna help? Check [this issue](https://github.com/kitajs/html/issues/2).
 
 <br />
 
@@ -208,7 +218,7 @@ Variables that were not passed to the `compile` function are ignored **silently*
 
 JSX does not allow multiple root elements, but you can use a fragment to group multiple elements:
 
-```tsx
+```jsx
 const html = (
   <>
     <div>1</div>
@@ -240,7 +250,7 @@ HTML tags and attributes should be case insensitive, however JSX syntax does not
 
 This transformation also works for custom attributes you define on a custom element yourself. For example:
 
-```tsx
+```jsx
 <kebabCase kebabCase="value"></kebabCase>
 ```
 
@@ -277,16 +287,16 @@ const html = (
 
 It is not ideal and I do not recommend you write async components, but it should work.
 
-```tsx
+```jsx
 // Prefer this syntax:
-async function render(name: string) {
+async function render(name) {
   // Fetches all async code beforehand and passes its contents to the component.
   const user = await api.getUser(name)
   return <Layout user={user} />
 }
 
 // Instead of this:
-async function render(name: string) {
+async function render(name) {
   // Instead of creating async components and each have their own async logic.
   return (
     <>
@@ -309,20 +319,17 @@ Just as exemplified above, you may also want to add custom properties to your el
 
 ```tsx
 declare namespace JSX {
-  // Declares a new element properties and children type
-  interface MathPower {
-    // Changes properties to the math-power element
-    myExponential: number
-    // this property becomes the children type
-    children: number
-  }
-
-  // Adds a new element
+  // Adds a new element called mathPower
   interface IntrinsicElements {
-    mathPower: MathPower
+    mathPower: {
+      // Changes properties to the math-power element
+      myExponential: number
+      // this property becomes the <>children</> type
+      children: number
+    }
   }
 
-  // Adds properties to all elements
+  // Adds hxBoost property to all elements native elements (those who extends HtmlTag)
   interface HtmlTag {
     hxBoost: boolean
   }
@@ -361,7 +368,7 @@ typed-html:
 
 This can be easily done by using TypeScript's JSX support and changing the default `react` bindings to our own `html` namespace.
 
-```tsx
+```jsx
 <ol start={2}>
   {[1, 2].map((i) => (
     <li>{i}</li>

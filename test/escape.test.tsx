@@ -23,7 +23,7 @@ test('with children', () => {
 test('escapes children', () => {
   assert.equal(
     <>
-      <div escapeInnerHtml>{unsafeTag}</div>
+      <div safe>{unsafeTag}</div>
     </>,
     <>
       <div>{safeTag}</div>
@@ -31,15 +31,39 @@ test('escapes children', () => {
   )
 })
 
-test('escapes children', () => {
+test('escapes deep children', () => {
   assert.equal(
     <>
-      <div escapeInnerHtml>
+      <div safe>
         <div>{unsafeTag}</div>
       </div>
     </>,
     <>
       <div>{html.escapeHtml(<div>{unsafeTag}</div>)}</div>
     </>
+  )
+})
+
+test('always escapes attributes', () => {
+  assert.equal(
+    <>
+      <div style={'"&<>\''}></div>
+      <div style={{ backgroundColor: '"&<>\'' }}></div>
+      <div class={'"&<>\''}></div>
+    </>,
+    <>
+      <div style="&#34;&amp;&lt;&gt;&#39;"></div>
+      <div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div>
+      <div class="&#34;&amp;&lt;&gt;&#39;"></div>
+    </>
+  )
+
+  assert.equal(
+    <>
+      <div style={'"&<>\''}></div>
+      <div style={{ backgroundColor: '"&<>\'' }}></div>
+      <div class={'"&<>\''}></div>
+    </>,
+    `<div style="&#34;&amp;&lt;&gt;&#39;"></div><div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div><div class="&#34;&amp;&lt;&gt;&#39;"></div>`
   )
 })

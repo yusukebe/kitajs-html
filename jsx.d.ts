@@ -47,18 +47,20 @@ declare namespace JSX {
      * <div>{'<script />'}</div>
      * '<div><script /></div>'
      *
-     * <div escapeInnerHtml>{'<script />'}</div>
+     * <div safe>{'<script />'}</div>
      * '<div>&lt;script /&gt;</div>'
      *
      * <div><div>{'<script />'}</div></div>
      * '<div><div><script /></div></div>'
      *
      * // Escapes even inner jsx tags
-     * <div escapeInnerHtml><div>{'<script />'}</div></div>
+     * <div safe><div>{'<script />'}</div></div>
      * '<div>&lt;div&gt;&lt;script /&gt;&lt;/div&gt;</div>'
      * ```
+     * 
+     * @see https://github.com/kitajs/html#sanitization
      */
-    escapeInnerHtml?: undefined | boolean
+    safe?: undefined | boolean
   }
 
   interface HtmlAnchorTag extends HtmlTag {

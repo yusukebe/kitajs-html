@@ -57,7 +57,7 @@ declare namespace JSX {
      * <div safe><div>{'<script />'}</div></div>
      * '<div>&lt;div&gt;&lt;script /&gt;&lt;/div&gt;</div>'
      * ```
-     * 
+     *
      * @see https://github.com/kitajs/html#sanitization
      */
     safe?: undefined | boolean

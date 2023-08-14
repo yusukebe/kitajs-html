@@ -124,28 +124,25 @@ function escapeHtml (value) {
  * @this {void}
  */
 function isVoidElement (tag) {
-  switch (tag) {
-    case 'area':
-    case 'base':
-    case 'br':
-    case 'col':
-    case 'command':
-    case 'embed':
-    case 'hr':
-    case 'img':
-    case 'input':
-    case 'keygen':
-    case 'link':
-    case 'meta':
-    case 'param':
-    case 'source':
-    case 'track':
-    case 'wbr':
-    case 'tag':
-      return true
-    default:
-      return false
-  }
+  // Ordered by most common to least common.
+  return (
+    tag === 'img' ||
+    tag === 'input' ||
+    tag === 'meta' ||
+    tag === 'br' ||
+    tag === 'hr' ||
+    tag === 'link' ||
+    tag === 'area' ||
+    tag === 'base' ||
+    tag === 'col' ||
+    tag === 'command' ||
+    tag === 'embed' ||
+    tag === 'keygen' ||
+    tag === 'param' ||
+    tag === 'source' ||
+    tag === 'track' ||
+    tag === 'wbr'
+  )
 }
 
 /**
@@ -326,9 +323,11 @@ function createElement (name, attrs, ...children) {
   }
 
   if (children.length === 0) {
-    return '<' + tag + attributesToString(attrs) + (
-      isVoidElement(name) ? '/>' : ('></' + tag + '>')
-    )
+    if (isVoidElement(tag)) {
+      return '<' + tag + attributesToString(attrs) + '/>'
+    }
+
+    return '<' + tag + attributesToString(attrs) + '></' + tag + '>'
   }
 
   return (

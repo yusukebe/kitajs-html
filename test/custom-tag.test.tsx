@@ -3,21 +3,42 @@ import test from 'node:test'
 import html from '../index'
 
 test('custom tag', () => {
-  assert.equal(<tag of="asd" attr />, '<asd attr/>')
+  assert.equal(<tag of="div" attr />, '<div attr></div>')
 
-  assert.equal(<tag of="asd" attr></tag>, '<asd attr/>')
+  assert.equal(<tag of="div" attr></tag>, '<div attr></div>')
 
   assert.equal(
-    <tag of="asd" attr>
+    <tag of="div" attr>
       1
     </tag>,
-    '<asd attr>1</asd>'
+    '<div attr>1</div>'
   )
 
   assert.equal(
-    <tag of="asd" attr>
+    <tag of="div" attr>
       {' '}
     </tag>,
-    '<asd attr> </asd>'
+    '<div attr> </div>'
+  )
+})
+
+
+test('custom void tag', () => {
+  assert.equal(<tag of="link" attr />, '<link attr/>')
+
+  assert.equal(<tag of="link" attr></tag>, '<link attr/>')
+
+  assert.equal(
+    <tag of="link" attr>
+      1
+    </tag>,
+    '<link attr>1</link>'
+  )
+
+  assert.equal(
+    <tag of="link" attr>
+      {' '}
+    </tag>,
+    '<link attr> </link>'
   )
 })

@@ -179,7 +179,7 @@ function UserCard({ name, description, date, about }) {
       <p safe>{description}</p>
       <br />
       // controlled input, no need to sanitize
-      <time datetime={date.toIsoString()}>{date.toDateString()}</time>
+      <time datetime={date.toISOString()}>{date.toDateString()}</time>
       <br />
       <p safe>{about}</p>
     </div>

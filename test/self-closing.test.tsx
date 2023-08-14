@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import test from 'node:test'
 import html from '../index'
 
-test('Self-closing html tags', () => {
+test('self-closing html tags', () => {
   assert.equal('<area/>', <area></area>)
 
   assert.equal('<hr/>', <hr></hr>)

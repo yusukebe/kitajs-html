@@ -22,7 +22,6 @@ test('custom tag', () => {
   )
 })
 
-
 test('custom void tag', () => {
   assert.equal(<tag of="link" attr />, '<link attr/>')
 
@@ -40,5 +39,10 @@ test('custom void tag', () => {
       {' '}
     </tag>,
     '<link attr> </link>'
+  )
+
+  assert.equal(
+    <tag of="my-custom-KEBAB" />,
+    '<my-custom-KEBAB></my-custom-KEBAB>'
   )
 })

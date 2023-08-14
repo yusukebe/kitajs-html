@@ -66,3 +66,10 @@ test('React-style children', () => {
       '<div><div></div>1<div></div></div>'
   )
 })
+
+test('React-style className', () => {
+  assert.equal(<div class="a"></div>, '<div class="a"></div>')
+  assert.equal(<div className="c"></div>, '<div class="c"></div>')
+  assert.equal(<div class="b" className="d"></div>, '<div class="b"></div>')
+  assert.equal(<div className="a" class="b"></div>, '<div class="b"></div>')
+})

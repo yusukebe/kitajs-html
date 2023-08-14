@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import test from 'node:test'
 import html from '../index'
 
-test('Using a Date type attribute', () => {
+test('using a Date type attribute', () => {
   assert.equal(
     '<time datetime="1914-12-20T08:00:00.000Z"></time>',
     <time datetime={new Date('1914-12-20T08:00+0000')}></time>

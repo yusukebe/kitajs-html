@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import test from 'node:test'
 import html from '../index'
 
-test('Simple html structures', () => {
+test('simple html structures', () => {
   assert.equal(<a href="test">a link</a>, '<a href="test">a link</a>')
 
   assert.equal(

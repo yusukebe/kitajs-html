@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import test from 'node:test'
 import html from '../index'
 
-test('Boolean attributes', () => {
+test('boolean attributes', () => {
   // https://www.w3.org/TR/html5/infrastructure.html#boolean-attributes
   assert.equal('<input checked/>', <input checked={true}></input>)
 

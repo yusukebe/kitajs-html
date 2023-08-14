@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import test from 'node:test'
 import html from '../index'
 
-test('Events', () => {
+test('events', () => {
   assert.equal(
     '<div onclick="click" onmouseover="mouseover" ondrag="ondrag"></div>',
     <div onclick="click" onmouseover="mouseover" ondrag="ondrag"></div>

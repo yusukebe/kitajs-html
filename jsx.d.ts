@@ -17,6 +17,8 @@ declare namespace JSX {
   interface HtmlTag extends ElementChildrenAttribute {
     accesskey?: undefined | string
     class?: undefined | string
+    /** @deprecated please use `class`, included here to work as a drop-in replacement */
+    className?: undefined | string
     contenteditable?: undefined | string
     dir?: undefined | string
     hidden?: undefined | string | boolean
@@ -57,6 +59,8 @@ declare namespace JSX {
      * <div safe><div>{'<script />'}</div></div>
      * '<div>&lt;div&gt;&lt;script /&gt;&lt;/div&gt;</div>'
      * ```
+     *
+     * @default false
      *
      * @see https://github.com/kitajs/html#sanitization
      */

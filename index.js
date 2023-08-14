@@ -208,6 +208,16 @@ function attributesToString (attributes) {
     // @ts-expect-error - this indexing is safe.
     value = attributes[key]
 
+    // React className compatibility.
+    if (key === 'className') {
+      // @ts-expect-error - both were provided, so use the class attribute.
+      if (attributes.class !== undefined) {
+        continue
+      }
+
+      key = 'class'
+    }
+
     if (key === 'style') {
       result += ' style="' + styleToString(value) + '"'
       continue
@@ -314,30 +324,24 @@ function createElement (name, attrs, ...children) {
     return contentsToString(children)
   }
 
-  let tag = toKebabCase(name)
-
   // Switches the tag name when this custom `tag` is present.
   if (name === 'tag') {
-    tag = String(attrs.of)
+    name = String(attrs.of)
     delete attrs.of
   }
 
-  if (children.length === 0) {
-    if (isVoidElement(tag)) {
-      return '<' + tag + attributesToString(attrs) + '/>'
-    }
-
-    return '<' + tag + attributesToString(attrs) + '></' + tag + '>'
+  if (children.length === 0 && isVoidElement(name)) {
+    return '<' + name + attributesToString(attrs) + '/>'
   }
 
   return (
     '<' +
-    tag +
+    name +
     attributesToString(attrs) +
     '>' +
     contentsToString(children, attrs.safe) +
     '</' +
-    tag +
+    name +
     '>'
   )
 }
@@ -381,8 +385,11 @@ function compile (html) {
 
     // Finds the end index of the current variable
     paramEnd = index
-    // @ts-expect-error - this indexing is safe.
-    while (html[++paramEnd] && html[paramEnd].match(/[a-zA-Z0-9]/));
+    while (
+      html[++paramEnd] !== undefined &&
+      // @ts-expect-error - this indexing is safe.
+      html[paramEnd].match(/[a-zA-Z0-9]/)
+    );
 
     body +=
       '`' +

@@ -35,10 +35,11 @@
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
   - [The safe attribute](#the-safe-attribute)
+- [Migrating from HTML](#migrating-from-html)
 - [Compiling html](#compiling-html)
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
-- [Kebab case](#kebab-case)
+  - [The `tag` tag](#the-tag-tag)
 - [Async Components](#async-components)
 - [Extending types](#extending-types)
 - [Performance](#performance)
@@ -163,6 +164,8 @@ This package aims to be a HTML builder, **_not an HTML sanitizer_**. This means 
 
 It's like if React's `dangerouslySetInnerHTML` was enabled by default.
 
+<br />
+
 ### The safe attribute
 
 You should always use the `safe` attribute when you are rendering user input. This will sanitize its contents and avoid XSS attacks.
@@ -190,6 +193,34 @@ Note that only at the very bottom of the HTML tree is where you should use the `
 
 <br />
 
+## Migrating from HTML
+
+Migrating from plain HTML to JSX can be a pain to convert it all manually, as you will find yourself hand placing quotes and closing void elements. Luckily for us, there's a tool called [htmltojsx](https://magic.reactjs.net/htmltojsx.htm) that can help us with that.
+
+```html
+<!-- Hello world -->
+<div class="awesome" style="border: 1px solid red">
+  <label for="name">Enter your name: </label>
+  <input type="text" id="name" />
+</div>
+<p>Enter your HTML here</p>
+```
+
+Generates:
+
+```jsx
+<>
+  {/* Hello world */}
+  <div className="awesome" style={{ border: '1px solid red' }}>
+    <label htmlFor="name">Enter your name: </label>
+    <input type="text" id="name" />
+  </div>
+  <p>Enter your HTML here</p>
+</>
+```
+
+<br />
+
 ## Compiling html
 
 When you have static html, is simple to get amazing performances, just save it to a constant and reuse it. However, if you need to hydrate the html with dynamic values in a super fast way, you can use the `compile` property to compile the html and reuse it later.
@@ -202,7 +233,9 @@ const compiled = html.compile<['param1', 'param2']>(
     <div>$param1</div>
     <div>$param2</div>
     <div>$notFound</div>
-  </div>
+  </div>,
+  // or
+  <MyComponent param1="$param1" param2="$param2" />
 )
 
 const html = compiled({ param1: 'Hello', param2: 'World!' })
@@ -214,7 +247,7 @@ const html = compiled({ param1: 'Hello', param2: 'World!' })
 // </div>
 ```
 
-This makes the html generation almost [**_2500_**](#performance) faster than just using jsx normally.
+This makes the html generation around [**_1500_**](#performance) times faster than just using normal jsx.
 
 Variables that were not passed to the `compile` function are ignored **silently**, this way you can reuse the result into another `compile` function or just because the your _"`$val`"_ was supposed to be a static value.
 
@@ -241,77 +274,49 @@ const html = (
 
 All HTML elements and attributes should be supported.
 
-- Supported html elements: https://dev.w3.org/html5/html-author/#the-elements
-- Supported html events: http://htmlcss.wikia.com/wiki/HTML5_Event_Attributes
+- [Supported html elements](https://html.spec.whatwg.org/multipage#toc-semantics)
+- [Supported html events](https://www.w3schools.com/tags/ref_eventattributes.asp)
 
 **Missing an element or attribute?** Please create an issue or a PR to add it. It's easy to add.
 
-We also provide a `<tag of="my-custom-one">` tag that resolves to `<my-custom-one>` to allow usage of custom elements when needed in non typescript projects. For TypeScript, see [extending types](#extending-types).
-
 <br />
 
-## Kebab case
+### The `tag` tag
 
-HTML tags and attributes should be case insensitive, however JSX syntax does not allow `<kebab-case>` elements. Therefore we transform all `<camelCase>` tags into `<camel-case>` to allow usage of custom html tags.
+The `<tag of="">` tag is a custom internal tag that allows you to render any runtime selected tag you want. Possibly reasons to prefer this tag over extending types:
 
-This transformation also works for custom attributes you define on a custom element yourself. For example:
+- You want to render a tag that is chosen at runtime.
+- You don't want to mess up with extending globally available types.
+- You are writing javascript with typechecking enabled.
+- You are writing a library and should not extend types globally.
+- You need to use kebab-case tags, which JSX syntax does not support.
 
 ```jsx
-<kebabCase kebabCase="value"></kebabCase>
+<tag of="asd" />
+// <asd></asd>
+
+<tag of="my-custom-KEBAB" />
+// <my-custom-KEBAB></my-custom-KEBAB>
 ```
 
-Becomes
-
-```html
-<kebab-case kebab-case="value"></kebab-case>
-```
+We do recommend using [extending types](#extending-types) instead, as it will give you intellisense and type checking.
 
 <br />
 
 ## Async Components
 
-Sadly, we cannot allow async components in JSX and keep the same string type for everything else. However, as your components are just functions that returns string, you should be fine by writing this:
+Sadly, we cannot allow async components in JSX and keep the same string type for everything else. Even though it should be possible to write async components you will have no real benefit from it, as you will always have to await the whole html generation
+to complete before you can render it.
+
+You should fetch async data in the following way:
 
 ```jsx
-// Don't write components this way!
-
-async function AsyncComponent({ children, name }) {
-  /// await calculations here...
-  return <div>Hello {name}!</div>
-}
-
-const html = (
-  <>
-    <div>1</div>
-    {await AsyncComponent({
-      name: 'World',
-      children: <div>Oi</div>
-    })}
-  </>
-)
-```
-
-It is not ideal and I do not recommend you write async components, but it should work.
-
-```jsx
-// Prefer this syntax:
+// Fetches all async code beforehand and passes its contents to the component.
 async function render(name) {
-  // Fetches all async code beforehand and passes its contents to the component.
-  const user = await api.getUser(name)
-  return <Layout user={user} />
-}
+  const data = await api.data(name)
+  const otherData = await api.otherData(name)
 
-// Instead of this:
-async function render(name) {
-  // Instead of creating async components and each have their own async logic.
-  return (
-    <>
-      <Layout>
-        {await header(name)}
-        {await body(name)}
-      </Layout>
-    </>
-  )
+  return <Layout data={data} otherData={data} />
 }
 ```
 
@@ -324,20 +329,22 @@ Just as exemplified above, you may also want to add custom properties to your el
 > ⚠️ Please follow the JSX convention and do not use `kebab-case` for your properties, use `camelCase` instead. We internally transform all `camelCase` properties to `kebab-case` to be compliant with the HTML and JSX standards.
 
 ```tsx
-declare namespace JSX {
-  // Adds a new element called mathPower
-  interface IntrinsicElements {
-    mathPower: {
-      // Changes properties to the math-power element
-      myExponential: number
-      // this property becomes the <>children</> type
-      children: number
+declare global {
+  namespace JSX {
+    // Adds a new element called mathPower
+    interface IntrinsicElements {
+      mathPower: HtmlTag & {
+        // Changes properties to the math-power element
+        myExponential: number
+        // this property becomes the <>{children}</> type
+        children: number
+      }
     }
-  }
 
-  // Adds hxBoost property to all elements native elements (those who extends HtmlTag)
-  interface HtmlTag {
-    hxBoost: boolean
+    // Adds hxBoost property to all elements native elements (those who extends HtmlTag)
+    interface HtmlTag {
+      hxBoost: boolean
+    }
   }
 }
 
@@ -359,20 +366,20 @@ You can run this yourself by running `pnpm bench`.
 
 ```java
 @kitajs/html:
-  24 038 ops/s, ±1.32%       | 99.93% slower
+  26 414 ops/s, ±0.87%       | 99.93% slower
 
 @kitajs/html - compiled:
-  34 054 217 ops/s, ±1.81%   | fastest
+  35 267 972 ops/s, ±1.19%   | fastest
 
 typed-html:
-  9 571 ops/s, ±1.95%        | slowest, 99.97% slower
+  9 827 ops/s, ±1.46%        | slowest, 99.97% slower
 ```
 
 <br />
 
 ## How it works
 
-This can be easily done by using TypeScript's JSX support and changing the default `react` bindings to our own `html` namespace.
+This package just aims to be a drop in replacement syntax for JSX, and it works because you [tell tsc to transpile](#getting-started) JSX syntax to calls to our own `html` namespace.
 
 ```jsx
 <ol start={2}>
@@ -382,7 +389,7 @@ This can be easily done by using TypeScript's JSX support and changing the defau
 </ol>
 ```
 
-Is transpiled by typescript compiler at build step to:
+Gets transpiled by tsc to plain javascript:
 
 ```js
 html.createElement(
@@ -392,13 +399,10 @@ html.createElement(
 )
 ```
 
-Which results into this string:
+Which, when called, returns this string:
 
-```html
-<ol start="2">
-  <li>1</li>
-  <li>2</li>
-</ol>
+```js
+'<ol start="2"><li>1</li><li>2</li></ol>'
 ```
 
 <br />

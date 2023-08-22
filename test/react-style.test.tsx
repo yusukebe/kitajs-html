@@ -73,3 +73,8 @@ test('React-style className', () => {
   assert.equal(<div class="b" className="d"></div>, '<div class="b"></div>')
   assert.equal(<div className="a" class="b"></div>, '<div class="b"></div>')
 })
+
+test('CSSProperties', () => {
+  const style: JSX.CSSProperties = { color: 'red' }
+  assert.equal(<div style={style} />, '<div style="color:red;"></div>')
+})

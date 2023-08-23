@@ -67,9 +67,8 @@ Install `@kitajs/html` with your favorite package manager, import it into the to
 {
   "compilerOptions": {
     "jsx": "react",
-    "reactNamespace": "html",
-    "jsxFactory": "html.createElement", // optional, if you had problems
-    "jsxFragmentFactory": "html.Fragment" // optional, if you had problems
+    "jsxFactory": "html.createElement",
+    "jsxFragmentFactory": "html.Fragment"
   }
 }
 ```

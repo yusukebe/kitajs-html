@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "react",
-    "reactNamespace": "html",
+    "jsxFactory": "html.createElement",
+    "jsxFragmentFactory": "html.Fragment",
     "module": "CommonJS",
     "moduleResolution": "node",
     "incremental": true,

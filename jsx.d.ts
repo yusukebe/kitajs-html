@@ -16,9 +16,7 @@ declare namespace JSX {
    */
   type CSSProperties = import('csstype').Properties<string | number | boolean>
 
-  interface IntrinsicAttributes {
-    key?: undefined | string | number
-  }
+  interface IntrinsicAttributes {}
 
   interface ElementChildrenAttribute {
     children?: undefined | any

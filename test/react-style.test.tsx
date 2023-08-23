@@ -83,6 +83,6 @@ test('CSSProperties', () => {
 
   assert.equal(
     <div style={style} />,
-    '<div style="color:red;not:defined"></div>'
+    '<div style="color:red;not:defined;"></div>'
   )
 })

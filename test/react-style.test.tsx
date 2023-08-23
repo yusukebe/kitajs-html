@@ -75,6 +75,14 @@ test('React-style className', () => {
 })
 
 test('CSSProperties', () => {
-  const style: JSX.CSSProperties = { color: 'red' }
-  assert.equal(<div style={style} />, '<div style="color:red;"></div>')
+  const style: JSX.CSSProperties = {
+    color: 'red',
+    //@ts-expect-error - should complain
+    not: 'defined'
+  }
+
+  assert.equal(
+    <div style={style} />,
+    '<div style="color:red;not:defined"></div>'
+  )
 })

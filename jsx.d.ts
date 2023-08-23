@@ -6,17 +6,15 @@
 declare namespace JSX {
   type Element = string
 
-  interface CSSProperties
-    extends import('csstype').Properties<string | number | boolean> {
-    /**
-     * The index signature was removed to enable closed typing for style
-     * using CSSType. You're able to use type assertion or module augmentation
-     * to add properties or an index signature of your own.
-     *
-     * For examples and more information, visit:
-     * https://github.com/frenic/csstype#what-should-i-do-when-i-get-type-errors
-     */
-  }
+  /**
+   * The index signature was removed to enable closed typing for style
+   * using CSSType. You're able to use type assertion or module augmentation
+   * to add properties or an index signature of your own.
+   *
+   * For examples and more information, visit:
+   * https://github.com/frenic/csstype#what-should-i-do-when-i-get-type-errors
+   */
+  type CSSProperties = import('csstype').Properties<string | number | boolean>
 
   interface IntrinsicAttributes {
     key?: undefined | string | number

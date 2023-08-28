@@ -364,14 +364,16 @@ This package is just a string builder on steroids, as you can see [how this work
 You can run this yourself by running `pnpm bench`.
 
 ```java
+// Apple M1 Pro 8gb
+
 @kitajs/html:
-  26 414 ops/s, ±0.87%       | 99.93% slower
+  44 767 ops/s, ±0.17%       | 99.91% slower
 
 @kitajs/html - compiled:
-  35 267 972 ops/s, ±1.19%   | fastest
+  48 124 728 ops/s, ±0.48%   | fastest
 
 typed-html:
-  9 827 ops/s, ±1.46%        | slowest, 99.97% slower
+  19 199 ops/s, ±0.45%       | slowest, 99.96% slower
 ```
 
 <br />

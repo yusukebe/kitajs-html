@@ -1,4 +1,4 @@
-// This file is a result from many sources, including: wikipedia, typescript dom lib, w3schools, and others.
+// This file is a result from many sources, including: RFCs, typescript dom lib, w3schools, and others.
 // Possibly there are many tags/attributes missing, but it is a good start.
 // Missing something? Please submit a issue report or a PR:
 // https://github.com/kitajs/html
@@ -16,17 +16,9 @@ declare namespace JSX {
    */
   type CSSProperties = import('csstype').Properties<string | number | boolean>
 
-  interface IntrinsicAttributes {}
-
-  interface ElementChildrenAttribute {
-    children?: undefined | any
-  }
-
-  interface HtmlTag extends ElementChildrenAttribute {
+  interface HtmlTag extends ElementChildrenAttribute, IntrinsicAttributes {
     accesskey?: undefined | string
     class?: undefined | string
-    /** @deprecated please use `class`, included here to work as a drop-in replacement */
-    className?: undefined | string
     contenteditable?: undefined | string
     dir?: undefined | string
     hidden?: undefined | string | boolean
@@ -70,6 +62,21 @@ declare namespace JSX {
      * @see https://github.com/kitajs/html#sanitization
      */
     safe?: undefined | boolean
+
+    /**
+     * Included here to work as a drop-in replacement
+     *
+     * @deprecated please use `class`.
+     */
+    className?: undefined | string
+
+    /**
+     * We should probably remove this, as it silence errors of missing/mistyped
+     * attributes. However, it is useful for interop with libraries that mix-up
+     * with html (like HTMX, jQuery, Hyperscript and others) as they are super
+     * common when templating HTML with libraries like this one.
+     */
+    [name: string]: unknown
   }
 
   interface HtmlAnchorTag extends HtmlTag {
@@ -447,6 +454,111 @@ declare namespace JSX {
     of: string
   }
 
+  interface HtmlBodyTag {
+    onafterprint?: undefined | string
+    onbeforeprint?: undefined | string
+    onbeforeonload?: undefined | string
+    onblur?: undefined | string
+    onerror?: undefined | string
+    onfocus?: undefined | string
+    onhaschange?: undefined | string
+    onload?: undefined | string
+    onmessage?: undefined | string
+    onoffline?: undefined | string
+    ononline?: undefined | string
+    onpagehide?: undefined | string
+    onpageshow?: undefined | string
+    onpopstate?: undefined | string
+    onredo?: undefined | string
+    onresize?: undefined | string
+    onstorage?: undefined | string
+    onundo?: undefined | string
+    onunload?: undefined | string
+  }
+
+  interface HtmlTag {
+    oncontextmenu?: undefined | string
+    onkeydown?: undefined | string
+    onkeypress?: undefined | string
+    onkeyup?: undefined | string
+    onclick?: undefined | string
+    ondblclick?: undefined | string
+    ondrag?: undefined | string
+    ondragend?: undefined | string
+    ondragenter?: undefined | string
+    ondragleave?: undefined | string
+    ondragover?: undefined | string
+    ondragstart?: undefined | string
+    ondrop?: undefined | string
+    onmousedown?: undefined | string
+    onmousemove?: undefined | string
+    onmouseout?: undefined | string
+    onmouseover?: undefined | string
+    onmouseup?: undefined | string
+    onmousewheel?: undefined | string
+    onscroll?: undefined | string
+  }
+
+  interface FormEvents {
+    onblur?: undefined | string
+    onchange?: undefined | string
+    onfocus?: undefined | string
+    onformchange?: undefined | string
+    onforminput?: undefined | string
+    oninput?: undefined | string
+    oninvalid?: undefined | string
+    onselect?: undefined | string
+    onsubmit?: undefined | string
+  }
+
+  interface HtmlInputTag extends FormEvents {}
+
+  interface HtmlFieldSetTag extends FormEvents {}
+
+  interface HtmlFormTag extends FormEvents {}
+
+  interface MediaEvents {
+    onabort?: undefined | string
+    oncanplay?: undefined | string
+    oncanplaythrough?: undefined | string
+    ondurationchange?: undefined | string
+    onemptied?: undefined | string
+    onended?: undefined | string
+    onerror?: undefined | string
+    onloadeddata?: undefined | string
+    onloadedmetadata?: undefined | string
+    onloadstart?: undefined | string
+    onpause?: undefined | string
+    onplay?: undefined | string
+    onplaying?: undefined | string
+    onprogress?: undefined | string
+    onratechange?: undefined | string
+    onreadystatechange?: undefined | string
+    onseeked?: undefined | string
+    onseeking?: undefined | string
+    onstalled?: undefined | string
+    onsuspend?: undefined | string
+    ontimeupdate?: undefined | string
+    onvolumechange?: undefined | string
+    onwaiting?: undefined | string
+  }
+
+  interface HtmlAudioTag extends MediaEvents {}
+
+  interface HtmlEmbedTag extends MediaEvents {}
+
+  interface HtmlImageTag extends MediaEvents {}
+
+  interface HtmlObjectTag extends MediaEvents {}
+
+  interface HtmlVideoTag extends MediaEvents {}
+
+  interface IntrinsicAttributes {}
+
+  interface ElementChildrenAttribute {
+    children?: undefined | any
+  }
+
   interface IntrinsicElements {
     a: HtmlAnchorTag
     abbr: HtmlTag
@@ -565,103 +677,4 @@ declare namespace JSX {
     wbr: HtmlTag
     tag: HtmlUnspecifiedTag
   }
-
-  interface HtmlBodyTag {
-    onafterprint?: undefined | string
-    onbeforeprint?: undefined | string
-    onbeforeonload?: undefined | string
-    onblur?: undefined | string
-    onerror?: undefined | string
-    onfocus?: undefined | string
-    onhaschange?: undefined | string
-    onload?: undefined | string
-    onmessage?: undefined | string
-    onoffline?: undefined | string
-    ononline?: undefined | string
-    onpagehide?: undefined | string
-    onpageshow?: undefined | string
-    onpopstate?: undefined | string
-    onredo?: undefined | string
-    onresize?: undefined | string
-    onstorage?: undefined | string
-    onundo?: undefined | string
-    onunload?: undefined | string
-  }
-
-  interface HtmlTag {
-    oncontextmenu?: undefined | string
-    onkeydown?: undefined | string
-    onkeypress?: undefined | string
-    onkeyup?: undefined | string
-    onclick?: undefined | string
-    ondblclick?: undefined | string
-    ondrag?: undefined | string
-    ondragend?: undefined | string
-    ondragenter?: undefined | string
-    ondragleave?: undefined | string
-    ondragover?: undefined | string
-    ondragstart?: undefined | string
-    ondrop?: undefined | string
-    onmousedown?: undefined | string
-    onmousemove?: undefined | string
-    onmouseout?: undefined | string
-    onmouseover?: undefined | string
-    onmouseup?: undefined | string
-    onmousewheel?: undefined | string
-    onscroll?: undefined | string
-  }
-
-  interface FormEvents {
-    onblur?: undefined | string
-    onchange?: undefined | string
-    onfocus?: undefined | string
-    onformchange?: undefined | string
-    onforminput?: undefined | string
-    oninput?: undefined | string
-    oninvalid?: undefined | string
-    onselect?: undefined | string
-    onsubmit?: undefined | string
-  }
-
-  interface HtmlInputTag extends FormEvents {}
-
-  interface HtmlFieldSetTag extends FormEvents {}
-
-  interface HtmlFormTag extends FormEvents {}
-
-  interface MediaEvents {
-    onabort?: undefined | string
-    oncanplay?: undefined | string
-    oncanplaythrough?: undefined | string
-    ondurationchange?: undefined | string
-    onemptied?: undefined | string
-    onended?: undefined | string
-    onerror?: undefined | string
-    onloadeddata?: undefined | string
-    onloadedmetadata?: undefined | string
-    onloadstart?: undefined | string
-    onpause?: undefined | string
-    onplay?: undefined | string
-    onplaying?: undefined | string
-    onprogress?: undefined | string
-    onratechange?: undefined | string
-    onreadystatechange?: undefined | string
-    onseeked?: undefined | string
-    onseeking?: undefined | string
-    onstalled?: undefined | string
-    onsuspend?: undefined | string
-    ontimeupdate?: undefined | string
-    onvolumechange?: undefined | string
-    onwaiting?: undefined | string
-  }
-
-  interface HtmlAudioTag extends MediaEvents {}
-
-  interface HtmlEmbedTag extends MediaEvents {}
-
-  interface HtmlImageTag extends MediaEvents {}
-
-  interface HtmlObjectTag extends MediaEvents {}
-
-  interface HtmlVideoTag extends MediaEvents {}
 }

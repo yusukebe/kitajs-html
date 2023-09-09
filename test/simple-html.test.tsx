@@ -29,3 +29,17 @@ test('simple html structures', () => {
       crossorigin="anonymous"></script>
   )
 })
+
+test('untyped & unknown attributes', () => {
+  assert.equal(<a notHref></a>, '<a not-href></a>')
+
+  // @ts-expect-error - should complain about unknown tag, but render it anyway
+  assert.equal(<c notHref></c>, '<c not-href></c>')
+
+  function D() {
+    return <div />
+  }
+
+  // @ts-expect-error - should complain about unknown tag on component and not render it
+  assert.equal(<D notHref></D>, '<div></div>')
+})

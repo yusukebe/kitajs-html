@@ -37,6 +37,7 @@
   - [The safe attribute](#the-safe-attribute)
 - [Migrating from HTML](#migrating-from-html)
 - [Compiling html](#compiling-html)
+  - [Clean Components](#clean-components)
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
   - [The `tag` tag](#the-tag-tag)
@@ -222,33 +223,55 @@ Generates:
 
 ## Compiling html
 
-When you have static html, is simple to get amazing performances, just save it to a constant and reuse it. However, if you need to hydrate the html with dynamic values in a super fast way, you can use the `compile` property to compile the html and reuse it later.
+Compiles a **clean component** into a super fast component. This does not
+support unclean components / props processing.
+
+This mode works just like prepared statements in SQL. Compiled components can give up to [**_3000_**](#performance) times faster html generation.
 
 ```tsx
 import html from '@kitajs/html'
 
-const compiled = html.compile<['param1', 'param2']>(
-  <div>
-    <div>$param1</div>
-    <div>$param2</div>
-    <div>$notFound</div>
-  </div>,
-  // or
-  <MyComponent param1="$param1" param2="$param2" />
-)
+function Component(props: PropsWithChildren<{ name: string }>) {
+  return <div>Hello {props.name}</div>
+}
 
-const html = compiled({ param1: 'Hello', param2: 'World!' })
-// formatted html to make it easier to read
-// <div>
-//   <div>Hello</div>
-//   <div>World!</div>
-//   <div>$notFound</div>
-// </div>
+compiled = html.compile<typeof Component>(Component)
+
+compiled({ name: 'World' })
+// <div>Hello World</div>
+
+compiled = html.compile(t => (
+  <div>Hello {t.name}</div>
+))
+
+compiled({ name: 'World' })
+// <div>Hello World</div>
 ```
 
-This makes the html generation around [**_1500_**](#performance) times faster than just using normal jsx.
+### Clean Components
 
-Variables that were not passed to the `compile` function are ignored **silently**, this way you can reuse the result into another `compile` function or just because the your _"`$val`"_ was supposed to be a static value.
+A **clean component** is a component that does not process props before
+applying them to the element. This means that the props are applied to the
+element as is, and you need to process them before passing them to the
+component.
+
+```tsx
+// Clean component, render as is
+function Clean(props: CleanProps<{ repeated: string }>) {
+  return <div>{props.repeated}</div>
+}
+
+// Calculation is done before passing to the component
+html = <Clean name={'a'.repeat(5)} />
+
+// Unclean component, process before render
+function Unclean(props: { repeat: string; n: number }) {
+  return <div>{props.repeat.repeat(props.n)}</div>
+}
+
+// Calculation is done inside the component, thus cannot be used with .compile()
+html = <Unclean repeat="a" n={5} />
+```
 
 <br />
 
@@ -359,21 +382,42 @@ const element = (
 
 ## Performance
 
-This package is just a string builder on steroids, as you can see [how this works](#how-it-works). However we are running a benchmark with an JSX HTML with about 10K characters to see how it performs.
+This package is just a string builder on steroids, as you can see [how this works](#how-it-works). This means that most way to isolate performance differences is to micro benchmark.
 
 You can run this yourself by running `pnpm bench`.
 
-```java
-// Apple M1 Pro 8gb
+```markdown
+# Benchmark
 
-@kitajs/html:
-  44 767 ops/s, ±0.17%       | 99.91% slower
+- 2023-09-10T22:52:25.947Z
+- Node: v20.6.0
+- V8: 11.3.244.8-node.14
+- OS: linux
+- Arch: x64
 
-@kitajs/html - compiled:
-  48 124 728 ops/s, ±0.48%   | fastest
+## Hello World
 
-typed-html:
-  19 199 ops/s, ±0.45%       | slowest, 99.96% slower
+| Runs   | @kitajs/html | typed-html | +     | .compile() | + / @kitajs/html | + / typed-html |
+| ------ | ------------ | ---------- | ----- | ---------- | ---------------- | -------------- |
+| 10     | 0.0156ms     | 0.0168ms   | 1.08x | 0.0095ms   | 1.64x            | 1.77x          |
+| 10000  | 1.1273ms     | 3.6216ms   | 3.21x | 0.5202ms   | 2.17x            | 6.96x          |
+| 100000 | 9.9481ms     | 26.7617ms  | 2.69x | 2.9238ms   | 3.4x             | 9.15x          |
+
+## Many Props
+
+| Runs   | @kitajs/html | typed-html   | +     | .compile() | + / @kitajs/html | + / typed-html |
+| ------ | ------------ | ------------ | ----- | ---------- | ---------------- | -------------- |
+| 10     | 0.8374ms     | 4.0157ms     | 4.8x  | 0.0045ms   | 186.09x          | 892.38x        |
+| 10000  | 655.6809ms   | 1402.1977ms  | 2.14x | 0.9794ms   | 669.47x          | 1431.69x       |
+| 100000 | 6374.5168ms  | 14292.5238ms | 2.24x | 5.1791ms   | 1230.82x         | 2759.65x       |
+
+## Big Component
+
+| Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
+| ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
+| 10     | 0.3942ms     | 0.9699ms    | 2.46x | 0.004ms    | 98.55x           | 242.48x        |
+| 10000  | 391.1009ms   | 966.6889ms  | 2.47x | 1.1829ms   | 330.63x          | 817.22x        |
+| 100000 | 3911.4595ms  | 9621.7799ms | 2.46x | 5.5242ms   | 708.06x          | 1741.75x       |
 ```
 
 <br />

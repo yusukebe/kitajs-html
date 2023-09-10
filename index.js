@@ -103,6 +103,7 @@ function escapeHtml (value) {
         escaped += value.slice(start, end) + '&#39;'
         start = end + 1
         continue
+      // Non breaking space
       case '\u00A0':
         escaped += value.slice(start, end) + '&#32;'
         start = end + 1
@@ -349,23 +350,46 @@ function createElement (name, attrs, ...children) {
 /**
  * Compiles html with the given arguments specified with $name syntax.
  *
- * @param {string} html
- * @returns {function} the compiled function which
+ * @param {(proxy: any) => string} htmlFn
+ * @param {boolean} [strict=true] if we should throw an error when a property is not found.
+ * @returns {function} the compiled template function
  * @this {void}
  */
-function compile (html) {
+function compile (htmlFn, strict = true, separator = '/*\x00*/') {
+  if (typeof htmlFn !== 'function') {
+    throw new Error('The first argument must be a function.')
+  }
+
+  const properties = new Set()
+
+  const html = htmlFn(new Proxy({}, {
+    get (_, name) {
+      // Adds the property to the set of known properties.
+      properties.add(name)
+
+      // Uses ` to avoid content being escaped.
+      return `\`${separator} + (args[${separator}\`${name.toString()}\`${separator}] || ${strict ? `throwPropertyNotFound(${separator}\`${name.toString()}\`${separator})` : `${separator}\`\`${separator}`}) + ${separator}\``
+    }
+  }))
+
+  const sepLength = separator.length
   const length = html.length
 
-  let body = 'return '
+  // Adds the throwPropertyNotFound function if strict
+  let body = ''
   let nextStart = 0
-  let paramEnd = 0
   let index = 0
 
+  // Escapes every ` without separator
   for (; index < length; index++) {
     // Escapes the backtick character because it will be used to wrap the string
     // in a template literal.
-    if (html[index] === '`') {
-      body += '`' + html.slice(nextStart, index) + '\\``+'
+    if (
+      html[index] === '`' &&
+      html.slice(index - sepLength, index) !== separator &&
+      html.slice(index + 1, index + sepLength + 1) !== separator
+    ) {
+      body += html.slice(nextStart, index) + '\\`'
       nextStart = index + 1
       continue
     }
@@ -373,42 +397,32 @@ function compile (html) {
     // Escapes the backslash character because it will be used to escape the
     // backtick character.
     if (html[index] === '\\') {
-      body += '`' + html.slice(nextStart, index) + '\\\\`+'
+      body += html.slice(nextStart, index) + '\\\\'
       nextStart = index + 1
       continue
     }
-
-    // Skip non $ characters
-    if (html[index] !== '$') {
-      continue
-    }
-
-    // Finds the end index of the current variable
-    paramEnd = index
-    while (
-      html[++paramEnd] !== undefined &&
-      // @ts-expect-error - this indexing is safe.
-      html[paramEnd].match(/[a-zA-Z0-9]/)
-    );
-
-    body +=
-      '`' +
-      html.slice(nextStart, index) +
-      '`+(args["' +
-      html.slice(index + 1, paramEnd) +
-      '"] || "' +
-      html.slice(index, paramEnd) +
-      '")+'
-
-    nextStart = paramEnd
-    index = paramEnd
   }
 
   // Adds the remaining string
-  body += '`' + html.slice(nextStart) + '`'
+  body += html.slice(nextStart)
+
+  if (strict) {
+    // eslint-disable-next-line no-new-func
+    return Function('args',
+    // Checks for args presence
+      'if (args === undefined) { throw new Error("The arguments object was not provided.") };\n' +
+    // Function to throw when a property is not found
+    'function throwPropertyNotFound(name) { throw new Error("Property " + name + " was not provided.") };\n' +
+    // Concatenates the body
+    `return \`${body}\``
+    )
+  }
 
   // eslint-disable-next-line no-new-func
-  return Function('args', body)
+  return Function('args',
+    // Adds a empty args object when it is not present
+    'if (args === undefined) { args = Object.create(null) };\n' + `return \`${body}\``
+  )
 }
 
 module.exports.escapeHtml = escapeHtml

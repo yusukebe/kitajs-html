@@ -105,19 +105,62 @@ declare namespace html {
   ): JSX.Element
 
   /**
-   * Compiles html with the given arguments specified with $name syntax.
+   * Compiles a **clean component** into a super fast component. This does not
+   * support unclean components / props processing.
    *
-   * @param {string} html
-   * @returns {function} the compiled function which
+   * A **clean component** is a component that does not process props before
+   * applying them to the element. This means that the props are applied to the
+   * element as is, and you need to process them before passing them to the
+   * component.
+   *
+   * @example
+   * ```tsx
+   * // Clean component, render as is
+   * function Clean(props: CleanProps<{ repeated: string }>) {
+   *   return <div>{props.repeated}</div>
+   * }
+   * 
+   * // Calculation is done before passing to the component
+   * html = <Clean name={'a'.repeat(5)} />
+   * 
+   * // Unclean component, process before render
+   * function Unclean(props: { repeat: string; n: number }) {
+   *   return <div>{props.repeat.repeat(props.n)}</div>
+   * }
+   * 
+   * // Calculation is done inside the component, thus cannot be used with .compile()
+   * html = <Unclean repeat="a" n={5} />
+   * ```
+   *
+   * @param {(proxy: any) => string} htmlFn
+   * @param {boolean} [strict=true] if we should throw an error when a property is not found.
+   * @param {string | undefined} [separator] the string used to interpolate and separate parameters
+   * @returns {function} the compiled template function
    * @this {void}
    */
-  export function compile<A extends string[] = []>(
+  export function compile<
+    P extends
+      | Record<string, any>
+      | string[]
+      | ((args: Record<string, string>) => JSX.Element) = {}
+  >(
     this: void,
-    html: string
-  ): (args: Record<A[number], number | string | boolean>) => JSX.Element
+    factory: (
+      args: Record<
+        P extends string[]
+          ? P[number]
+          : P extends (args: infer U) => JSX.Element
+          ? keyof U
+          : keyof P,
+        string
+      >
+    ) => JSX.Element,
+    strict?: boolean,
+    separator?: string
+  ): typeof factory
 
   /**
-   * Here for interop with preact and many build systems.
+   * Here for interop with `preact` and many build systems.
    */
   export const h: typeof createElement
 

@@ -27,7 +27,7 @@ declare namespace JSX {
     lang?: undefined | string
     draggable?: undefined | string | boolean
     spellcheck?: undefined | string | boolean
-    tabindex?: undefined | string
+    tabindex?: undefined | number | string
     title?: undefined | string
     translate?: undefined | string | boolean
 

@@ -12,7 +12,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "tsc && node --test dist/test",
-    "bench": "tsc && node dist/benchmark",
+    "bench": "tsc && node --expose-gc dist/benchmark",
     "format": "prettier --write .",
     "lint": "standard"
   },

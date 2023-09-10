@@ -14,7 +14,7 @@ declare namespace html {
   /**
    * A const used to represent a html fragment.
    */
-  export declare const Fragment: unique symbol
+  export const Fragment: unique symbol
 
   /**
    * Escapes a string for safe use as HTML text content.
@@ -119,9 +119,9 @@ declare namespace html {
   /**
    * Here for interop with preact and many build systems.
    */
-  export declare const h = createElement
+  export const h: typeof createElement
 
-  export declare type Children =
+  export type Children =
     | number
     | string
     | boolean
@@ -129,9 +129,9 @@ declare namespace html {
     | undefined
     | Children[]
 
-  export declare type PropsWithChildren<T = {}> = { children?: Children } & T
+  export type PropsWithChildren<T = {}> = { children?: Children } & T
 
-  export declare type Component<T = {}> = (
+  export type Component<T = {}> = (
     this: void,
     props: PropsWithChildren<T>
   ) => JSX.Element

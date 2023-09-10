@@ -33,8 +33,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    "skipDefaultLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"]
 }

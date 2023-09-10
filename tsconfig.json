@@ -32,8 +32,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

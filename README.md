@@ -240,13 +240,25 @@ compiled = html.compile<typeof Component>(Component)
 compiled({ name: 'World' })
 // <div>Hello World</div>
 
-compiled = html.compile(t => (
-  <div>Hello {t.name}</div>
-))
+compiled = html.compile((p) => <div>Hello {p.name}</div>)
 
 compiled({ name: 'World' })
 // <div>Hello World</div>
 ```
+
+Properties passed for compiled components **ARE NOT** what will be passed as argument to the generated function.
+
+```tsx
+compiled = html.compile((t) => {
+  // THIS WILL NOT print 123, but a string used by .compile instead
+  console.log(t.asd)
+  return <div></div>
+})
+
+compiled({ asd: 123 })
+```
+
+That's the reason on why you cannot compile unclean components, as they need to process the props before rendering.
 
 ### Clean Components
 

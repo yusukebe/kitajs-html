@@ -42,6 +42,11 @@ declare namespace Htmx {
     | ':queue all'
 
   /**
+   * Evaluate the values given, you can prefix the values with javascript: or js:.
+   */
+  type HxHeaders = AnyStr | 'javascript:' | 'js:'
+
+  /**
    * An event followed by one of these modifiers, e.g. `click once`.
    */
   type HxTriggerModifier =
@@ -289,9 +294,9 @@ declare namespace Htmx {
 
     /**
      * Adds values to the parameters to submit with the request (JSON-formatted).
-     * @see https://htmx.org/attributes/hx-params/
+     * @see https://htmx.org/attributes/hx-vals/
      */
-    ['hx-vals']?: AnyStr | 'javascript:' | 'js:' | Record<PropertyKey, unknown>
+    ['hx-vals']?: HxHeaders
 
     /**
      * Shows a `confirm()` dialog before issuing a request.
@@ -328,11 +333,7 @@ declare namespace Htmx {
      * Adds to the headers that will be submitted with the request.
      * @see https://htmx.org/attributes/hx-headers/
      */
-    ['hx-headers']?:
-      | AnyStr
-      | 'javascript:'
-      | 'js:'
-      | Record<PropertyKey, unknown>
+    ['hx-headers']?: HxHeaders | AnyStr
 
     /**
      * Prevent sensitive data being saved to the history cache.
@@ -389,18 +390,16 @@ declare namespace Htmx {
      * @see https://htmx.org/attributes/hx-request/
      */
     ['hx-request']?:
-      | '"timeout":'
-      | '"credentials":'
-      | '"noHeaders":'
-      | 'javascript:'
-      | 'js:'
-      | AnyStr
+      | `"timeout": `
+      | `"credentials": `
+      | `"noHeaders": `
+      | HxHeaders
 
     /**
      * Control how requests made by different elements are synchronized.
      * @see https://htmx.org/attributes/hx-sync/
      */
-    ['hx-sync']?: HxSync | AnyStr
+    ['hx-sync']?: HxSync
 
     /**
      * Force elements to validate themselves before a request.
@@ -442,7 +441,7 @@ declare namespace Htmx {
      * Apply class transitions on this element.
      * @see https://htmx.org/extensions/class-tools/
      */
-    ['classes']?: 'add ' | 'remove ' | 'toggle ' | AnyStr
+    ['classes']?: `add ` | `remove ` | `toggle ` | AnyStr
 
     /**
      * The element or elements to disable during requests.

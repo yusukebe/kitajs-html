@@ -15,5 +15,5 @@ test('Htmx properties', () => {
   )
 
   assert.equal(<div hx-boost></div>, '<div hx-boost></div>')
-  assert.equal(<div hx-swap="id"></div>, '<div hx-swap="id"></div>')
+  assert.equal(<div hx-target="find "></div>, '<div hx-swap="id"></div>')
 })

@@ -2,7 +2,10 @@
 
 !index.js
 !index.d.ts
+!jsx.js
 !jsx.d.ts
+!htmx.js
+!htmx.d.ts
 
 !LICENSE
 !README.md

@@ -1,8 +1,8 @@
 import assert from 'node:assert'
 import test from 'node:test'
-import Html, { PropsWithChildren } from '../index'
+import Html from '../index'
 
-type Props = PropsWithChildren<{ color: string }>
+type Props = Html.PropsWithChildren<{ color: string }>
 
 function Component({ color, children }: Props) {
   return (
@@ -14,10 +14,8 @@ function Component({ color, children }: Props) {
   )
 }
 
-test('compiled component proxy', () => {
-  const Compiled = Html.compile<typeof Component>((t) => (
-    <Component color={t.color}>{t.children}</Component>
-  ))
+test('compiled component', () => {
+  const Compiled = Html.compile(Component)
 
   assert.equal(
     <Compiled color="red">1</Compiled>,
@@ -25,12 +23,17 @@ test('compiled component proxy', () => {
   )
 })
 
-test('compiled component', () => {
-  const Compiled = Html.compile<typeof Component>(Component)
+test('compiled with children', () => {
+  const Compiled =
+    Html.compile<Html.PropsWithChildren<{ color: string }>>(Component)
 
   assert.equal(
-    <Compiled color="red">1</Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
+    <Compiled color="red">
+      <>1</>
+      <>2</>
+    </Compiled>,
+    // Should not complain, just transform to string as any other array [1, 2] => '1,2'
+    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1 2</div>'
   )
 })
 
@@ -43,17 +46,8 @@ test('compiled component with props', () => {
   )
 })
 
-test('compiled component with props', () => {
-  const Compiled = Html.compile<['color', 'children']>(Component)
-
-  assert.equal(
-    <Compiled color="red">1</Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
-  )
-})
-
 test('compiled handmade component', () => {
-  const Compiled = Html.compile<Props>(({ color, children }) => (
+  const Compiled = Html.compile(({ color, children }: Props) => (
     <div>
       <div class="a" style={{ color }}></div>
       <div class="b" style={{ color }}></div>
@@ -68,7 +62,7 @@ test('compiled handmade component', () => {
 })
 
 test('compiled strict', () => {
-  const Compiled = Html.compile<Props>(({ color, children }) => (
+  const Compiled = Html.compile(({ color, children }: Props) => (
     <div>
       <div class="a" style={{ color }}></div>
       <div class="b" style={{ color }}></div>
@@ -90,8 +84,8 @@ test('compiled strict', () => {
 })
 
 test('compiled not strict', () => {
-  const Compiled = Html.compile<Props>(
-    ({ color, children }) => (
+  const Compiled = Html.compile(
+    ({ color, children }: Props) => (
       <div>
         <div class="a" style={{ color }}></div>
         <div class="b" style={{ color }}></div>

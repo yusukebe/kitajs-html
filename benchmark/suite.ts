@@ -1,52 +1,6 @@
-// import benny from 'benny'
 import Kita from '../index'
 // Avoids type-conflicts
 const TypedHtml = require('typed-html')
-
-// export function suite(name: string, fn: Function) {
-//   const compiled = Kita.compile<['name']>((p) => fn(Kita, p.name))
-
-//   function kita() {
-//     return fn(Kita, name)
-//   }
-
-//   function compiledKita() {
-//     return compiled({ name })
-//   }
-
-//   function typedHtml() {
-//     return fn(TypedHtml, name)
-//   }
-
-//   // warms up the JIT
-//   for (let i = 0; i < 100; i++) {
-//     kita()
-//     compiledKita()
-//     typedHtml()
-//   }
-
-//   return benny.suite(
-//     `Html generation (${name})`,
-
-//     benny.add('@kitajs/html', kita),
-//     benny.add('@kitajs/html - compiled', compiledKita),
-//     benny.add('typed-html', typedHtml),
-
-//     benny.configure({
-//       cases: {
-//         minSamples: 100
-//         // minTime: 5
-//       }
-//     }),
-//     benny.cycle(),
-//     benny.complete()
-//   )
-// }
-
-// export function results(title: string, data: Record<string, number>[]) {
-//   console.log(`\n${title}\n`)
-//   console.table(data)
-// }
 
 export function bench(name: string, runs: number, fn: Function) {
   const compiled = Kita.compile((p: { name: string }) => fn(Kita, p.name))

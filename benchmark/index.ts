@@ -3,6 +3,11 @@ import { BigComponent } from './big-component'
 import { HelloWorld } from './hello-world'
 import { ManyProps } from './many-props'
 import { bench } from './suite'
+
+function toMdRow(values: string[]) {
+  return '| ' + values.join(' | ') + ' |'
+}
+
 ;(async () => {
   const out = createWriteStream('benchmark.md', {
     mode: 0o644,
@@ -47,7 +52,3 @@ import { bench } from './suite'
     out.write('\n')
   }
 })().catch(console.error)
-
-function toMdRow(values: string[]) {
-  return '| ' + values.join(' | ') + ' |'
-}

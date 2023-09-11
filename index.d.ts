@@ -119,15 +119,15 @@ declare namespace html {
    * function Clean(props: CleanProps<{ repeated: string }>) {
    *   return <div>{props.repeated}</div>
    * }
-   * 
+   *
    * // Calculation is done before passing to the component
    * html = <Clean name={'a'.repeat(5)} />
-   * 
+   *
    * // Unclean component, process before render
    * function Unclean(props: { repeat: string; n: number }) {
    *   return <div>{props.repeat.repeat(props.n)}</div>
    * }
-   * 
+   *
    * // Calculation is done inside the component, thus cannot be used with .compile()
    * html = <Unclean repeat="a" n={5} />
    * ```

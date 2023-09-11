@@ -269,7 +269,7 @@ const html = (
 
 The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why we also provide type definitions for all HTMX attributes.
 
-You just need to `import '@kitajs/html/htmx'>` at the top of your main.ts file and you will be able to use all HTMX attributes.
+You just need to `import '@kitajs/html/htmx'` at the top of your main.ts file and you will be able to use all HTMX attributes.
 
 ```tsx
 import '@kitajs/html/htmx'

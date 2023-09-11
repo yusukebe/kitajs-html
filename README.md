@@ -36,7 +36,8 @@
 - [Sanitization](#sanitization)
   - [The safe attribute](#the-safe-attribute)
 - [Migrating from HTML](#migrating-from-html)
-- [Compiling html](#compiling-html)
+  - [Base HTML templates](#base-html-templates)
+- [Compiling HTML](#compiling-html)
   - [Clean Components](#clean-components)
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
@@ -221,7 +222,42 @@ Generates:
 
 <br />
 
-## Compiling html
+### Base HTML templates
+
+Often you will have a "template" html with doctype, things on the head, body and so on... The layout is also a very good component to be compiled. Here is a effective example on how to do it:.
+
+```tsx
+export const Layout = html.compile<html.PropsWithChildren>((p) => (
+  <>
+    {'<!doctype html>'}
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        {p.head}
+      </head>
+      <body>{p.children}</body>
+    </html>
+  </>
+))
+
+const html = (
+  <Layout
+    head={
+      <>
+        <link rel="stylesheet" href="/style.css" />
+        <script src="/script.js" />
+      </>
+    }>
+    <div>Hello World</div>
+  </Layout>
+)
+```
+
+<br />
+
+## Compiling HTML
 
 Compiles a **clean component** into a super fast component. This does not
 support unclean components / props processing.
@@ -259,6 +295,8 @@ compiled({ asd: 123 })
 ```
 
 That's the reason on why you cannot compile unclean components, as they need to process the props before rendering.
+
+<br />
 
 ### Clean Components
 

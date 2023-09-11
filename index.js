@@ -1,7 +1,7 @@
 /// <reference path="./jsx.d.ts" />
 
-const ESCAPED_REGEX = /[\u00A0<>"'&]/;
-const CAMEL_REGEX = /[a-z][A-Z]/;
+const ESCAPED_REGEX = /[\u00A0<>"'&]/
+const CAMEL_REGEX = /[a-z][A-Z]/
 
 /**
  * A const used to represent a html fragment.
@@ -65,7 +65,6 @@ function toKebabCase (camel) {
   return kebab
 }
 
-
 /**
  * Escapes a string for use in an HTML attribute value.
  *
@@ -83,12 +82,12 @@ function escapeHtml (value) {
 
     // Calls toString() on the value
     value = String(value)
-  } 
-  
-  // This is a optimization to avoid the whole escaping process when the value 
+  }
+
+  // This is a optimization to avoid the whole escaping process when the value
   // does not contain any special characters.
   if (!ESCAPED_REGEX.test(value)) {
-    return value;
+    return value
   }
 
   const length = value.length

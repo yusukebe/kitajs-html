@@ -1,4 +1,3 @@
-
 import Kita from '../index'
 import { HelloWorld } from './hello-world'
 import { BigComponent } from './big-component'

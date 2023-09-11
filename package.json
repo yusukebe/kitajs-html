@@ -28,7 +28,7 @@
     "typed-html": "^3.0.1",
     "typescript": "^5.1.6"
   },
-  "packageManager": "pnpm@8.6.11",
+  "packageManager": "pnpm@8.7.5",
   "engines": {
     "node": ">=12"
   }

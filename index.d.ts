@@ -116,7 +116,7 @@ declare namespace Html {
    * @example
    * ```tsx
    * // Clean component, render as is
-   * function Clean(props: CleanProps<{ repeated: string }>) {
+   * function Clean(props: PropsWithChildren<{ repeated: string }>) {
    *   return <div>{props.repeated}</div>
    * }
    *

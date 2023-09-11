@@ -262,7 +262,7 @@ const html = (
 Compiles a **clean component** into a super fast component. This does not
 support unclean components / props processing.
 
-This mode works just like prepared statements in SQL. Compiled components can give up to [**_3000_**](#performance) times faster html generation.
+This mode works just like prepared statements in SQL. Compiled components can give up to [**_3000_**](#performance) times faster html generation. This is a opt-in feature that you may not be able to use everywhere!
 
 ```tsx
 import html from '@kitajs/html'

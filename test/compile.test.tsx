@@ -1,49 +1,6 @@
 import assert from 'node:assert'
 import test from 'node:test'
-import html, { PropsWithChildren } from '../index'
-
-// const Header: html.Component<{ paramName: string }> = ({
-//   children,
-//   paramName
-// }) => <h1 class={`$parameterOne $${paramName}`}>{children}</h1>
-
-// function Button({ children }: html.PropsWithChildren) {
-//   return (
-//     <button type="button" class="$test-color">
-//       {children}
-//     </button>
-//   )
-// }
-
-// const template = html.compile<['parameterOne', 'p3a', 'test', 'last']>(
-//   <>
-//     <Header paramName="p3a"></Header>
-//     <span>Header ` ` \````Text</span>
-//     <Button>Button Text</Button>
-//     $last $notFound
-//   </>
-// )
-
-// test('compile', () => {
-//   // raw
-//   assert.equal(
-//     template({ parameterOne: '123', p3a: 321, test: 'red', last: 1 }),
-//     '<h1 class="123 321"></h1><span>Header ` ` \\````Text</span><button type="button" class="red-color">Button Text</button>1 $notFound'
-//   )
-
-//   // same output as non-compiled
-//   assert.equal(
-//     template({ parameterOne: '123', p3a: 321, test: 'cyan', last: 1 }),
-//     <>
-//       <h1 class="123 321"></h1>
-//       <span>Header ` ` \````Text</span>
-//       <button type="button" class="cyan-color">
-//         Button Text
-//       </button>
-//       1 $notFound
-//     </>
-//   )
-// })
+import Html, { PropsWithChildren } from '../index'
 
 type Props = PropsWithChildren<{ color: string }>
 
@@ -58,7 +15,7 @@ function Component({ color, children }: Props) {
 }
 
 test('compiled component proxy', () => {
-  const Compiled = html.compile<typeof Component>((t) => (
+  const Compiled = Html.compile<typeof Component>((t) => (
     <Component color={t.color}>{t.children}</Component>
   ))
 
@@ -69,7 +26,7 @@ test('compiled component proxy', () => {
 })
 
 test('compiled component', () => {
-  const Compiled = html.compile<typeof Component>(Component)
+  const Compiled = Html.compile<typeof Component>(Component)
 
   assert.equal(
     <Compiled color="red">1</Compiled>,
@@ -78,7 +35,7 @@ test('compiled component', () => {
 })
 
 test('compiled component with props', () => {
-  const Compiled = html.compile<Props>(Component)
+  const Compiled = Html.compile<Props>(Component)
 
   assert.equal(
     <Compiled color="red">1</Compiled>,
@@ -87,7 +44,7 @@ test('compiled component with props', () => {
 })
 
 test('compiled component with props', () => {
-  const Compiled = html.compile<['color', 'children']>(Component)
+  const Compiled = Html.compile<['color', 'children']>(Component)
 
   assert.equal(
     <Compiled color="red">1</Compiled>,
@@ -96,7 +53,7 @@ test('compiled component with props', () => {
 })
 
 test('compiled handmade component', () => {
-  const Compiled = html.compile<Props>(({ color, children }) => (
+  const Compiled = Html.compile<Props>(({ color, children }) => (
     <div>
       <div class="a" style={{ color }}></div>
       <div class="b" style={{ color }}></div>
@@ -111,7 +68,7 @@ test('compiled handmade component', () => {
 })
 
 test('compiled strict', () => {
-  const Compiled = html.compile<Props>(({ color, children }) => (
+  const Compiled = Html.compile<Props>(({ color, children }) => (
     <div>
       <div class="a" style={{ color }}></div>
       <div class="b" style={{ color }}></div>
@@ -133,7 +90,7 @@ test('compiled strict', () => {
 })
 
 test('compiled not strict', () => {
-  const Compiled = html.compile<Props>(
+  const Compiled = Html.compile<Props>(
     ({ color, children }) => (
       <div>
         <div class="a" style={{ color }}></div>

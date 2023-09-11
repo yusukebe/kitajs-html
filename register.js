@@ -3,6 +3,7 @@
 // Finds the global object (window in browsers)
 let root
 try {
+  // eslint-disable-next-line no-new-func
   root = Function('return this')()
 } catch (_) {
   root = window

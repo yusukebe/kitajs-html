@@ -37,6 +37,7 @@
   - [The safe attribute](#the-safe-attribute)
 - [Migrating from HTML](#migrating-from-html)
   - [Base HTML templates](#base-html-templates)
+  - [Htmx](#htmx)
 - [Compiling HTML](#compiling-html)
   - [Clean Components](#clean-components)
 - [Fragments](#fragments)
@@ -44,7 +45,6 @@
   - [The `tag` tag](#the-tag-tag)
 - [Async Components](#async-components)
 - [Extending types](#extending-types)
-  - [HTMX](#htmx)
 - [Performance](#performance)
 - [How it works](#how-it-works)
 - [Format HTML output](#format-html-output)
@@ -265,6 +265,42 @@ const html = (
 
 <br />
 
+### Htmx
+
+The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why we also provide type definitions for all HTMX attributes.
+
+You just need to `import '@kitajs/html/htmx'>` at the top of your main.ts file and you will be able to use all HTMX attributes.
+
+```tsx
+import '@kitajs/html/htmx'
+import '@kitajs/html/register'
+
+const html = (
+  // Type checking and intellisense for all HTMX attributes
+  <div hx-get="/api" hx-trigger="click" hx-target="#target">
+    Click me!
+  </div>
+)
+```
+
+It can also be included in your `tsconfig.json` to enable intellisense and type checking for all HTMX attributes.
+
+```json
+{
+  "compilerOptions": {
+    "types": ["node_modules/@kitajs/html/htmx"]
+  }
+}
+```
+
+Or with a triple slash directive:
+
+```tsx
+/// <reference types="@kitajs/html/htmx.d.ts" />
+```
+
+<br />
+
 ## Compiling HTML
 
 Compiles a **clean component** into a super fast component. This does not
@@ -434,42 +470,6 @@ const element = (
   </mathPower>
 )
 // Becomes <math-power my-exponential="2" hx-boost>3</math-power>
-```
-
-<br />
-
-### HTMX
-
-The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why we also provide type definitions for all HTMX attributes.
-
-You just need to `import '@kitajs/html/htmx'>` at the top of your main.ts file and you will be able to use all HTMX attributes.
-
-```tsx
-import '@kitajs/html/htmx'
-import '@kitajs/html/register'
-
-const html = (
-  // Type checking and intellisense for all HTMX attributes
-  <div hx-get="/api" hx-trigger="click" hx-target="#target">
-    Click me!
-  </div>
-)
-```
-
-It can also be included in your `tsconfig.json` to enable intellisense and type checking for all HTMX attributes.
-
-```json
-{
-  "compilerOptions": {
-    "types": ["node_modules/@kitajs/html/htmx"]
-  }
-}
-```
-
-Or with a triple slash directive:
-
-```tsx
-/// <reference types="@kitajs/html/htmx.d.ts" />
 ```
 
 <br />

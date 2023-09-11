@@ -1,7 +1,7 @@
 'use strict'
 
 // Finds the global object (window in browsers)
-var root
+let root
 try {
   root = Function('return this')()
 } catch (_) {

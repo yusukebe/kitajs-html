@@ -62,6 +62,9 @@ npm install @kitajs/html # or yarn add @kitajs/html
 
 ## Getting Started
 
+> [!WARNING]  
+> Learn how to [sanitize](#sanitization) and avoid [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
+
 Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
 ```js
@@ -143,36 +146,38 @@ const html = <div>Hello World!<div> ✅
 
 ## Sanitization
 
-This package aims to be a HTML builder, **_not an HTML sanitizer_**. This means that no HTML content is escaped by default. However we provide a custom attribute called **_`safe`_** that will sanitize everything inside of it. You can also use the exported `Html.escapeHtml` function to escape other contents arbitrarily.
+This package sanitizes every attribute by default. However, as the result is always a string, we cannot differentiate a html element created by a `<tag>` or from a user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually call `Html.escapeHtml`.
 
 ```jsx
-// Attributes are always escaped by default
-<div style={'"&<>\''}></div> // <div style="&#34;&amp;&lt;&gt;&#39;"></div>
-<div style={{ backgroundColor: '"&<>\'' }}></div> // <div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div>
+<div>⚠️ This will NOT be escaped. and WILL expose you to XSS</div>
+
+<div attr="This WILL be escaped"></div>
+<div safe>This WILL be escaped</div>
+<div>{Html.escapeHtml('This WILL be escaped')}</div>
 ```
+
+Here's an example of how this is **DANGEROUS** to your application:
 
 ```jsx
-// Correct way to escape input content, you should only use when rendering user input
-<div safe>{untrusted}</div> // <div>&lt;script&gt;alert(&#34;hacked!&#34;)&lt;/script&gt;</div>
-```
+user = {
+  name: 'Bad guy',
+  description: '</div><script>getStoredPasswordAndSentToBadGuysServer()</script>'
+}
 
-```jsx
-// Manual escaping with Html.escapeHtml
-<div>{'<a></a>' + Html.escapeHtml('<a></a>')}</div> // <div><a></a>&lt;a&gt;&lt;/a&gt;</div>
-```
+<div class="user-card">{user.description}</div>
+// Renders this html which will execute malicious code:
+<div class="user-card"></div><script>getStoredPasswordAndSentToBadGuysServer()</script></div>
 
-```jsx
-// ⚠️ unsafe input is not escaped by default
-<div>{untrusted}</div> // <div><script>alert('hacked!')</script></div>
+<div class="user-card" safe>{user.description}</div>
+// Renders this safe html, which will NOT execute any malicious code:
+<div>&lt;/div&gt;&lt;script&gt;getStoredPasswordAndSentToBadGuysServer()&lt;/script&gt;</div>
 ```
-
-It's like if React's `dangerouslySetInnerHTML` was enabled by default.
 
 <br />
 
 ### The safe attribute
 
-You should always use the `safe` attribute when you are rendering user input. This will sanitize its contents and avoid XSS attacks.
+You should always use the `safe` attribute when you are rendering uncontrolled user input. This will sanitize its contents and avoid XSS attacks.
 
 ```jsx
 function UserCard({ name, description, date, about }) {
@@ -193,7 +198,8 @@ function UserCard({ name, description, date, about }) {
 
 Note that only at the very bottom of the HTML tree is where you should use the `safe` attribute, to only escape where its needed.
 
-👉 There's an open issue to integrate this within a typescript plugin to emit warnings and alerts to use the safe attribute everywhere a variable is used. Wanna help? Check [this issue](https://github.com/kitajs/html/issues/2).
+> [!NOTE]  
+> There's an open issue to integrate this within a typescript plugin to emit warnings and alerts to use the safe attribute everywhere a variable is used. Wanna help? Check [this issue](https://github.com/kitajs/html/issues/2).
 
 <br />
 

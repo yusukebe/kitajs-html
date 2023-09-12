@@ -28,6 +28,11 @@
 
 <br />
 
+> [!WARNING]  
+> Learn how to [sanitize](#sanitization) and avoid [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
+
+<br />
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
@@ -61,9 +66,6 @@ npm install @kitajs/html # or yarn add @kitajs/html
 <br />
 
 ## Getting Started
-
-> [!WARNING]  
-> Learn how to [sanitize](#sanitization) and avoid [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
 
 Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 

@@ -32,8 +32,6 @@ test('simple html structures', () => {
 
 test('untyped & unknown attributes', () => {
   assert.equal(<a notHref></a>, '<a not-href></a>')
-
-  // @ts-expect-error - should complain about unknown tag, but render it anyway
   assert.equal(<c notHref></c>, '<c not-href></c>')
 
   function D() {

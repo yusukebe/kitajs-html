@@ -69,14 +69,6 @@ declare namespace JSX {
      * @deprecated please use `class`.
      */
     className?: undefined | string
-
-    /**
-     * We should probably remove this, as it silence errors of missing/mistyped
-     * attributes. However, it is useful for interop with libraries that mix-up
-     * with html (like HTMX, jQuery, Hyperscript and others) as they are super
-     * common when templating HTML with libraries like this one.
-     */
-    [name: string]: unknown
   }
 
   interface HtmlAnchorTag extends HtmlTag {

@@ -50,6 +50,7 @@
   - [The `tag` tag](#the-tag-tag)
 - [Async Components](#async-components)
 - [Extending types](#extending-types)
+  - [Allow everything!](#allow-everything)
 - [Performance](#performance)
 - [How it works](#how-it-works)
 - [Format HTML output](#format-html-output)
@@ -277,10 +278,11 @@ const html = (
 
 The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why we also provide type definitions for all HTMX attributes.
 
-You just need to `import '@kitajs/html/htmx'` at the top of your main.ts file and you will be able to use all HTMX attributes.
+You just need to add this triple slash directive to the top of your file:
 
 ```tsx
-import '@kitajs/html/htmx'
+/// <reference types="@kitajs/html/htmx.d.ts" />
+
 import '@kitajs/html/register'
 
 const html = (
@@ -289,22 +291,6 @@ const html = (
     Click me!
   </div>
 )
-```
-
-It can also be included in your `tsconfig.json` to enable intellisense and type checking for all HTMX attributes.
-
-```json
-{
-  "compilerOptions": {
-    "types": ["node_modules/@kitajs/html/htmx"]
-  }
-}
-```
-
-Or with a triple slash directive:
-
-```tsx
-/// <reference types="@kitajs/html/htmx.d.ts" />
 ```
 
 <br />
@@ -478,6 +464,16 @@ const element = (
   </mathPower>
 )
 // Becomes <math-power my-exponential="2" hx-boost>3</math-power>
+```
+
+### Allow everything!
+
+We also provide a way to allow any tag/attribute combination, altough we **do not recommend using it**.
+
+Just add this triple slash directive to the top of your file:
+
+```tsx
+/// <reference types="@kitajs/html/all-types.d.ts" />
 ```
 
 <br />

@@ -39,7 +39,7 @@ declare namespace JSX {
     /**
      * Tells if any inner html should be escaped.
      *
-     * **Warning: This also escapes inner jsx tags. You should only use this in the most inner tags.**
+     * **Warning: This also escapes inner jsx tags. You should only use this in the inner tag.**
      *
      * @example
      * ```tsx

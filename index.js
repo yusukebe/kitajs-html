@@ -1,6 +1,6 @@
 /// <reference path="./jsx.d.ts" />
 
-const ESCAPED_REGEX = /[\u00A0<>"'&]/
+const QUOTE_REGEX = /"/g
 const CAMEL_REGEX = /[a-z][A-Z]/
 
 /**
@@ -66,29 +66,27 @@ function toKebabCase (camel) {
 }
 
 /**
- * Escapes a string for use in an HTML attribute value.
+ * Escapes a string to avoid any possible harmful html from being executed.
  *
- * @param {any} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
+ * @param {any} value the value to escape.
  * @returns {string} the escaped string.
  * @this {void}
  */
 function escapeHtml (value) {
-  // Handle non string values
-  if (typeof value !== 'string') {
-    // HTML Dates can just be ISO stringified
-    if (value instanceof Date) {
-      return value.toISOString()
-    }
-
-    // Calls toString() on the value
-    value = String(value)
+  if (value === null) {
+    return 'null'
   }
 
-  // This is a optimization to avoid the whole escaping process when the value
-  // does not contain any special characters.
-  if (!ESCAPED_REGEX.test(value)) {
-    return value
+  if (value === undefined) {
+    return 'undefined'
   }
+
+  // HTML Dates can just be ISO stringified
+  if (value instanceof Date) {
+    return value.toISOString()
+  }
+
+  value = value.toString()
 
   const length = value.length
   let escaped = ''
@@ -96,16 +94,17 @@ function escapeHtml (value) {
   let start = 0
   let end = 0
 
+  // Faster than using regex
+  // https://jsperf.app/kakihu
   for (; end < length; end++) {
+    // https://wonko.com/post/html-escaping
     switch (value[end]) {
       case '&':
         escaped += value.slice(start, end) + '&amp;'
         start = end + 1
         continue
-      case '>':
-        escaped += value.slice(start, end) + '&gt;'
-        start = end + 1
-        continue
+      // We don't need to escape > because it is only used to close tags.
+      // https://stackoverflow.com/a/9189067
       case '<':
         escaped += value.slice(start, end) + '&lt;'
         start = end + 1
@@ -118,11 +117,6 @@ function escapeHtml (value) {
         escaped += value.slice(start, end) + '&#39;'
         start = end + 1
         continue
-      // Non breaking space
-      case '\u00A0':
-        escaped += value.slice(start, end) + '&#32;'
-        start = end + 1
-        continue
     }
   }
 
@@ -130,6 +124,32 @@ function escapeHtml (value) {
   escaped += value.slice(start, end)
 
   return escaped
+}
+
+/**
+ * This function is intended to be used *internally* for attributes escaping.
+ * **ONLY ESCAPES DOUBLE QUOTES**
+ *
+ * @internal
+ * @param {unknown} value
+ * @returns the escaped value
+ */
+function escapeAttribute (value) {
+  if (value === null) {
+    return 'null'
+  }
+
+  if (value === undefined) {
+    return 'undefined'
+  }
+
+  // HTML Dates can just be ISO stringified
+  if (value instanceof Date) {
+    return value.toISOString()
+  }
+
+  // Only escape strings
+  return value.toString().replace(QUOTE_REGEX, '&#34;')
 }
 
 /**
@@ -170,7 +190,10 @@ function isVoidElement (tag) {
  */
 function styleToString (style) {
   if (typeof style === 'string') {
-    return escapeHtml(style)
+    // We manually uses double quotes for attributes,
+    // This way, we can optimize the escaping process
+    // by only escaping double quotes.
+    return style.replace(QUOTE_REGEX, '&#34;')
   }
 
   const keys = Object.keys(style)
@@ -184,7 +207,7 @@ function styleToString (style) {
     key = keys[index]
 
     // @ts-expect-error - this indexing is safe.
-    result += toKebabCase(key) + ':' + escapeHtml(style[key]) + ';'
+    result += toKebabCase(key) + ':' + escapeAttribute(style[key]) + ';'
   }
 
   return result
@@ -258,7 +281,7 @@ function attributesToString (attributes) {
     result += ' ' + formattedName
 
     if (value !== '') {
-      result += '="' + escapeHtml(value) + '"'
+      result += '="' + escapeAttribute(value) + '"'
     }
   }
 
@@ -377,23 +400,32 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
 
   const properties = new Set()
 
-  const html = htmlFn(new Proxy({}, {
-    get (_, name) {
-      // Adds the property to the set of known properties.
-      properties.add(name)
+  const html = htmlFn(
+    new Proxy(
+      {},
+      {
+        get (_, name) {
+          // Adds the property to the set of known properties.
+          properties.add(name)
 
-      const isChildren = name === 'children'
-      let access = `args[${separator}\`${name.toString()}\`${separator}]`
+          const isChildren = name === 'children'
+          let access = `args[${separator}\`${name.toString()}\`${separator}]`
 
-      // Adds support to render multiple children
-      if (isChildren) {
-        access = `Array.isArray(${access}) ? ${access}.join(${separator}\` \`${separator}) : ${access}`
+          // Adds support to render multiple children
+          if (isChildren) {
+            access = `Array.isArray(${access}) ? ${access}.join(${separator}\` \`${separator}) : ${access}`
+          }
+
+          // Uses ` to avoid content being escaped.
+          return `\`${separator} + (${access} || ${
+            strict && !isChildren
+              ? `throwPropertyNotFound(${separator}\`${name.toString()}\`${separator})`
+              : `${separator}\`\`${separator}`
+          }) + ${separator}\``
+        }
       }
-
-      // Uses ` to avoid content being escaped.
-      return `\`${separator} + (${access} || ${strict && !isChildren ? `throwPropertyNotFound(${separator}\`${name.toString()}\`${separator})` : `${separator}\`\`${separator}`}) + ${separator}\``
-    }
-  }))
+    )
+  )
 
   const sepLength = separator.length
   const length = html.length
@@ -431,20 +463,23 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
 
   if (strict) {
     // eslint-disable-next-line no-new-func
-    return Function('args',
-    // Checks for args presence
+    return Function(
+      'args',
+      // Checks for args presence
       'if (args === undefined) { throw new Error("The arguments object was not provided.") };\n' +
-    // Function to throw when a property is not found
-    'function throwPropertyNotFound(name) { throw new Error("Property " + name + " was not provided.") };\n' +
-    // Concatenates the body
-    `return \`${body}\``
+        // Function to throw when a property is not found
+        'function throwPropertyNotFound(name) { throw new Error("Property " + name + " was not provided.") };\n' +
+        // Concatenates the body
+        `return \`${body}\``
     )
   }
 
   // eslint-disable-next-line no-new-func
-  return Function('args',
+  return Function(
+    'args',
     // Adds a empty args object when it is not present
-    'if (args === undefined) { args = Object.create(null) };\n' + `return \`${body}\``
+    'if (args === undefined) { args = Object.create(null) };\n' +
+      `return \`${body}\``
   )
 }
 

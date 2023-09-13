@@ -52,19 +52,19 @@ test('always escapes attributes', () => {
       <div class={'"&<>\''}></div>
     </>,
     <>
-      <div style="&#34;&amp;&lt;&gt;&#39;"></div>
-      <div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div>
-      <div class="&#34;&amp;&lt;&gt;&#39;"></div>
+      <div style="&#34;&<>'"></div>
+      <div style="background-color:&#34;&<>';"></div>
+      <div class="&#34;&<>'"></div>
     </>
   )
 
   assert.equal(
     <>
-      <div style={'"&<>\''}></div>
-      <div style={{ backgroundColor: '"&<>\'' }}></div>
-      <div class={'"&<>\''}></div>
+      <div style={`"&<>'`}></div>
+      <div style={{ backgroundColor: `"&<>'` }}></div>
+      <div class={`"&<>'`}></div>
     </>,
-    `<div style="&#34;&amp;&lt;&gt;&#39;"></div><div style="background-color:&#34;&amp;&lt;&gt;&#39;;"></div><div class="&#34;&amp;&lt;&gt;&#39;"></div>`
+    `<div style="&#34;&<>'"></div><div style="background-color:&#34;&<>';"></div><div class="&#34;&<>'"></div>`
   )
 })
 

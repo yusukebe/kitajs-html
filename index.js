@@ -210,12 +210,12 @@ function styleToString (style) {
     result += toKebabCase(key) + ':'
 
     // Only needs escaping when the value is a string.
-    if (typeof value !== 'string') { 
+    if (typeof value !== 'string') {
       result += value.toString() + ';'
       continue
     }
 
-    let end = value.indexOf('"')    
+    let end = value.indexOf('"')
 
     // This is a optimization to avoid having to look twice for the " character.
     // And make the loop already start in the middle

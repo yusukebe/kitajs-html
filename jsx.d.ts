@@ -64,7 +64,7 @@ declare namespace JSX {
     safe?: undefined | boolean
 
     /**
-     * Included here to work as a drop-in replacement
+     * Included here to work as a react drop-in replacement
      *
      * @deprecated please use `class`.
      */
@@ -164,7 +164,7 @@ declare namespace JSX {
   }
 
   interface HtmlFormTag extends HtmlTag {
-    acceptCharset?: undefined | string
+    ['accept-charset']?: undefined | string
     action?: undefined | string
     autocomplete?: undefined | string
     enctype?: undefined | string
@@ -270,7 +270,7 @@ declare namespace JSX {
 
   interface HtmlMetaTag extends HtmlTag {
     name?: undefined | string
-    httpEquiv?: undefined | string
+    ['http-equiv']?: undefined | string
     content?: undefined | string
     charset?: undefined | string
   }

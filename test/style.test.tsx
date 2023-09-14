@@ -8,7 +8,8 @@ test('style property', () => {
       <div style={{ backgroundColor: 'red' }}></div>
       <div style="background-color: blue;"></div>
       <div style="background-color:green;"></div>
+      <div style="backgroundColor:green;"></div>
     </>,
-    '<div style="background-color:red;"></div><div style="background-color: blue;"></div><div style="background-color:green;"></div>'
+    '<div style="background-color:red;"></div><div style="background-color: blue;"></div><div style="background-color:green;"></div><div style="backgroundColor:green;"></div>'
   )
 })

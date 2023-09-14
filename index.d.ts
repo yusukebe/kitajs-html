@@ -13,17 +13,29 @@
 declare namespace Html {
   /**
    * A const used to represent a html fragment.
+   *
    */
   export const Fragment: unique symbol
 
   /**
-   * Escapes a string for safe use as HTML text content.
+   * Returns true if the character at the given index is an uppercase character.
    *
-   * @param {unknown} value the value to escape. If the value is not a string it will be converted to a string with `toString()` or `toISOString()` if it is a Date.
+   * @param {string} input the string to check.
+   * @param {number} index the index of the character to check.
+   * @returns {boolean} if the character at the given index is an uppercase character.
+   * @this {void}
+   */
+  export function isUpper(this: void, input: string, index: number): boolean
+
+  /**
+   * Escapes a string for safe use as HTML text content. If the value is not a string,
+   * it is coerced to one with its own `toString()` method.
+   *
+   * @param {unknown} value the value to escape.
    * @returns {string} the escaped string.
    * @this {void}
    */
-  export function escapeHtml(this: void, value: unknown): string
+  export function escapeHtml(this: void, value: any): string
 
   /**
    * Returns true if the element is a html void element.
@@ -41,7 +53,7 @@ declare namespace Html {
    * @returns {string} the generated html style string.
    * @this {void}
    */
-  export function styleToString(this: void, style: object | string): boolean
+  export function styleToString(this: void, style: object | string): string
 
   /**
    * Transforms an object of attributes into a html attributes string.
@@ -65,16 +77,6 @@ declare namespace Html {
   export function toKebabCase(this: void, camel: string): string
 
   /**
-   * Returns true if the character at the given index is an uppercase character.
-   *
-   * @param {string} input the string to check.
-   * @param {number} index the index of the character to check.
-   * @returns {boolean} if the character at the given index is an uppercase character.
-   * @this {void}
-   */
-  export function isUpper(this: void, input: string, index: number): boolean
-
-  /**
    * Generates a html string from the given contents.
    *
    * @param {string | Function} name the name of the element to create or a function that creates the element.
@@ -93,15 +95,17 @@ declare namespace Html {
   /**
    * Joins raw string html elements into a single html string.
    *
-   * A raw html fragment is just an array of strings, this method concatenates.
+   * A raw html fragment is just an array of strings, this method concatenates .
    *
-   * @param {(string | string[])[]} contents an maybe nested array of strings to concatenate.
-   * @returns {string} the concatenated string of contents.
+   * @param {import('.').Children[]} contents an maybe nested array of strings to concatenate.
+   * @param {boolean} [escape=false] if we should escape the contents before concatenating them.
+   * @returns {string} the concatenated and escaped string of contents.
    * @this {void}
    */
   export function contentsToString(
     this: void,
-    contents: (string | string[])[]
+    contents: Children[],
+    escape?: boolean
   ): JSX.Element
 
   /**

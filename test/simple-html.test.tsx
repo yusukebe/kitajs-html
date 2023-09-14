@@ -31,8 +31,10 @@ test('simple html structures', () => {
 })
 
 test('untyped & unknown attributes', () => {
-  assert.equal(<a notHref></a>, '<a not-href></a>')
-  assert.equal(<c notHref></c>, '<c not-href></c>')
+  assert.equal(<a not-href></a>, '<a not-href></a>')
+  assert.equal(<c not-href></c>, '<c not-href></c>')
+  assert.equal(<c notHref></c>, '<c notHref></c>')
+  assert.equal(<c notHref></c>, '<c notHref></c>')
 
   function D() {
     return <div />

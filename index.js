@@ -4,19 +4,12 @@ const ESCAPED_REGEX = /[<"'&]/
 const CAMEL_REGEX = /[a-z][A-Z]/
 
 /**
- * A const used to represent a html fragment.
- *
- * @typedef {import('.').Fragment}
+ * @type {typeof import('.').Fragment}
  */
 const Fragment = Symbol.for('kHtmlFragment')
 
 /**
- * Returns true if the character at the given index is an uppercase character.
- *
- * @param {string} input the string to check.
- * @param {number} index the index of the character to check.
- * @returns {boolean} if the character at the given index is an uppercase character.
- * @this {void}
+ * @type {import('.').isUpper}
  */
 function isUpper (input, index) {
   const code = input.charCodeAt(index)
@@ -24,10 +17,7 @@ function isUpper (input, index) {
 }
 
 /**
- * Converts a camel cased string to a kebab cased string.
- *
- * @param {string} camel the camel cased string to convert.
- * @this {void}
+ * @type {import('.').toKebabCase}
  */
 function toKebabCase (camel) {
   // This is a optimization to avoid the whole conversion process when the
@@ -66,11 +56,7 @@ function toKebabCase (camel) {
 }
 
 /**
- * Escapes a string to avoid any possible harmful html from being executed.
- *
- * @param {any} value the value to escape.
- * @returns {string} the escaped string.
- * @this {void}
+ * @type {import('.').escapeHtml}
  */
 function escapeHtml (value) {
   if (typeof value !== 'string') {
@@ -122,11 +108,7 @@ function escapeHtml (value) {
 }
 
 /**
- * Returns true if the element is a html void element.
- *
- * @param {string} tag the name of the element to check.
- * @returns {boolean} if the element is a html void element.
- * @this {void}
+ * @type {import('.').isVoidElement}
  */
 function isVoidElement (tag) {
   // Ordered by most common to least common.
@@ -151,11 +133,7 @@ function isVoidElement (tag) {
 }
 
 /**
- * Transforms an object of style attributes into a html style string.
- *
- * @param {object | string}  style
- * @returns {string}
- * @this {void}
+ * @type {import('.').styleToString}
  */
 function styleToString (style) {
   // Faster escaping process that only looks for the " character.
@@ -244,14 +222,7 @@ function styleToString (style) {
 }
 
 /**
- * Transforms an object of attributes into a html attributes string.
- *
- *
- * @example `a b="c" d="1"`
- *
- * @param {object} attributes a record of literal values to use as attributes.
- * @returns {string} the generated html attributes string.
- * @this {void}
+ * @type {import('.').attributesToString}
  */
 function attributesToString (attributes) {
   if (!attributes) {
@@ -296,8 +267,7 @@ function attributesToString (attributes) {
     if (type === 'boolean') {
       // Only add the attribute if the value is true.
       if (value) {
-        // @ts-expect-error - this indexing is safe.
-        result += ' ' + toKebabCase(key)
+        result += ' ' + key
       }
 
       continue
@@ -307,8 +277,7 @@ function attributesToString (attributes) {
       continue
     }
 
-    // @ts-expect-error - this indexing is safe.
-    result += ' ' + toKebabCase(key)
+    result += ' ' + key
 
     if (type !== 'string') {
       // Non objects are
@@ -358,14 +327,7 @@ function attributesToString (attributes) {
 }
 
 /**
- * Joins raw string html elements into a single html string.
- *
- * A raw html fragment is just an array of strings, this method concatenates .
- *
- * @param {import('.').Children[]} contents an maybe nested array of strings to concatenate.
- * @param {boolean} [escape=false] if we should escape the contents before concatenating them.
- * @returns {string} the concatenated and escaped string of contents.
- * @this {void}
+ * @type {import('.').contentsToString}
  */
 function contentsToString (contents, escape) {
   const length = contents.length
@@ -399,13 +361,10 @@ function contentsToString (contents, escape) {
 }
 
 /**
- * Generates a html string from the given contents.
+ * Just to stop TS from complaining about the type.
+ * @param {any} name
  *
- * @param {string | Function | typeof Fragment} name the name of the element to create or a function that creates the element.
- * @param {import('.').PropsWithChildren<any> | null} attrs a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
- * @param  {...import('.').Children} children the inner contents of the element.
- * @returns {string} the generated html string.
- * @this {void}
+ * @type {import('.').createElement}
  */
 function createElement (name, attrs, ...children) {
   // Adds the children to the attributes if it is not present.
@@ -455,12 +414,10 @@ function createElement (name, attrs, ...children) {
 }
 
 /**
- * Compiles html with the given arguments specified with $name syntax.
+ * Just to stop TS from complaining about the type.
+ * @returns {Function}
  *
- * @param {(proxy: any) => string} htmlFn
- * @param {boolean} [strict=true] if we should throw an error when a property is not found.
- * @returns {function} the compiled template function
- * @this {void}
+ * @type {import('.').compile}
  */
 function compile (htmlFn, strict = true, separator = '/*\x00*/') {
   if (typeof htmlFn !== 'function') {
@@ -470,6 +427,7 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
   const properties = new Set()
 
   const html = htmlFn(
+    //@ts-expect-error - this proxy will meet the props with children requirements.
     new Proxy(
       {},
       {

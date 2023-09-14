@@ -1,8 +1,9 @@
 import { createWriteStream } from 'fs'
-import { BigComponent } from './big-component'
-import { HelloWorld } from './hello-world'
-import { ManyProps } from './many-props'
+import { BigComponent } from './renderers/big-component'
 import { bench } from './suite'
+import { HelloWorld } from './renderers/hello-world'
+import { ManyProps } from './renderers/many-props'
+import { ManyComponents } from './renderers/many-components'
 
 function toMdRow(values: string[]) {
   return '| ' + values.join(' | ') + ' |'
@@ -26,6 +27,7 @@ function toMdRow(values: string[]) {
   for (const [name, fn] of [
     ['Hello World', HelloWorld],
     ['Many Props', ManyProps],
+    ['Many Components', ManyComponents],
     ['Big Component', BigComponent]
   ] as const) {
     out.write('## ' + name + '\n\n')

@@ -1,6 +1,6 @@
 /// <reference path="./jsx.d.ts" />
 
-const QUOTE_REGEX = /"/g
+const ESCAPED_REGEX = /[<"'&]/
 const CAMEL_REGEX = /[a-z][A-Z]/
 
 /**
@@ -73,20 +73,15 @@ function toKebabCase (camel) {
  * @this {void}
  */
 function escapeHtml (value) {
-  if (value === null) {
-    return 'null'
+  if (typeof value !== 'string') {
+    value = value.toString()
   }
 
-  if (value === undefined) {
-    return 'undefined'
+  // This is a optimization to avoid the whole conversion process when the
+  // string does not contain any uppercase characters.
+  if (!ESCAPED_REGEX.test(value)) {
+    return value
   }
-
-  // HTML Dates can just be ISO stringified
-  if (value instanceof Date) {
-    return value.toISOString()
-  }
-
-  value = value.toString()
 
   const length = value.length
   let escaped = ''
@@ -127,32 +122,6 @@ function escapeHtml (value) {
 }
 
 /**
- * This function is intended to be used *internally* for attributes escaping.
- * **ONLY ESCAPES DOUBLE QUOTES**
- *
- * @internal
- * @param {unknown} value
- * @returns the escaped value
- */
-function escapeAttribute (value) {
-  if (value === null) {
-    return 'null'
-  }
-
-  if (value === undefined) {
-    return 'undefined'
-  }
-
-  // HTML Dates can just be ISO stringified
-  if (value instanceof Date) {
-    return value.toISOString()
-  }
-
-  // Only escape strings
-  return value.toString().replace(QUOTE_REGEX, '&#34;')
-}
-
-/**
  * Returns true if the element is a html void element.
  *
  * @param {string} tag the name of the element to check.
@@ -162,12 +131,12 @@ function escapeAttribute (value) {
 function isVoidElement (tag) {
   // Ordered by most common to least common.
   return (
-    tag === 'img' ||
-    tag === 'input' ||
     tag === 'meta' ||
-    tag === 'br' ||
-    tag === 'hr' ||
     tag === 'link' ||
+    tag === 'img' ||
+    tag === 'br' ||
+    tag === 'input' ||
+    tag === 'hr' ||
     tag === 'area' ||
     tag === 'base' ||
     tag === 'col' ||
@@ -189,25 +158,86 @@ function isVoidElement (tag) {
  * @this {void}
  */
 function styleToString (style) {
+  // Faster escaping process that only looks for the " character.
+  // As we use the " character to wrap the style string, we need to escape it.
   if (typeof style === 'string') {
-    // We manually uses double quotes for attributes,
-    // This way, we can optimize the escaping process
-    // by only escaping double quotes.
-    return style.replace(QUOTE_REGEX, '&#34;')
+    let end = style.indexOf('"')
+
+    // This is a optimization to avoid having to look twice for the " character.
+    // And make the loop already start in the middle
+    if (end === -1) {
+      return style
+    }
+
+    const length = style.length
+
+    let escaped = ''
+    let start = 0
+
+    // Faster than using regex
+    // https://jsperf.app/kakihu
+    for (; end < length; end++) {
+      if (style[end] === '"') {
+        escaped += style.slice(start, end) + '&#34;'
+        start = end + 1
+      }
+    }
+
+    // Appends the remaining string.
+    escaped += style.slice(start, end)
+
+    return escaped
   }
 
   const keys = Object.keys(style)
   const length = keys.length
 
   let key
+  let value
   let index = 0
   let result = ''
 
   for (; index < length; index++) {
     key = keys[index]
+    // @ts-expect-error - this indexing is safe.
+    value = style[key]
+
+    if (value === null || value === undefined) {
+      continue
+    }
 
     // @ts-expect-error - this indexing is safe.
-    result += toKebabCase(key) + ':' + escapeAttribute(style[key]) + ';'
+    result += toKebabCase(key) + ':'
+
+    // Only needs escaping when the value is a string.
+    if (typeof value !== 'string') { 
+      result += value.toString() + ';'
+      continue
+    }
+
+    let end = value.indexOf('"')    
+
+    // This is a optimization to avoid having to look twice for the " character.
+    // And make the loop already start in the middle
+    if (end === -1) {
+      result += value + ';'
+      continue
+    }
+
+    const length = value.length
+    let start = 0
+
+    // Faster than using regex
+    // https://jsperf.app/kakihu
+    for (; end < length; end++) {
+      if (value[end] === '"') {
+        result += value.slice(start, end) + '&#34;'
+        start = end + 1
+      }
+    }
+
+    // Appends the remaining string.
+    result += value.slice(start, end) + ';'
   }
 
   return result
@@ -216,7 +246,6 @@ function styleToString (style) {
 /**
  * Transforms an object of attributes into a html attributes string.
  *
- * **This function does not support Date objects.**
  *
  * @example `a b="c" d="1"`
  *
@@ -232,7 +261,7 @@ function attributesToString (attributes) {
   const keys = Object.keys(attributes)
   const length = keys.length
 
-  let key, value, formattedName
+  let key, value, type
   let result = ''
   let index = 0
 
@@ -262,13 +291,13 @@ function attributesToString (attributes) {
       continue
     }
 
-    // @ts-expect-error - this indexing is safe.
-    formattedName = toKebabCase(key)
+    type = typeof value
 
-    if (typeof value === 'boolean') {
+    if (type === 'boolean') {
       // Only add the attribute if the value is true.
       if (value) {
-        result += ' ' + formattedName
+        // @ts-expect-error - this indexing is safe.
+        result += ' ' + toKebabCase(key)
       }
 
       continue
@@ -278,11 +307,51 @@ function attributesToString (attributes) {
       continue
     }
 
-    result += ' ' + formattedName
+    // @ts-expect-error - this indexing is safe.
+    result += ' ' + toKebabCase(key)
 
-    if (value !== '') {
-      result += '="' + escapeAttribute(value) + '"'
+    if (type !== 'string') {
+      // Non objects are
+      if (type !== 'object') {
+        result += '="' + value.toString() + '"'
+        continue
+
+        // Dates are always safe
+      } else if (value instanceof Date) {
+        result += '="' + value.toISOString() + '"'
+        continue
+      }
+
+      // The object may have a overridden toString method.
+      // Which results in a non escaped string.
+      value = value.toString()
     }
+
+    let end = value.indexOf('"')
+
+    // This is a optimization to avoid having to look twice for the " character.
+    // And make the loop already start in the middle
+    if (end === -1) {
+      result += '="' + value + '"'
+      continue
+    }
+
+    result += '="'
+
+    const length = value.length
+    let start = 0
+
+    // Faster than using regex
+    // https://jsperf.app/kakihu
+    for (; end < length; end++) {
+      if (value[end] === '"') {
+        result += value.slice(start, end) + '&#34;'
+        start = end + 1
+      }
+    }
+
+    // Appends the remaining string.
+    result += value.slice(start, end) + '"'
   }
 
   return result
@@ -413,7 +482,7 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
 
           // Adds support to render multiple children
           if (isChildren) {
-            access = `Array.isArray(${access}) ? ${access}.join(${separator}\` \`${separator}) : ${access}`
+            access = `Array.isArray(${access}) ? ${access}.join(${separator}\`\`${separator}) : ${access}`
           }
 
           // Uses ` to avoid content being escaped.

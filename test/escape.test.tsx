@@ -71,9 +71,7 @@ test('always escapes attributes', () => {
 test('always escapeHtml', () => {
   const date = new Date()
 
-  assert.equal(Html.escapeHtml(date), date.toISOString())
-  assert.equal(Html.escapeHtml(null), 'null')
-  assert.equal(Html.escapeHtml(undefined), 'undefined')
+  assert.equal(Html.escapeHtml(date), date.toString())
   assert.equal(Html.escapeHtml(true), 'true')
   assert.equal(Html.escapeHtml(false), 'false')
   assert.equal(Html.escapeHtml(0), '0')

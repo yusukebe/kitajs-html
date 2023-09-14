@@ -32,8 +32,7 @@ test('compiled with children', () => {
       <>1</>
       <>2</>
     </Compiled>,
-    // Should not complain, just transform to string as any other array [1, 2] => '1,2'
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1 2</div>'
+    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>12</div>'
   )
 })
 
@@ -104,5 +103,17 @@ test('compiled not strict', () => {
     //@ts-expect-error - Property color was not provided.
     <Compiled></Compiled>,
     '<div><div class="a" style="color:;"></div><div class="b" style="color:;"></div></div>'
+  )
+})
+
+test('compiled multiple children', () => {
+  const Compiled = Html.compile(({ children }) => <div>{children}</div>)
+
+  assert.equal(
+    <Compiled>
+      <div>1</div>
+      <div>2</div>
+    </Compiled>,
+    '<div><div>1</div><div>2</div></div>'
   )
 })

@@ -13,3 +13,11 @@ test('should not encode & as &amp', () => {
 test('should not encode \\u00A0 as &#32', () => {
   assert.equal(<div class={'\u00A0'}></div>, '<div class="\u00A0"></div>')
 })
+
+test('should encode date attributes', () => {
+  const date = new Date()
+  assert.equal(
+    <div datetime={date}></div>,
+    `<div datetime="${date.toISOString()}"></div>`
+  )
+})

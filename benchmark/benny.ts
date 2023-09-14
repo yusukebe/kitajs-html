@@ -1,7 +1,7 @@
 import Kita from '../index'
-import { HelloWorld } from './hello-world'
-import { BigComponent } from './big-component'
-import { ManyProps } from './many-props'
+import { BigComponent } from './renderers/big-component'
+import { HelloWorld } from './renderers/hello-world'
+import { ManyProps } from './renderers/many-props'
 // Avoids type-conflicts
 const TypedHtml = require('typed-html')
 const benny = require('benny')

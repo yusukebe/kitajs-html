@@ -1,4 +1,5 @@
 import Kita from '../index'
+import { round, run } from './util/math'
 // Avoids type-conflicts
 const TypedHtml = require('typed-html')
 
@@ -26,7 +27,15 @@ export function bench(name: string, runs: number, fn: Function) {
   gc!()
 
   const kitaTime = run(runs, kita)
+
+  // Prevents the GC from running in the middle of the benchmark
+  gc!()
+
   const typedHtmlTime = run(runs, typedHtml)
+
+  // Prevents the GC from running in the middle of the benchmark
+  gc!()
+
   const compiledKitaTime = run(runs, compiledKita)
 
   return {
@@ -42,19 +51,4 @@ export function bench(name: string, runs: number, fn: Function) {
     ['+ / @kitajs/html']: `${round(kitaTime / compiledKitaTime, 2)}x`,
     ['+ / typed-html']: `${round(typedHtmlTime / compiledKitaTime, 2)}x`
   } as const
-}
-
-function run(amount: number, fn: Function) {
-  const start = performance.now()
-
-  for (let i = 0; i < amount; i++) {
-    void fn()
-  }
-
-  return performance.now() - start
-}
-
-function round(num: number, n = 4) {
-  const p = Math.pow(10, n)
-  return Math.round(num * p) / p
 }

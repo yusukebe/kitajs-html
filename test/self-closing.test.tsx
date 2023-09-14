@@ -11,7 +11,9 @@ test('self-closing html tags', () => {
 
   assert.equal('<meta charset="utf8"/>', <meta charset="utf8"></meta>)
 
-  assert.equal('<video autoplay></video>', <video autoplay=""></video>)
+  //@ts-expect-error - invalid html
+  assert.equal('<video autoplay></video>', <video autoplay></video>)
+  assert.equal('<video autoplay=""></video>', <video autoplay=""></video>)
 
   assert.equal(
     '<video autoplay="test"></video>',

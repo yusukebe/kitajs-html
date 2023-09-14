@@ -436,8 +436,6 @@ async function render(name) {
 
 Just as exemplified above, you may also want to add custom properties to your elements. You can do this by extending the `JSX` namespace.
 
-> ⚠️ Please follow the JSX convention and do not use `kebab-case` for your properties, use `camelCase` instead. We internally transform all `camelCase` properties to `kebab-case` to be compliant with the HTML and JSX standards.
-
 ```tsx
 declare global {
   namespace JSX {
@@ -445,7 +443,7 @@ declare global {
     interface IntrinsicElements {
       mathPower: HtmlTag & {
         // Changes properties to the math-power element
-        myExponential: number
+        ['my-exponential']: number
         // this property becomes the <>{children}</> type
         children: number
       }
@@ -453,13 +451,14 @@ declare global {
 
     // Adds hxBoost property to all elements native elements (those who extends HtmlTag)
     interface HtmlTag {
-      hxBoost: boolean
+      ['hx-boost']: boolean
+      // TIP: We already provide HTMX types, check them out!
     }
   }
 }
 
 const element = (
-  <mathPower myExponential={2} hxBoost>
+  <mathPower my-exponential={2} hx-boost>
     {3}
   </mathPower>
 )

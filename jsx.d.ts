@@ -440,6 +440,7 @@ declare namespace JSX {
     height?: undefined | string
   }
 
+  // We allow any attributes on svg because its hard to keep track of them all.
   interface HtmlSvgTag extends HtmlTag, Record<string, any> {}
 
   interface HtmlUnspecifiedTag extends HtmlTag, Record<string, any> {

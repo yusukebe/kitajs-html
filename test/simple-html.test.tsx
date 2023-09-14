@@ -43,3 +43,13 @@ test('untyped & unknown attributes', () => {
   // @ts-expect-error - should complain about unknown tag on component and not render it
   assert.equal(<D notHref></D>, '<div></div>')
 })
+
+
+test('simple svg structure', () => {
+  assert.equal(
+    <svg width="100" height="100" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+    </svg>,
+    '<svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
+  )
+})

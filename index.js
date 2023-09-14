@@ -427,7 +427,7 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
   const properties = new Set()
 
   const html = htmlFn(
-    //@ts-expect-error - this proxy will meet the props with children requirements.
+    // @ts-expect-error - this proxy will meet the props with children requirements.
     new Proxy(
       {},
       {

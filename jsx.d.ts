@@ -115,6 +115,8 @@ declare namespace JSX {
     cite?: undefined | string
   }
 
+  interface HtmlBodyTag extends HtmlTag {}
+
   interface HtmlButtonTag extends HtmlTag {
     action?: undefined | string
     autofocus?: undefined | string
@@ -129,6 +131,8 @@ declare namespace JSX {
     value?: undefined | string
   }
 
+  interface HtmlDataListTag extends HtmlTag {}
+
   interface HtmlCanvasTag extends HtmlTag {
     width?: undefined | string
     height?: undefined | string
@@ -137,6 +141,10 @@ declare namespace JSX {
   interface HtmlTableColTag extends HtmlTag {
     span?: undefined | string
   }
+
+  interface HtmlTableSectionTag extends HtmlTag {}
+
+  interface HtmlTableRowTag extends HtmlTag {}
 
   interface DataTag extends HtmlTag {
     value?: undefined | string
@@ -329,6 +337,8 @@ declare namespace JSX {
     default?: undefined | string
   }
 
+  interface HtmlLegendTag extends HtmlTag {}
+
   interface HtmlBrowserButtonTag extends HtmlTag {
     type?: undefined | string
   }
@@ -375,6 +385,8 @@ declare namespace JSX {
     disabled?: undefined | boolean
     scoped?: undefined | string
   }
+
+  interface HtmlTableTag extends HtmlTag {}
 
   interface HtmlTableDataCellTag extends HtmlTag {
     colspan?: undefined | string | number
@@ -565,7 +577,7 @@ declare namespace JSX {
     colgroup: HtmlTableColTag
     commands: HtmlCommandTag
     data: DataTag
-    datalist: HtmlTag
+    datalist: HtmlDataListTag
     dd: HtmlTag
     del: HtmlModTag
     details: HtmlDetailsTag
@@ -599,7 +611,7 @@ declare namespace JSX {
     kbd: HtmlTag
     keygen: KeygenTag
     label: HtmlLabelTag
-    legend: HtmlTag
+    legend: HtmlLegendTag
     li: HtmlLITag
     link: HtmlLinkTag
     main: HtmlTag
@@ -639,17 +651,17 @@ declare namespace JSX {
     sub: HtmlTag
     sup: HtmlTag
     svg: HtmlSvgTag
-    table: HtmlTag
+    table: HtmlTableTag
     tbody: HtmlTag
     td: HtmlTableDataCellTag
     template: HtmlTag
     textarea: HtmlTextAreaTag
-    tfoot: HtmlTag
+    tfoot: HtmlTableSectionTag
     th: HtmlTableHeaderCellTag
-    thead: HtmlTag
+    thead: HtmlTableSectionTag
     time: HtmlTimeTag
     title: HtmlTag
-    tr: HtmlTag
+    tr: HtmlTableRowTag
     track: HtmlTrackTag
     u: HtmlTag
     ul: HtmlTag

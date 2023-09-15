@@ -169,7 +169,7 @@ user = {
 
 <div class="user-card">{user.description}</div>
 // Renders this html which will execute malicious code:
-<div class="user-card"></div><script>getStoredPasswordAndSentToBadGuysServer()</script></div>
+<div class="user-card"><script>getStoredPasswordAndSentToBadGuysServer()</script></div>
 
 <div class="user-card" safe>{user.description}</div>
 // Renders this safe html, which will NOT execute any malicious code:

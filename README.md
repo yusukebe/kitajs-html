@@ -61,7 +61,7 @@
 ## Installing
 
 ```sh
-npm install @kitajs/html @kitajs/  # or yarn add @kitajs/html @kitajs/ts-html-plugin
+npm install @kitajs/html @kitajs/ts-html-plugin  # or yarn add @kitajs/html @kitajs/ts-html-plugin
 ```
 
 <br />

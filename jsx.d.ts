@@ -158,7 +158,7 @@ declare namespace JSX {
   }
 
   interface HtmlFieldSetTag extends HtmlTag {
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     form?: undefined | string
     name?: undefined | string
   }
@@ -205,7 +205,7 @@ declare namespace JSX {
     autocomplete?: undefined | string
     autofocus?: undefined | string
     checked?: undefined | string | boolean
-    disabled?: undefined | string | boolean
+    disabled?: undefined | boolean
     enctype?: undefined | string
     form?: undefined | string
     height?: undefined | string
@@ -238,7 +238,7 @@ declare namespace JSX {
   interface KeygenTag extends HtmlTag {
     autofocus?: undefined | string
     challenge?: undefined | string
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     form?: undefined | string
     keytype?: undefined | string
     name?: undefined | string
@@ -300,12 +300,12 @@ declare namespace JSX {
   }
 
   interface HtmlOptgroupTag extends HtmlTag {
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     label?: undefined | string
   }
 
   interface HtmlOptionTag extends HtmlTag {
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     label?: undefined | string
     selected?: undefined | string
     value?: undefined | string
@@ -331,7 +331,7 @@ declare namespace JSX {
     type?: undefined | string
     label?: undefined | string
     icon?: undefined | string
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     checked?: undefined | string
     radiogroup?: undefined | string
     default?: undefined | string
@@ -365,7 +365,7 @@ declare namespace JSX {
 
   interface HtmlSelectTag extends HtmlTag {
     autofocus?: undefined | string
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     form?: undefined | string
     multiple?: undefined | string
     name?: undefined | string
@@ -382,7 +382,7 @@ declare namespace JSX {
   interface HtmlStyleTag extends HtmlTag {
     media?: undefined | string
     type?: undefined | string
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     scoped?: undefined | string
   }
 
@@ -398,7 +398,7 @@ declare namespace JSX {
     autofocus?: undefined | string
     cols?: undefined | string
     dirname?: undefined | string
-    disabled?: undefined | string
+    disabled?: undefined | boolean
     form?: undefined | string
     maxlength?: undefined | string
     minlength?: undefined | string

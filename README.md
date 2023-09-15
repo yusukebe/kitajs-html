@@ -61,7 +61,7 @@
 ## Installing
 
 ```sh
-npm install @kitajs/html # or yarn add @kitajs/html
+npm install @kitajs/html @kitajs/  # or yarn add @kitajs/html @kitajs/ts-html-plugin
 ```
 
 <br />
@@ -70,14 +70,16 @@ npm install @kitajs/html # or yarn add @kitajs/html
 
 Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
-```js
+```jsonc
 // tsconfig.json
 
 {
   "compilerOptions": {
     "jsx": "react",
     "jsxFactory": "Html.createElement",
-    "jsxFragmentFactory": "Html.Fragment"
+    "jsxFragmentFactory": "Html.Fragment",
+    // Plugin to add XSS warnings and alerts.
+    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
   }
 }
 ```
@@ -149,6 +151,9 @@ const html = <div>Hello World!<div> ✅
 
 ## Sanitization
 
+> [!IMPORTANT]  
+> Please use our `@kitajs/ts-html-plugin` to emit TS errors on where you are exposed to XSS. Head over to [getting started](#getting-started) to install it.
+
 This package sanitizes every attribute by default. However, as the result is always a string, we cannot differentiate a html element created by a `<tag>` or from a user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually call `Html.escapeHtml`.
 
 ```jsx
@@ -200,9 +205,6 @@ function UserCard({ name, description, date, about }) {
 ```
 
 Note that only at the very bottom of the HTML tree is where you should use the `safe` attribute, to only escape where its needed.
-
-> [!NOTE]  
-> There's an open issue to integrate this within a typescript plugin to emit warnings and alerts to use the safe attribute everywhere a variable is used. Wanna help? Check [this issue](https://github.com/kitajs/html/issues/2).
 
 <br />
 

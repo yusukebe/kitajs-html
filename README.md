@@ -154,6 +154,8 @@ const html = <div>Hello World!<div> ✅
 > [!IMPORTANT]  
 > Please use our `@kitajs/ts-html-plugin` to emit TS errors on where you are exposed to XSS. Head over to [getting started](#getting-started) to install it.
 
+<br />
+
 This package sanitizes every attribute by default. However, as the result is always a string, we cannot differentiate a html element created by a `<tag>` or from a user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually call `Html.escapeHtml`.
 
 ```jsx
@@ -205,6 +207,30 @@ function UserCard({ name, description, date, about }) {
 ```
 
 Note that only at the very bottom of the HTML tree is where you should use the `safe` attribute, to only escape where its needed.
+
+<br />
+
+### Typescript Plugin
+
+By installing `@kitajs/ts-html-plugin`, we can add errors and warnings in your editor. To prevent IDE incompatibility and problems, please install it globally.
+
+```sh
+npm i -g @kitajs/ts-html-plugin
+```
+
+Make sure to enable it in your tsconfig.json, and you are ready to go!
+
+```jsonc
+// tsconfig.json
+
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
+  }
+}
+```
+
+[Make sure to understand what language service plugins can and cannot do.](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin#whats-a-language-service-plugin)
 
 <br />
 

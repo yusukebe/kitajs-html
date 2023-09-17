@@ -349,8 +349,28 @@ function contentsToString (contents, escape) {
     }
 
     if (Array.isArray(content)) {
-      result += contentsToString(content, escape)
-    } else if (escape === true) {
+      content = contentsToString(content, escape)
+    }
+
+    if (
+      // @ts-expect-error - Also accepts thenable objects, not only promises
+      // https://jsperf.app/zipuvi
+      content.then
+    ) {
+      // @ts-expect-error - this is a promise
+      return content.then((resolved) =>
+        contentsToString(
+          [
+            result,
+            resolved,
+            contentsToString(contents.slice(index + 1), escape)
+          ],
+          escape
+        )
+      )
+    }
+
+    if (escape === true) {
       result += escapeHtml(content)
     } else {
       result += content
@@ -401,12 +421,33 @@ function createElement (name, attrs, ...children) {
     return '<' + name + attributesToString(attrs) + '/>'
   }
 
+  // @ts-expect-error - joins the children
+  children = contentsToString(children, attrs.safe)
+
+  // Faster than checking if `children instanceof Promise`
+  // https://jsperf.app/zipuvi
+  if (typeof children !== 'string') {
+    // @ts-expect-error - it will be a promise here
+    return children.then(
+      /** @param {string} child */
+      (child) =>
+        '<' +
+        name +
+        attributesToString(attrs) +
+        '>' +
+        child +
+        '</' +
+        name +
+        '>'
+    )
+  }
+
   return (
     '<' +
     name +
     attributesToString(attrs) +
     '>' +
-    contentsToString(children, attrs.safe) +
+    children +
     '</' +
     name +
     '>'
@@ -453,6 +494,10 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
       }
     )
   )
+
+  if (typeof html !== 'string') {
+    throw new Error('You cannot use compile() with async components')
+  }
 
   const sepLength = separator.length
   const length = html.length

@@ -443,20 +443,25 @@ We do recommend using [extending types](#extending-types) instead, as it will gi
 
 ## Async Components
 
-Sadly, we cannot allow async components in JSX and keep the same string type for everything else. Even though it should be possible to write async components you will have no real benefit from it, as you will always have to await the whole html generation
-to complete before you can render it.
+Async components are supported. When any child or sub child of a component tree is a promise, the whole tree will return a promise of the html string.
 
-You should fetch async data in the following way:
+If no async components are found, the result will be simply a string.
 
 ```jsx
-// Fetches all async code beforehand and passes its contents to the component.
-async function render(name) {
-  const data = await api.data(name)
-  const otherData = await api.otherData(name)
-
-  return <Layout data={data} otherData={data} />
+async function Async() {
+  await callApi();
+  return <div>Async!</div>
 }
+
+function Sync() {
+  return <div>Sync!</div>
+}
+
+const async: Promise<string> = <div><Async /></div>
+const sync: string = <div><Sync /></div>
 ```
+
+A `JSX.Element` will always be a string, unless one of its children is a promise, in which case all of its subsequent children will also be promises.
 
 <br />
 

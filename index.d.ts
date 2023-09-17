@@ -162,6 +162,7 @@ declare namespace Html {
     | boolean
     | null
     | undefined
+    | PromiseLike<Children>
     | Children[]
 
   export type PropsWithChildren<T = {}> = { children?: Children } & T

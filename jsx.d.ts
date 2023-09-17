@@ -4,7 +4,12 @@
 // https://github.com/kitajs/html
 
 declare namespace JSX {
-  type Element = string
+  /**
+   * A {@linkcode JSX.Element} will always be a string, unless one of its 
+   * children is a promise, in which case all of its subsequent children will
+   * also be promises.
+   */
+  type Element = string | PromiseLike<string>
 
   /**
    * The index signature was removed to enable closed typing for style
@@ -37,9 +42,11 @@ declare namespace JSX {
     style?: undefined | string | CSSProperties
 
     /**
-     * Tells if any inner html should be escaped.
+     * When set to true, all inner content (html or not) of this tag will be
+     * escaped when evaluated.
      *
-     * **Warning: This also escapes inner jsx tags. You should only use this in the inner tag.**
+     * **Warning: This will escape even inner jsx tags. You should only use this
+     * in the most inner tag of the html tree.**
      *
      * @example
      * ```tsx

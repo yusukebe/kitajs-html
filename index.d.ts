@@ -30,7 +30,7 @@ declare namespace Html {
   /**
    * Escapes a string for safe use as HTML text content. If the value is not a string,
    * it is coerced to one with its own `toString()` method.
-   * 
+   *
    * If the {@linkcode Bun} runtime is available, this function will be swapped out
    * to {@linkcode Bun.escapeHTML}.
    *

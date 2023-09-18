@@ -1,5 +1,5 @@
 import Kita from '../index'
-import { BigComponent } from './renderers/big-component'
+import { MdnHomepage } from './renderers/mdn-homepage'
 import { HelloWorld } from './renderers/hello-world'
 import { ManyProps } from './renderers/many-props'
 // Avoids type-conflicts
@@ -48,4 +48,4 @@ export function suite(name: string, fn: Function) {
 
 suite('Hello World', HelloWorld)
 suite('Many Props', ManyProps)
-suite('Big Component', BigComponent)
+suite('Big Component', MdnHomepage)

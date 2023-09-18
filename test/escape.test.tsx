@@ -102,10 +102,7 @@ test('always escapeHtml', () => {
   assert.equal(Html.escapeHtml('\u00A0'), '\u00A0')
   assert.equal(Html.escapeHtml('<script>ab'), '&lt;script>ab')
   assert.equal(Html.escapeHtml('<script>'), '&lt;script>')
-  assert.equal(
-    Html.escapeHtml('<script><script>'),
-    '&lt;script>&lt;script>'
-  )
+  assert.equal(Html.escapeHtml('<script><script>'), '&lt;script>&lt;script>')
 
   assert.equal(
     Html.escapeHtml('lalala' + '<script>alert(1)</script>' + 'lalala'),

@@ -5,7 +5,7 @@
 
 declare namespace JSX {
   /**
-   * A {@linkcode JSX.Element} will always be a string, unless one of its 
+   * A {@linkcode JSX.Element} will always be a string, unless one of its
    * children is a promise, in which case all of its subsequent children will
    * also be promises.
    */

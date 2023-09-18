@@ -1,24 +1,24 @@
 // Sample benchmark to test agains multiple kitajs versions
 
 import Kita from '../index'
-const KitaCurr = require('../indexCurr')
-const KitaOld = require('../indexOld')
+const Kita2 = require('../index2')
+// const Kita3 = require('../index3')
 const TypedHtml = require('typed-html')
 import { HelloWorld } from './renderers/hello-world'
 import { startBenchmark } from './util/writer'
-import { BigComponent } from './renderers/big-component'
+import { MdnHomepage } from './renderers/mdn-homepage'
 import { ManyComponents } from './renderers/many-components'
 import { ManyProps } from './renderers/many-props'
 
 //@ts-expect-error
 Kita.name = '@kitajs/html'
 TypedHtml.name = 'typed-html'
-KitaCurr.name = '@kitajs/html - curr'
-KitaOld.name = '@kitajs/html - old'
+Kita2.name = '@kitajs/html -- v2'
+// Kita3.name = '@kitajs/html -- v3'
 
 startBenchmark(
   'benchmark.md',
-  [HelloWorld, BigComponent, ManyComponents, ManyProps],
+  [HelloWorld, MdnHomepage, ManyComponents, ManyProps],
 
-  [KitaCurr, KitaOld, Kita, TypedHtml]
+  [TypedHtml, Kita, Kita2]
 ).catch(console.error)

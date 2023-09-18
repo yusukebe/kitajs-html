@@ -17,16 +17,21 @@ export async function startBenchmark(
     flags: 'w'
   })
 
-  stream.write('# Benchmark\n\n')
-  stream.write('- ' + new Date().toISOString() + '\n')
-  stream.write('- Node: ' + process.version + '\n')
-  stream.write('- V8: ' + process.versions.v8 + '\n')
-  stream.write('- OS: ' + process.platform + '\n')
-  stream.write('- Arch: ' + process.arch + '\n')
-  stream.write('\n')
+  write('# Benchmark\n\n')
+  write('- ' + new Date().toISOString() + '\n')
+  write('- Node: ' + process.version + '\n')
+  write('- V8: ' + process.versions.v8 + '\n')
+  write('- OS: ' + process.platform + '\n')
+  write('- Arch: ' + process.arch + '\n')
+  write('\n')
+
+  function write(str = ``) {
+    stream.write(str.trim() + '\n')
+    console.log(str)
+  }
 
   for (const fn of tests) {
-    stream.write('## ' + fn.name + '\n\n')
+    write('## ' + fn.name + '\n\n')
 
     let headersWritten = false
 
@@ -44,23 +49,21 @@ export async function startBenchmark(
     })
 
     for (const runs of [10, 10_000, 100_000]) {
-      console.log(`Running ${fn.name} ${runs} times...`)
-
       const result = runBenchmark(runs, tests)
 
       if (!headersWritten) {
-        stream.write(toMdRow(Object.keys(result)) + '\n')
-        stream.write(toMdRow(Object.keys(result).fill('-')) + '\n')
+        write(toMdRow(Object.keys(result)))
+        write(toMdRow(Object.keys(result).fill('-')))
         headersWritten = true
       }
 
-      stream.write(toMdRow(Object.values(result)) + '\n')
+      write(toMdRow(Object.values(result)))
 
       //  A second to let the event loop do its thing
       await new Promise((resolve) => setTimeout(resolve, 1000))
     }
 
-    stream.write('\n')
+    write('\n')
   }
 
   return new Promise((res) => stream.close(res))

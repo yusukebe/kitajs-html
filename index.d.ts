@@ -52,7 +52,7 @@ declare namespace Html {
   /**
    * Transforms an object of style attributes into a html style string.
    *
-   * @param {object | string}  style a record of literal values to use as style attributes or a string.
+   * @param {object | string} style a record of literal values to use as style attributes or a string.
    * @returns {string} the generated html style string.
    * @this {void}
    */

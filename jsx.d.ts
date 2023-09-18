@@ -8,6 +8,11 @@ declare namespace JSX {
    * A {@linkcode JSX.Element} will always be a string, unless one of its
    * children is a promise, in which case all of its subsequent children will
    * also be promises.
+   * 
+   * Direct calls of `Html.createElement` uses correct return type based on its children.
+   * However, when using JSX syntax, typescript does not support this yet.
+   * 
+   * @see https://github.com/microsoft/TypeScript/issues/14729
    */
   type Element = string | Promise<string>
 

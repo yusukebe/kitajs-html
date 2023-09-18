@@ -13,7 +13,6 @@
 declare namespace Html {
   /**
    * A const used to represent a html fragment.
-   *
    */
   export const Fragment: unique symbol
 

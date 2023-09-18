@@ -463,7 +463,7 @@ const async = <div><Async /></div> as Promise<string>
 const sync: string = <div><Sync /></div> as string
 ```
 
-A `JSX.Element` will always be a string, unless one of its children is a promise, in which case all of its subsequent children will also be promises.
+A `JSX.Element` will always be a string. Once a children element is a async component, the entire upper tree will also be async.
 
 <br />
 

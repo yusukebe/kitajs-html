@@ -58,7 +58,7 @@ function toKebabCase (camel) {
 /**
  * @type {import('.').escapeHtml}
  */
-function escapeHtml (value) {
+let escapeHtml = function (value) {
   if (typeof value !== 'string') {
     value = value.toString()
   }
@@ -106,6 +106,10 @@ function escapeHtml (value) {
 
   return escaped
 }
+
+// @ts-ignore - bun runtime have its own escapeHTML function.
+// eslint-disable-next-line no-undef
+if (typeof Bun !== 'undefined') escapeHtml = Bun.escapeHTML
 
 /**
  * @type {import('.').isVoidElement}

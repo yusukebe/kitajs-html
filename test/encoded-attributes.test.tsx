@@ -6,8 +6,8 @@ test('should encode " as &#34', () => {
   assert.equal(<div class={'"'}></div>, '<div class="&#34;"></div>')
 })
 
-test('should not encode & as &amp', () => {
-  assert.equal(<div class={'&'}></div>, '<div class="&"></div>')
+test('should encode & as &amp', () => {
+  assert.equal(<div class={'&'} safe>&</div>, '<div class="&">&amp;</div>')
 })
 
 test('should not encode \\u00A0 as &#32', () => {

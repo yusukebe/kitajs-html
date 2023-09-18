@@ -83,18 +83,25 @@ declare namespace Html {
   /**
    * Generates a html string from the given contents.
    *
-   * @param {string | Function} name the name of the element to create or a function that creates the element.
+   * @param {string | Function | typeof Fragment} name the name of the element to create or a function that creates the element.
    * @param {{children?: object}} [attributes] a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
    * @param  {...string} contents the inner contents of the element.
    * @returns {string} the generated html string.
    * @this {void}
    */
-  export function createElement(
+  export function createElement<
+    C extends Children[],
+    N extends string | Function | typeof Fragment
+  >(
     this: void,
-    name: string | Function | typeof Fragment,
+    name: N,
     attributes: PropsWithChildren<any> | null,
-    ...contents: Children[]
-  ): JSX.Element
+    ...contents: C
+  ): Promise<string> extends C[number]
+    ? Promise<string>
+    : N extends () => Promise<string>
+    ? Promise<string>
+    : string
 
   /**
    * Joins raw string html elements into a single html string.
@@ -106,11 +113,11 @@ declare namespace Html {
    * @returns {string} the concatenated and escaped string of contents.
    * @this {void}
    */
-  export function contentsToString(
+  export function contentsToString<C extends Children[]>(
     this: void,
-    contents: Children[],
+    contents: C,
     escape?: boolean
-  ): JSX.Element
+  ): Promise<string> extends C[number] ? Promise<string> : string
 
   /**
    * Compiles a **clean component** into a super fast component. This does not
@@ -166,7 +173,7 @@ declare namespace Html {
     | boolean
     | null
     | undefined
-    | PromiseLike<Children>
+    | Promise<Children>
     | Children[]
 
   export type PropsWithChildren<T = {}> = { children?: Children } & T

@@ -331,6 +331,7 @@ function attributesToString (attributes) {
 }
 
 /**
+ * @returns {any}
  * @type {import('.').contentsToString}
  */
 function contentsToString (contents, escape) {
@@ -387,6 +388,7 @@ function contentsToString (contents, escape) {
 /**
  * Just to stop TS from complaining about the type.
  * @param {any} name
+ * @returns {any}
  *
  * @type {import('.').createElement}
  */

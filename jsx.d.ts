@@ -9,7 +9,7 @@ declare namespace JSX {
    * children is a promise, in which case all of its subsequent children will
    * also be promises.
    */
-  type Element = string | PromiseLike<string>
+  type Element = string | Promise<string>
 
   /**
    * The index signature was removed to enable closed typing for style

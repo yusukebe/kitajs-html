@@ -40,6 +40,7 @@
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
   - [The safe attribute](#the-safe-attribute)
+  - [Typescript Plugin](#typescript-plugin)
 - [Migrating from HTML](#migrating-from-html)
   - [Base HTML templates](#base-html-templates)
   - [Htmx](#htmx)
@@ -49,6 +50,7 @@
 - [Supported HTML](#supported-html)
   - [The `tag` tag](#the-tag-tag)
 - [Async Components](#async-components)
+  - [Why JSX.Element is a Promise?](#why-jsxelement-is-a-promise)
 - [Extending types](#extending-types)
   - [Allow everything!](#allow-everything)
 - [Performance](#performance)
@@ -457,11 +459,29 @@ function Sync() {
   return <div>Sync!</div>
 }
 
-const async: Promise<string> = <div><Async /></div>
-const sync: string = <div><Sync /></div>
+const async = <div><Async /></div> as Promise<string>
+const sync: string = <div><Sync /></div> as string
 ```
 
 A `JSX.Element` will always be a string, unless one of its children is a promise, in which case all of its subsequent children will also be promises.
+
+<br />
+
+### Why JSX.Element is a Promise?
+
+JSX elements are mostly strings everywhere. However, as the nature of this package, once a children element is a async component, the entire upper tree will also be async. Unless you are sure that no other component in your entire codebase is async, you should always handle both string and promise cases.
+
+```jsx
+const myElement = <div>I can be sync or async, who knows?</div>
+
+if(myElement instanceof Promise) {
+  // I'm a promise, I should be awaited
+  console.log(await myElement)
+} else {
+  // I'm a string, I can be used as is
+  console.log(myElement)
+}
+```
 
 <br />
 

@@ -584,6 +584,6 @@ const Html = {
  * - `import Html from '@kitajs/html'`
  * - `import Html, { TSC_definition } from '@kitajs/html'`
  */
-module.exports = Html;
-module.exports.Html = Html;
-module.exports.default = Html;
+module.exports = Html
+module.exports.Html = Html
+module.exports.default = Html

@@ -1,5 +1,7 @@
 /// <reference path="./jsx.d.ts" />
 
+type Html = typeof Html
+
 /**
  * Fast and type safe HTML templates using JSX syntax.
  *
@@ -173,6 +175,18 @@ declare namespace Html {
     this: void,
     props: PropsWithChildren<T>
   ) => JSX.Element
+
+  /**
+   * Fast and type safe HTML templates using JSX syntax.
+   *
+   * @module html
+   * @license Apache License Version 2.0
+   *
+   * @link https://github.com/kitajs/html
+   * @link https://www.npmjs.com/package/@kitajs/html
+   * @link https://kitajs.github.io/html/
+   */
+  export const Html: Html
 }
 
 export = Html

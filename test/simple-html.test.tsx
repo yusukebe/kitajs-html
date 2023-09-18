@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import test from 'node:test'
-import Html from '../index'
+import { Html } from '../index'
 
 test('simple html structures', () => {
   assert.equal(<a href="test">a link</a>, '<a href="test">a link</a>')
@@ -58,4 +58,21 @@ test('simple svg structure', () => {
     </svg>,
     '<svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
   )
+})
+
+test('esm and cjs usage', async () => {
+  const Html0 = require('../index')
+  const { Html: Html1 } = require('../index')
+  const Html2 = require('../index').default
+
+  const Html3 = await import('../index')
+  const { Html: Html4 } = await import('../index')
+  const Html5 = (await import('../index')).default
+
+  assert.deepEqual(Html0, Html)
+  assert.deepEqual(Html1, Html)
+  assert.deepEqual(Html2, Html)
+  assert.deepEqual(Html3, Html)
+  assert.deepEqual(Html4, Html)
+  assert.deepEqual(Html5, Html)
 })

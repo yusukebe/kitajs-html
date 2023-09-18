@@ -559,18 +559,31 @@ function compile (htmlFn, strict = true, separator = '/*\x00*/') {
   )
 }
 
-module.exports.escapeHtml = escapeHtml
-module.exports.isVoidElement = isVoidElement
-module.exports.attributesToString = attributesToString
-module.exports.toKebabCase = toKebabCase
-module.exports.isUpper = isUpper
-module.exports.styleToString = styleToString
-module.exports.createElement = createElement
-module.exports.h = createElement
-module.exports.contentsToString = contentsToString
-module.exports.compile = compile
-module.exports.Fragment = Fragment
+const Html = {
+  escapeHtml,
+  isVoidElement,
+  attributesToString,
+  toKebabCase,
+  isUpper,
+  styleToString,
+  createElement,
+  h: createElement,
+  contentsToString,
+  compile,
+  Fragment
+}
 
-// esModule interop
-Object.defineProperty(exports, '__esModule', { value: true })
-module.exports.default = Object.assign({}, module.exports)
+/**
+ * These export configurations enable JS and TS developers
+ * to consumer @kitajs/html in whatever way best suits their needs.
+ * Some examples of supported import syntax includes:
+ * - `const Html = require('@kitajs/html')`
+ * - `const { Html } = require('@kitajs/html')`
+ * - `import * as Fastify from '@kitajs/html'`
+ * - `import { Html, TSC_definition } from '@kitajs/html'`
+ * - `import Html from '@kitajs/html'`
+ * - `import Html, { TSC_definition } from '@kitajs/html'`
+ */
+module.exports = Html;
+module.exports.Html = Html;
+module.exports.default = Html;

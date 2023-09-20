@@ -470,7 +470,7 @@ A `JSX.Element` will always be a string. Once a children element is a async comp
 
 ### Why JSX.Element is a Promise?
 
-> ℹ️ Until [typescript#14729](https://github.com/microsoft/TypeScript/issues/14729) gets implemented, you'll have to manually cast `JSX.Element` into strings when you are sure that it won't have any inner async components.
+> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets implemented, you need to manually cast `JSX.Element` into strings if you are sure there is no inner async components in your component tree.
 
 JSX elements are mostly strings everywhere. However, as the nature of this package, once a children element is a async component, the entire upper tree will also be async. Unless you are sure that no other component in your entire codebase is async, you should always handle both string and promise cases.
 

@@ -474,7 +474,7 @@ JSX elements are mostly strings everywhere. However, as the nature of this packa
 ```jsx
 const myElement = <div>I can be sync or async, who knows?</div>
 
-if(myElement instanceof Promise) {
+if (myElement instanceof Promise) {
   // I'm a promise, I should be awaited
   console.log(await myElement)
 } else {

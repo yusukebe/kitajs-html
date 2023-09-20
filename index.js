@@ -75,6 +75,7 @@ let escapeHtml = function (value) {
   let start = 0
   let end = 0
 
+  // Escapes double quotes to be used inside attributes
   // Faster than using regex
   // https://jsperf.app/kakihu
   for (; end < length; end++) {
@@ -156,6 +157,7 @@ function styleToString (style) {
     let escaped = ''
     let start = 0
 
+    // Escapes double quotes to be used inside attributes
     // Faster than using regex
     // https://jsperf.app/kakihu
     for (; end < length; end++) {
@@ -209,6 +211,7 @@ function styleToString (style) {
     const length = value.length
     let start = 0
 
+    // Escapes double quotes to be used inside attributes
     // Faster than using regex
     // https://jsperf.app/kakihu
     for (; end < length; end++) {
@@ -314,6 +317,7 @@ function attributesToString (attributes) {
     const length = value.length
     let start = 0
 
+    // Escapes double quotes to be used inside attributes
     // Faster than using regex
     // https://jsperf.app/kakihu
     for (; end < length; end++) {
@@ -348,38 +352,41 @@ function contentsToString (contents, escape) {
   for (; index < length; index++) {
     content = contents[index]
 
-    // Ignores non 0 falsy values
-    if (!content && content !== 0) {
-      continue
-    }
+    if (typeof content !== 'string') {
+      // Ignores non 0 falsy values
+      if (!content && content !== 0) {
+        continue
+      }
 
-    if (Array.isArray(content)) {
-      content = contentsToString(content, escape)
-    }
+      // @ts-expect-error - faster than checking if Array.isArray
+      if (content.length !== undefined) {
+        // @ts-expect-error - this is an array
+        content = contentsToString(content)
+      }
 
-    if (
       // @ts-expect-error - Also accepts thenable objects, not only promises
       // https://jsperf.app/zipuvi
-      content.then
-    ) {
-      // @ts-expect-error - this is a promise
-      return content.then((resolved) =>
-        contentsToString(
-          [
-            result,
-            resolved,
-            contentsToString(contents.slice(index + 1), escape)
-          ],
-          escape
+      if (content.then) {
+        // @ts-expect-error - this is a promise
+        return content.then((resolved) =>
+          contentsToString(
+            [result, resolved]
+            // if we also pass escape here, it would double escape this result
+            // with the above call.
+              .concat(contents.slice(index + 1)),
+            escape
+          )
         )
-      )
+      }
     }
 
-    if (escape === true) {
-      result += escapeHtml(content)
-    } else {
-      result += content
-    }
+    result += content
+  }
+
+  // escapeHtml is faster when with longer strings, that's
+  // why we escape the entire result once
+  if (escape === true) {
+    return escapeHtml(result)
   }
 
   return result
@@ -437,31 +444,18 @@ function createElement (name, attrs, ...children) {
     return children.then(
       /** @param {string} child */
       (child) =>
-        '<' +
-        name +
-        attributesToString(attrs) +
-        '>' +
-        child +
-        '</' +
-        name +
-        '>'
+        '<' + name + attributesToString(attrs) + '>' + child + '</' + name + '>'
     )
   }
 
   return (
-    '<' +
-    name +
-    attributesToString(attrs) +
-    '>' +
-    children +
-    '</' +
-    name +
-    '>'
+    '<' + name + attributesToString(attrs) + '>' + children + '</' + name + '>'
   )
 }
 
 /**
  * Just to stop TS from complaining about the type.
+ *
  * @returns {Function}
  *
  * @type {import('.').compile}

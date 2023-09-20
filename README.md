@@ -447,7 +447,7 @@ We do recommend using [extending types](#extending-types) instead, as it will gi
 
 Async components are supported. When any child or sub child of a component tree is a promise, the whole tree will return a promise of the html string.
 
-If no async components are found, the result will be simply a string.
+If no async components are found, the result will be simply a string, and you can safely cast it into a string.
 
 ```jsx
 async function Async() {
@@ -459,6 +459,7 @@ function Sync() {
   return <div>Sync!</div>
 }
 
+// Safe to cast into a string
 const async = <div><Async /></div> as Promise<string>
 const sync: string = <div><Sync /></div> as string
 ```
@@ -469,17 +470,20 @@ A `JSX.Element` will always be a string. Once a children element is a async comp
 
 ### Why JSX.Element is a Promise?
 
+> ℹ️ Until [typescript#14729](https://github.com/microsoft/TypeScript/issues/14729) gets implemented, you'll have to manually cast `JSX.Element` into strings when you are sure that it won't have any inner async components.
+
 JSX elements are mostly strings everywhere. However, as the nature of this package, once a children element is a async component, the entire upper tree will also be async. Unless you are sure that no other component in your entire codebase is async, you should always handle both string and promise cases.
 
 ```jsx
-const myElement = <div>I can be sync or async, who knows?</div>
+// It may or may not have inner async components.
+const html = <Layout />
 
-if (myElement instanceof Promise) {
+if (html instanceof Promise) {
   // I'm a promise, I should be awaited
-  console.log(await myElement)
+  console.log(await html)
 } else {
   // I'm a string, I can be used as is
-  console.log(myElement)
+  console.log(html)
 }
 ```
 
@@ -539,9 +543,9 @@ You can run this yourself by running `pnpm bench`. The bench below was with a Ap
 ```markdown
 # Benchmark
 
-- 2023-09-14T20:06:09.655Z
-- Node: v18.15.0
-- V8: 10.2.154.26-node.25
+- 2023-09-20T03:18:01.545Z
+- Node: v20.6.1
+- V8: 11.3.244.8-node.14
 - OS: linux
 - Arch: x64
 
@@ -549,33 +553,33 @@ You can run this yourself by running `pnpm bench`. The bench below was with a Ap
 
 | Runs   | @kitajs/html | typed-html | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ---------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.0088ms     | 0.0177ms   | 2.02x | 0.0066ms   | 1.33x            | 2.68x          |
-| 10000  | 0.9501ms     | 3.2714ms   | 3.44x | 0.6968ms   | 1.36x            | 4.7x           |
-| 100000 | 12.2114ms    | 19.6453ms  | 1.61x | 2.7776ms   | 4.4x             | 7.07x          |
+| 10     | 0.0105ms     | 0.0142ms   | 1.35x | 0.0756ms   | 0.14x            | 0.19x          |
+| 10000  | 0.677ms      | 2.2098ms   | 3.26x | 0.3758ms   | 1.8x             | 5.88x          |
+| 100000 | 5.5433ms     | 14.3708ms  | 2.59x | 1.7392ms   | 3.19x            | 8.26x          |
 
-## Many Props
+## Mdn Homepage
 
 | Runs   | @kitajs/html | typed-html   | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ------------ | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.2479ms     | 1.3757ms     | 5.55x | 0.0031ms   | 79.8x            | 442.91x        |
-| 10000  | 240.6256ms   | 982.6665ms   | 4.08x | 0.7723ms   | 311.56x          | 1272.37x       |
-| 100000 | 2436.4599ms  | 10844.2049ms | 4.45x | 4.4179ms   | 551.49x          | 2454.59x       |
+| 10     | 0.7832ms     | 4.5548ms     | 5.82x | 0.0033ms   | 237.63x          | 1381.92x       |
+| 10000  | 766.6816ms   | 3633.8914ms  | 4.74x | 0.3101ms   | 2472.18x         | 11717.54x      |
+| 100000 | 7289.5123ms  | 34943.7809ms | 4.79x | 1.7747ms   | 4107.43x         | 19689.83x      |
+
+## Many Props
+
+| Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
+| ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
+| 10     | 0.2521ms     | 1.11ms      | 4.4x  | 0.0047ms   | 53.76x           | 236.72x        |
+| 10000  | 221.9241ms   | 938.6489ms  | 4.23x | 0.754ms    | 294.34x          | 1244.95x       |
+| 100000 | 2106.7762ms  | 8763.8641ms | 4.16x | 4.1149ms   | 511.99x          | 2129.81x       |
 
 ## Many Components
 
 | Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.2174ms     | 0.5805ms    | 2.67x | 0.0058ms   | 37.43x           | 99.91x         |
-| 10000  | 169.6069ms   | 665.6724ms  | 3.92x | 1.5865ms   | 106.91x          | 419.6x         |
-| 100000 | 1747.2244ms  | 5227.3891ms | 2.99x | 7.5666ms   | 230.91x          | 690.85x        |
-
-## Big Component
-
-| Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
-| ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.2235ms     | 0.8053ms    | 3.6x  | 0.0048ms   | 46.53x           | 167.64x        |
-| 10000  | 175.1073ms   | 735.6298ms  | 4.2x  | 0.9891ms   | 177.03x          | 743.7x         |
-| 100000 | 1841.2463ms  | 7872.5854ms | 4.28x | 5.1064ms   | 360.58x          | 1541.72x       |
+| 10     | 0.2818ms     | 0.6042ms    | 2.14x | 0.0056ms   | 50.39x           | 108.05x        |
+| 10000  | 194.1914ms   | 443.3157ms  | 2.28x | 1.4394ms   | 134.91x          | 307.99x        |
+| 100000 | 1876.636ms   | 4357.6772ms | 2.32x | 7.9442ms   | 236.23x          | 548.54x        |
 ```
 
 <br />

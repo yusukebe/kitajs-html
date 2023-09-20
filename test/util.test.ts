@@ -22,7 +22,7 @@ it('tests deep scaping', async () => {
     await Html.contentsToString(['<>', Promise.resolve('<>')], true),
     '&lt;>&lt;>'
   )
-  
+
   assert.equal(
     await Html.contentsToString(
       [
@@ -38,8 +38,6 @@ it('tests deep scaping', async () => {
     ),
     '&lt;>'
   )
-
-  
 })
 
 it('tests string contents', async () => {

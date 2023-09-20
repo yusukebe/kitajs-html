@@ -341,10 +341,6 @@ function attributesToString (attributes) {
 function contentsToString (contents, escape) {
   const length = contents.length
 
-  if (length === 0) {
-    return ''
-  }
-
   let result = ''
   let content
   let index = 0
@@ -383,7 +379,7 @@ function contentsToString (contents, escape) {
     result += content
   }
 
-  // escapeHtml is faster when with longer strings, that's
+  // escapeHtml is faster with longer strings, that's
   // why we escape the entire result once
   if (escape === true) {
     return escapeHtml(result)

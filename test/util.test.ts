@@ -15,6 +15,8 @@ it('tests undefined contents', async () => {
     ]),
     ''
   )
+
+  assert.equal(await Html.contentsToString([]), '')
 })
 
 it('tests deep scaping', async () => {

@@ -53,6 +53,10 @@ it('tests string contents', async () => {
   )
 })
 
+it('tests only string contents', async () => {
+  assert.equal(await Html.contentsToString(['a', 'b', ['c', 'd']]), 'abcd')
+})
+
 it('tests promises', async () => {
   const result = Html.contentsToString([
     Promise.resolve('a'),

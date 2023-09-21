@@ -1,5 +1,10 @@
 import Html from '../index'
-import { Suspense, Doctype } from '../components'
+import {
+  Suspense,
+  renderToStream,
+  SuspenseScript,
+  SUSPENSE_ROOT
+} from '../suspense'
 import { setTimeout } from 'timers/promises'
 import http from 'http'
 
@@ -11,21 +16,20 @@ async function WaitFor({ s }: { s: number }) {
 function render(rid: number) {
   return (
     <>
-      <Doctype />
       <html>
-        <head>{Suspense.Script}</head>
+        <head>{SuspenseScript}</head>
         <body>
           <div>Hello</div>
 
-          {Array.from({ length: 10 }, (_, i) => (
+          {/* {Array.from({ length: 10 }, (_, i) => (
             <>
               <Suspense rid={rid} fallback={<div>loading 1s</div>}>
                 <div style="color: verde">
-                  <WaitFor s={i*2} />
+                  <WaitFor s={i * 2} />
                 </div>
               </Suspense>
             </>
-          ))}
+          ))} */}
 
           {/* <Suspense rid={rid} fallback={<div>loading 1s</div>}>
             <div style="color: red">
@@ -58,16 +62,18 @@ function render(rid: number) {
             </div>
           </Suspense>
 
-          <div>World</div>
+          <div>World</div> */}
 
-          <Suspense rid={rid} fallback={<div>loading random</div>}>
+          <Suspense
+            rid={rid}
+            fallback={Promise.resolve(<div>loading random</div>)}>
             <div style="color: green">
-              <WaitFor s={3} />
+              <WaitFor s={10} />
             </div>
-            <div style="color: green">
+            {/* <div style="color: green">
               <WaitFor s={4.5} />
-            </div>
-          </Suspense> */}
+            </div> */}
+          </Suspense>
         </body>
       </html>
     </>
@@ -75,13 +81,13 @@ function render(rid: number) {
 }
 
 setInterval(() => {
-  console.log(Suspense.pending)
+  console.log(SUSPENSE_ROOT)
 }, 500)
 
 http
   .createServer((req, res) => {
     if (req.url === '/') {
-      Suspense.renderToStream(render).pipe(res)
+      renderToStream(render).pipe(res)
       return
     }
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import test from 'node:test'
+import test, { describe } from 'node:test'
 import Html from '../index'
 
 type Props = Html.PropsWithChildren<{ color: string }>
@@ -14,106 +14,108 @@ function Component({ color, children }: Props) {
   )
 }
 
-test('compiled component', () => {
-  const Compiled = Html.compile(Component)
+describe('Compiled components', () => {
+  test('simple', () => {
+    const Compiled = Html.compile(Component)
 
-  assert.equal(
-    <Compiled color="red">1</Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
-  )
-})
+    assert.equal(
+      <Compiled color="red">1</Compiled>,
+      '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
+    )
+  })
 
-test('compiled with children', () => {
-  const Compiled =
-    Html.compile<Html.PropsWithChildren<{ color: string }>>(Component)
+  test('with children', () => {
+    const Compiled =
+      Html.compile<Html.PropsWithChildren<{ color: string }>>(Component)
 
-  assert.equal(
-    <Compiled color="red">
-      <>1</>
-      <>2</>
-    </Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>12</div>'
-  )
-})
+    assert.equal(
+      <Compiled color="red">
+        <>1</>
+        <>2</>
+      </Compiled>,
+      '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>12</div>'
+    )
+  })
 
-test('compiled component with props', () => {
-  const Compiled = Html.compile<Props>(Component)
+  test('with props', () => {
+    const Compiled = Html.compile<Props>(Component)
 
-  assert.equal(
-    <Compiled color="red">1</Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
-  )
-})
+    assert.equal(
+      <Compiled color="red">1</Compiled>,
+      '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
+    )
+  })
 
-test('compiled handmade component', () => {
-  const Compiled = Html.compile(({ color, children }: Props) => (
-    <div>
-      <div class="a" style={{ color }}></div>
-      <div class="b" style={{ color }}></div>
-      {children}
-    </div>
-  ))
-
-  assert.equal(
-    <Compiled color="red">1</Compiled>,
-    '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
-  )
-})
-
-test('compiled strict', () => {
-  const Compiled = Html.compile(({ color, children }: Props) => (
-    <div>
-      <div class="a" style={{ color }}></div>
-      <div class="b" style={{ color }}></div>
-      {children}
-    </div>
-  ))
-
-  assert.throws(
-    //@ts-expect-error - Property color was not provided.
-    () => Compiled({}),
-    /Error: Property color was not provided./
-  )
-
-  assert.throws(
-    //@ts-expect-error - Property color was not provided.
-    () => Compiled(),
-    /Error: The arguments object was not provided./
-  )
-})
-
-test('compiled not strict', () => {
-  const Compiled = Html.compile(
-    ({ color, children }: Props) => (
+  test('handmade component', () => {
+    const Compiled = Html.compile(({ color, children }: Props) => (
       <div>
         <div class="a" style={{ color }}></div>
         <div class="b" style={{ color }}></div>
         {children}
       </div>
-    ),
-    false
-  )
+    ))
 
-  assert.doesNotThrow(
-    //@ts-expect-error - Property color was not provided.
-    Compiled
-  )
+    assert.equal(
+      <Compiled color="red">1</Compiled>,
+      '<div><div class="a" style="color:red;"></div><div class="b" style="color:red;"></div>1</div>'
+    )
+  })
 
-  assert.equal(
-    //@ts-expect-error - Property color was not provided.
-    <Compiled></Compiled>,
-    '<div><div class="a" style="color:;"></div><div class="b" style="color:;"></div></div>'
-  )
-})
+  test('strict', () => {
+    const Compiled = Html.compile(({ color, children }: Props) => (
+      <div>
+        <div class="a" style={{ color }}></div>
+        <div class="b" style={{ color }}></div>
+        {children}
+      </div>
+    ))
 
-test('compiled multiple children', () => {
-  const Compiled = Html.compile(({ children }) => <div>{children}</div>)
+    assert.throws(
+      //@ts-expect-error - Property color was not provided.
+      () => Compiled({}),
+      /Error: Property color was not provided./
+    )
 
-  assert.equal(
-    <Compiled>
-      <div>1</div>
-      <div>2</div>
-    </Compiled>,
-    '<div><div>1</div><div>2</div></div>'
-  )
+    assert.throws(
+      //@ts-expect-error - Property color was not provided.
+      () => Compiled(),
+      /Error: The arguments object was not provided./
+    )
+  })
+
+  test('not strict', () => {
+    const Compiled = Html.compile(
+      ({ color, children }: Props) => (
+        <div>
+          <div class="a" style={{ color }}></div>
+          <div class="b" style={{ color }}></div>
+          {children}
+        </div>
+      ),
+      false
+    )
+
+    assert.doesNotThrow(
+      //@ts-expect-error - Property color was not provided.
+      Compiled
+    )
+
+    assert.equal(
+      //@ts-expect-error - Property color was not provided.
+      <Compiled></Compiled>,
+      '<div><div class="a" style="color:;"></div><div class="b" style="color:;"></div></div>'
+    )
+  })
+
+  test('multiple children', () => {
+    const Compiled = Html.compile(({ children }) => <div>{children}</div>)
+
+    assert.equal(
+      <Compiled>
+        <div>1</div>
+        <div>2</div>
+      </Compiled>,
+      '<div><div>1</div><div>2</div></div>'
+    )
+  })
 })

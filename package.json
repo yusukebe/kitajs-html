@@ -11,8 +11,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "test": "tsc && node --test dist/test",
-    "test:only": "tsc; node --test-only --test dist/test",
+    "test": "tsc && node --trace-warnings --test dist/test",
+    "test:only": "tsc; node --trace-warnings --test-only --test dist/test",
     "bench": "tsc && node --expose-gc dist/benchmark",
     "format": "prettier --write .",
     "lint": "standard"

@@ -1,15 +1,15 @@
-//@ts-nocheck
-
 import assert from 'node:assert'
 import { Readable } from 'node:stream'
-import { afterEach, describe, test } from 'node:test'
-import Html from '../index'
+import { afterEach, describe, it, test } from 'node:test'
+import Html, { PropsWithChildren } from '../index'
 import { Suspense, renderToStream, SUSPENSE_ROOT } from '../suspense'
+import { setTimeout } from 'node:timers/promises'
 
-function SleepForMs({ children }): Promise<string> {
-  return new Promise((res) => {
-    setTimeout(() => res(children), Number(children) * 1.5) // just to differentiate 1ms and 2ms better
-  })
+function SleepForMs({ children }: PropsWithChildren): Promise<string> {
+  const ms = Number(children)
+
+  // just to differentiate 1ms and 2ms better
+  return setTimeout(ms * 1.5, String(ms))
 }
 
 function streamToString(stream: Readable) {
@@ -22,13 +22,23 @@ function streamToString(stream: Readable) {
   })
 }
 
+function Throw(): string {
+  throw new Error('test')
+}
+
 // Detect leaks of pending promises
 afterEach(() => {
-  assert.equal(SUSPENSE_ROOT.pending.size, 0)
-  SUSPENSE_ROOT.pending = new Map()
+  assert.equal(
+    SUSPENSE_ROOT.pending.size,
+    0,
+    'Suspense root left pending values'
+  )
 
-  assert.equal(SUSPENSE_ROOT.handlers.size, 0)
-  SUSPENSE_ROOT.handlers = new Map()
+  assert.equal(
+    SUSPENSE_ROOT.handlers.size,
+    0,
+    'Suspense root left pending handlers'
+  )
 })
 
 describe('Suspense', () => {
@@ -383,5 +393,40 @@ describe('Suspense', () => {
         <script>$RC("N:1", "B:1");</script>
       </>
     ])
+  })
+})
+
+describe('Suspense errors', () => {
+  it('tests sync errors are thrown', () => {
+    assert.throws(() => {
+      renderToStream((r) => (
+        <Suspense rid={r} fallback={<div>fallback</div>}>
+          <Throw />
+        </Suspense>
+      ))
+    }, /test/)
+  })
+
+  it('test sync errors after suspense', () => {
+    try {
+      renderToStream((r) => (
+        <div>
+          {/* Throws after suspense registration */}
+          <Suspense rid={r} fallback={<div>fallback</div>}>
+            {setTimeout(50).then(() => (
+              <div>1</div>
+            ))}
+          </Suspense>
+
+          <div>
+            <Throw />
+          </div>
+        </div>
+      ))
+
+      assert.fail('should throw')
+    } catch (error: any) {
+      assert.equal(error.message, 'test')
+    }
   })
 })

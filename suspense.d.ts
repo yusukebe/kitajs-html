@@ -37,7 +37,7 @@ export const SuspenseScript: string
  * stream of HTML.
  *
  * @param factory The component tree to render.
- * @param rid The request id to identify the request, if not provided, a new
+ * @param rid The resource id to identify the request, if not provided, a new
  * incrementing id will be used.
  *
  * @see {@linkcode Suspense}

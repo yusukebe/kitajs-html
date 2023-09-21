@@ -3,7 +3,7 @@ import test, { describe } from 'node:test'
 import Html from '../index'
 
 describe('Tags', () => {
-  test('self-closing html tags', () => {
+  test('Self-closing html tags', () => {
     assert.equal('<area/>', <area></area>)
 
     assert.equal('<hr/>', <hr></hr>)

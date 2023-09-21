@@ -89,5 +89,4 @@ describe('Util', () => {
     assert.deepEqual(Html4, Html)
     assert.deepEqual(Html5, Html)
   })
-
 })

@@ -21,17 +21,7 @@ function render(rid: number) {
         <body>
           <div>Hello</div>
 
-          {Array.from({ length: 10 }, (_, i) => (
-            <>
-              <Suspense rid={rid} fallback={<div>loading 1s</div>}>
-                <div style="color: verde">
-                  <WaitFor s={i * 2} />
-                </div>
-              </Suspense>
-            </>
-          ))}
-
-          {/* <Suspense rid={rid} fallback={<div>loading 1s</div>}>
+          <Suspense rid={rid} fallback={<div>loading 2s</div>}>
             <div style="color: red">
               <WaitFor s={1} />
             </div>
@@ -71,16 +61,26 @@ function render(rid: number) {
             <div style="color: green">
               <WaitFor s={4.5} />
             </div>
-          </Suspense> */}
+          </Suspense>
+
+          <div>World</div>
         </body>
       </html>
     </>
   )
 }
 
-setInterval(() => {
-  console.log(SUSPENSE_ROOT)
-}, 500)
+  renderToStream(render).pipe(process.stdout)
+ 
+// function streamToString(stream) {
+//   return new Promise((res) => {
+//     let str = ''
+//     stream.on('data', (chunk) => {
+//       str += chunk
+//     })
+//     stream.on('end', () => res(str))
+//   })
+// }
 
 http
   .createServer((req, res) => {
@@ -94,4 +94,8 @@ http
   })
   .listen(8080, () => {
     console.log('http://localhost:8080')
+
+    // setInterval(() => {
+    //   console.log(SUSPENSE_ROOT)
+    // }, 500)
   })

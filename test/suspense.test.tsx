@@ -70,11 +70,11 @@ describe('Suspense', () => {
     assert.equal(
       await streamToString(stream),
       <>
-        <div id="B:1" data-fallback>
+        <div id="B:1" data-sf>
           <div>1</div>
         </div>
 
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           2
         </template>
         <script>$RC("N:1", "B:1");</script>
@@ -92,11 +92,11 @@ describe('Suspense', () => {
     assert.equal(
       await streamToString(stream),
       <>
-        <div id="B:1" data-fallback>
+        <div id="B:1" data-sf>
           <div>1</div>
         </div>
 
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           2
         </template>
         <script>$RC("N:1", "B:1");</script>
@@ -129,11 +129,11 @@ describe('Suspense', () => {
           assert.equal(
             res,
             <>
-              <div id="B:1" data-fallback>
+              <div id="B:1" data-sf>
                 <div>1</div>
               </div>
 
-              <template id="N:1" data-replace>
+              <template id="N:1" data-sr>
                 2
               </template>
               <script>$RC("N:1", "B:1");</script>
@@ -155,11 +155,11 @@ describe('Suspense', () => {
       assert.equal(
         await streamToString(stream),
         <>
-          <div id="B:1" data-fallback>
+          <div id="B:1" data-sf>
             <div>1</div>
           </div>
 
-          <template id="N:1" data-replace>
+          <template id="N:1" data-sr>
             2
           </template>
           <script>$RC("N:1", "B:1");</script>
@@ -189,28 +189,28 @@ describe('Suspense', () => {
       await streamToString(stream),
       <>
         <div>
-          <div id="B:1" data-fallback>
+          <div id="B:1" data-sf>
             <div>1</div>
           </div>
-          <div id="B:2" data-fallback>
+          <div id="B:2" data-sf>
             <div>2</div>
           </div>
-          <div id="B:3" data-fallback>
+          <div id="B:3" data-sf>
             <div>3</div>
           </div>
         </div>
 
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           4
         </template>
         <script>$RC("N:1", "B:1");</script>
 
-        <template id="N:2" data-replace>
+        <template id="N:2" data-sr>
           5
         </template>
         <script>$RC("N:2", "B:2");</script>
 
-        <template id="N:3" data-replace>
+        <template id="N:3" data-sr>
           6
         </template>
         <script>$RC("N:3", "B:3");</script>
@@ -240,67 +240,67 @@ describe('Suspense', () => {
     assert.deepEqual(results, [
       <>
         <div>
-          <div id="B:1" data-fallback>
+          <div id="B:1" data-sf>
             <div>9 loading</div>
           </div>
-          <div id="B:2" data-fallback>
+          <div id="B:2" data-sf>
             <div>8 loading</div>
           </div>
-          <div id="B:3" data-fallback>
+          <div id="B:3" data-sf>
             <div>7 loading</div>
           </div>
-          <div id="B:4" data-fallback>
+          <div id="B:4" data-sf>
             <div>6 loading</div>
           </div>
-          <div id="B:5" data-fallback>
+          <div id="B:5" data-sf>
             <div>5 loading</div>
           </div>
-          <div id="B:6" data-fallback>
+          <div id="B:6" data-sf>
             <div>4 loading</div>
           </div>
-          <div id="B:7" data-fallback>
+          <div id="B:7" data-sf>
             <div>3 loading</div>
           </div>
-          <div id="B:8" data-fallback>
+          <div id="B:8" data-sf>
             <div>2 loading</div>
           </div>
-          <div id="B:9" data-fallback>
+          <div id="B:9" data-sf>
             <div>1 loading</div>
           </div>
         </div>
-        <template id="N:9" data-replace>
+        <template id="N:9" data-sr>
           1
         </template>
         <script>$RC("N:9", "B:9");</script>
-        <template id="N:8" data-replace>
+        <template id="N:8" data-sr>
           2
         </template>
         <script>$RC("N:8", "B:8");</script>
-        <template id="N:7" data-replace>
+        <template id="N:7" data-sr>
           3
         </template>
         <script>$RC("N:7", "B:7");</script>
-        <template id="N:6" data-replace>
+        <template id="N:6" data-sr>
           4
         </template>
         <script>$RC("N:6", "B:6");</script>
-        <template id="N:5" data-replace>
+        <template id="N:5" data-sr>
           5
         </template>
         <script>$RC("N:5", "B:5");</script>
-        <template id="N:4" data-replace>
+        <template id="N:4" data-sr>
           6
         </template>
         <script>$RC("N:4", "B:4");</script>
-        <template id="N:3" data-replace>
+        <template id="N:3" data-sr>
           7
         </template>
         <script>$RC("N:3", "B:3");</script>
-        <template id="N:2" data-replace>
+        <template id="N:2" data-sr>
           8
         </template>
         <script>$RC("N:2", "B:2");</script>
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           9
         </template>
         <script>$RC("N:1", "B:1");</script>
@@ -308,32 +308,32 @@ describe('Suspense', () => {
 
       <>
         <div>
-          <div id="B:1" data-fallback>
+          <div id="B:1" data-sf>
             <div>4 loading</div>
           </div>
-          <div id="B:2" data-fallback>
+          <div id="B:2" data-sf>
             <div>3 loading</div>
           </div>
-          <div id="B:3" data-fallback>
+          <div id="B:3" data-sf>
             <div>2 loading</div>
           </div>
-          <div id="B:4" data-fallback>
+          <div id="B:4" data-sf>
             <div>1 loading</div>
           </div>
         </div>
-        <template id="N:4" data-replace>
+        <template id="N:4" data-sr>
           1
         </template>
         <script>$RC("N:4", "B:4");</script>
-        <template id="N:3" data-replace>
+        <template id="N:3" data-sr>
           2
         </template>
         <script>$RC("N:3", "B:3");</script>
-        <template id="N:2" data-replace>
+        <template id="N:2" data-sr>
           3
         </template>
         <script>$RC("N:2", "B:2");</script>
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           4
         </template>
         <script>$RC("N:1", "B:1");</script>
@@ -341,53 +341,53 @@ describe('Suspense', () => {
 
       <>
         <div>
-          <div id="B:1" data-fallback>
+          <div id="B:1" data-sf>
             <div>7 loading</div>
           </div>
-          <div id="B:2" data-fallback>
+          <div id="B:2" data-sf>
             <div>6 loading</div>
           </div>
-          <div id="B:3" data-fallback>
+          <div id="B:3" data-sf>
             <div>5 loading</div>
           </div>
-          <div id="B:4" data-fallback>
+          <div id="B:4" data-sf>
             <div>4 loading</div>
           </div>
-          <div id="B:5" data-fallback>
+          <div id="B:5" data-sf>
             <div>3 loading</div>
           </div>
-          <div id="B:6" data-fallback>
+          <div id="B:6" data-sf>
             <div>2 loading</div>
           </div>
-          <div id="B:7" data-fallback>
+          <div id="B:7" data-sf>
             <div>1 loading</div>
           </div>
         </div>
-        <template id="N:7" data-replace>
+        <template id="N:7" data-sr>
           1
         </template>
         <script>$RC("N:7", "B:7");</script>
-        <template id="N:6" data-replace>
+        <template id="N:6" data-sr>
           2
         </template>
         <script>$RC("N:6", "B:6");</script>
-        <template id="N:5" data-replace>
+        <template id="N:5" data-sr>
           3
         </template>
         <script>$RC("N:5", "B:5");</script>
-        <template id="N:4" data-replace>
+        <template id="N:4" data-sr>
           4
         </template>
         <script>$RC("N:4", "B:4");</script>
-        <template id="N:3" data-replace>
+        <template id="N:3" data-sr>
           5
         </template>
         <script>$RC("N:3", "B:3");</script>
-        <template id="N:2" data-replace>
+        <template id="N:2" data-sr>
           6
         </template>
         <script>$RC("N:2", "B:2");</script>
-        <template id="N:1" data-replace>
+        <template id="N:1" data-sr>
           7
         </template>
         <script>$RC("N:1", "B:1");</script>

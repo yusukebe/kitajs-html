@@ -12,27 +12,40 @@ const SUSPENSE_ROOT = {
 
 /**
  * @type {import('./suspense').SuspenseScript}
+ *
+ * Simple replace child scripts to replace the template streamed by the server
  */
-const SuspenseScript = `
-    <script>
-      function $RC(ni,oi){
-        let n=document.querySelector(\`template[id="\${ni}"][data-replace]\`);
-        let o=document.querySelector(\`div[id="\${oi}"][data-fallback]\`);
-        if(!n||!o)return;
-        let f=document.createDocumentFragment();
-        while(n.content.firstChild){
-          f.appendChild(n.content.firstChild)
+// As this script is the only residue of this package that is actually sent
+// to the client, it's important to keep it as small as possible and also
+// include the license to avoid legal issues.
+const SuspenseScript = /* html */ `
+      <script>
+        /* Apache-2.0 https://kita.js.org */
+        function $RC(s){
+          var d=document,
+            q=d.querySelector.bind(d),
+            n=q('template[id="N:'+s+'"][data-sr]'),
+            o=q('div[id="B:'+s+'"][data-sf]'),
+            f=d.createDocumentFragment(),
+            g=q('script[id="S:'+s+'"][data-ss]'),
+            c;
+
+          if (n&&o){
+            while(c=n.content.firstChild)
+              f.appendChild(c);
+            o.parentNode.replaceChild(f,o);
+            n.remove()
+          }
+
+          g&&g.remove()
         }
-        o.parentNode.replaceChild(f,o);
-        n.remove()
-      }
-    </script>
-    `.replace(/\n\s*/g, '')
+      </script>
+    `.replace(/\n\s*/g, '') // simply minifies the script
 
 /**
  * @type {import('./suspense').Suspense}
  */
-function Suspense (props) {
+function Suspense(props) {
   // fallback may be async.
   const fallback = contentsToString([props.fallback])
 
@@ -61,7 +74,7 @@ function Suspense (props) {
   SUSPENSE_ROOT.pending.set(props.rid, sid)
 
   children
-    .then(function writeStreamTemplate (result) {
+    .then(function writeStreamTemplate(result) {
       const handler = SUSPENSE_ROOT.handlers.get(props.rid)
 
       // Handler was cleared out previously, probably
@@ -78,17 +91,25 @@ function Suspense (props) {
         return
       }
 
+      // Writes the suspense script if its the first
+      // suspense component in this resource. This way following
+      // templates+scripts can be executed
+      if (sid === 1) {
+        stream.write(SuspenseScript)
+      }
+
       // Writes the chunk
       stream.write(
-        `<template id="N:${sid}" data-replace>${result}</template><script>$RC("N:${sid}", "B:${sid}");</script>`
+        // prettier-ignore
+        '<template id="N:' + sid + '" data-sr>' + result + '</template><script id="S:' + sid + '" data-ss>$RC(' + sid + ')</script>'
       )
     })
-    .catch(function catchError (err) {
+    .catch(function catchError(err) {
       // There's nothing we can do as this block is
       // executed asynchronously.
       console.error(err)
     })
-    .finally(function removePending () {
+    .finally(function removePending() {
       // Gets the last suspense id for this resource, so we can decrement it.
       const lastSuspenseId = SUSPENSE_ROOT.pending.get(props.rid)
 
@@ -123,18 +144,19 @@ function Suspense (props) {
 
   // Keeps string return type
   if (typeof fallback === 'string') {
-    return `<div id="B:${sid}" data-fallback>${fallback}</div>`
+    return '<div id="B:' + sid + '" data-sf>' + fallback + '</div>'
   }
 
   return fallback.then(
-    (fallback) => `<div id="B:${sid}" data-fallback>${fallback}</div>`
+    (resolvedFallback) =>
+      '<div id="B:' + sid + '" data-sf>' + resolvedFallback + '</div>'
   )
 }
 
 /**
  * @type {import('./suspense').renderToStream}
  */
-function renderToStream (factory, customRid) {
+function renderToStream(factory, customRid) {
   if (customRid && SUSPENSE_ROOT.handlers.has(customRid)) {
     throw new Error(`The provided resource ID is already in use: ${customRid}.`)
   }
@@ -176,15 +198,15 @@ function renderToStream (factory, customRid) {
   }
 
   html
-    .then(function writeStreamHtml (html) {
+    .then(function writeStreamHtml(html) {
       stream.write(html)
     })
-    .catch(function catchError (err) {
+    .catch(function catchError(err) {
       // There's nothing we can do as this block is
       // executed asynchronously.
       console.error(err)
     })
-    .finally(function endStream () {
+    .finally(function endStream() {
       // Did not had any suspense component in which
       // a async handler was called.
       if (!SUSPENSE_ROOT.pending.has(rid)) {

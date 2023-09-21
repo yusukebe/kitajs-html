@@ -8,7 +8,7 @@
   "bugs": "https://github.com/kitajs/html/issues",
   "funding": "https://github.com/kitajs/html?sponsor=1",
   "author": "arthurfiorette <npm@arthur.place>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
     "test": "tsc && node --trace-warnings --test dist/test",

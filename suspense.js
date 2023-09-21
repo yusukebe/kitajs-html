@@ -32,7 +32,7 @@ const SuspenseScript = `
 /**
  * @type {import('./suspense').Suspense}
  */
-function Suspense(props) {
+function Suspense (props) {
   // fallback may be async.
   const fallback = contentsToString([props.fallback])
 
@@ -61,7 +61,7 @@ function Suspense(props) {
   SUSPENSE_ROOT.pending.set(props.rid, sid)
 
   children
-    .then(function handler(result) {
+    .then(function handler (result) {
       {
         const currentSid = SUSPENSE_ROOT.pending.get(props.rid)
 
@@ -121,7 +121,7 @@ function Suspense(props) {
 /**
  * @type {import('./suspense').renderToStream}
  */
-function renderToStream(factory, _rid) {
+function renderToStream (factory, _rid) {
   if (_rid && SUSPENSE_ROOT.handlers.has(_rid)) {
     throw new Error(`The provided resource ID is already in use: ${_rid}.`)
   }
@@ -150,7 +150,7 @@ function renderToStream(factory, _rid) {
   }
 
   html
-    .then(function asyncHandler(html) {
+    .then(function asyncHandler (html) {
       stream.write(html)
 
       // Did not had any suspense component in which

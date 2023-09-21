@@ -1,21 +1,23 @@
 import HtmlModule from '../index'
 import assert from 'node:assert'
-import test from 'node:test'
+import test, { describe } from 'node:test'
 
-test('registers Html to the global namespace', async () => {
-  // This should not be defined yet
-  assert.equal(typeof Html, 'undefined')
+describe('Global instance', () => {
+  test('registers Html to the global namespace', async () => {
+    // This should not be defined yet
+    assert.equal(typeof Html, 'undefined')
 
-  // Adds Html to the global namespace
-  await import('../register')
+    // Adds Html to the global namespace
+    await import('../register')
 
-  // Literally the same object
-  assert.equal(typeof Html, 'object')
-  assert.ok(Html === HtmlModule)
+    // Literally the same object
+    assert.equal(typeof Html, 'object')
+    assert.ok(Html === HtmlModule)
 
-  // @ts-expect-error - Delete globalThis to test that it is added
-  delete globalThis.Html
+    // @ts-expect-error - Delete globalThis to test that it is added
+    delete globalThis.Html
 
-  // Should be the same as the start of this test
-  assert.equal(typeof Html, 'undefined')
+    // Should be the same as the start of this test
+    assert.equal(typeof Html, 'undefined')
+  })
 })

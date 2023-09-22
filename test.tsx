@@ -1,12 +1,7 @@
-import Html from './index'
-import { setTimeout } from 'timers/promises'
 import http from 'http'
-import {
-  SUSPENSE_ROOT,
-  Suspense,
-  SuspenseScript,
-  renderToStream
-} from './suspense'
+import { setTimeout } from 'timers/promises'
+import Html from './index'
+import { Suspense, renderToStream } from './suspense'
 
 async function WaitFor({ s }: { s: number }) {
   await setTimeout(Number(s) * 1000)
@@ -16,75 +11,63 @@ async function WaitFor({ s }: { s: number }) {
 function render(rid: number) {
   return (
     <>
-      <html>
-        <head>{SuspenseScript}</head>
-        <body>
-          <div>Hello</div>
+      <div>Hello</div>
 
-          <Suspense rid={rid} fallback={<div>loading 2s</div>}>
-            <div style="color: red">
-              <WaitFor s={1} />
-            </div>
-            <div style="color: red">
-              <WaitFor s={1} />
-            </div>
-          </Suspense>
+      <Suspense rid={rid} fallback={<div>loading 2s</div>}>
+        <div style="color: red">
+          <WaitFor s={1} />
+        </div>
+        <div style="color: red">
+          <WaitFor s={1} />
+        </div>
+      </Suspense>
 
-          <div>World</div>
+      <div>World</div>
 
-          <Suspense rid={rid} fallback={<div>loading 3s</div>}>
-            <div style="color: green">
-              <WaitFor s={3} />
-            </div>
-            <div style="color: green">
-              <WaitFor s={3} />
-            </div>
-          </Suspense>
+      <Suspense rid={rid} fallback={<div>loading 3s</div>}>
+        <div style="color: green">
+          <WaitFor s={3} />
+        </div>
+        <div style="color: green">
+          <WaitFor s={3} />
+        </div>
+      </Suspense>
 
-          <div>World</div>
+      <div>World</div>
 
-          <Suspense rid={rid} fallback={<div>loading 2s</div>}>
-            <div style="color: blue">
-              <WaitFor s={2} />
-            </div>
-            <div style="color: blue">
-              <WaitFor s={2} />
-            </div>
-          </Suspense>
+      <Suspense rid={rid} fallback={<div>loading 2s</div>}>
+        <div style="color: blue">
+          <WaitFor s={2} />
+        </div>
+        <div style="color: blue">
+          <WaitFor s={2} />
+        </div>
+      </Suspense>
 
-          <div>World</div>
+      <div>World</div>
 
-          <Suspense rid={rid} fallback={<div>loading random</div>}>
-            <div style="color: green">
-              <WaitFor s={3} />
-            </div>
-            <div style="color: green">
-              <WaitFor s={4.5} />
-            </div>
-          </Suspense>
+      <Suspense rid={rid} fallback={<div>loading random</div>}>
+        <div style="color: green">
+          <WaitFor s={3} />
+        </div>
+        <div style="color: green">
+          <WaitFor s={4.5} />
+        </div>
+      </Suspense>
 
-          <div>World</div>
-        </body>
-      </html>
+      <div>World</div>
     </>
   )
 }
 
-  renderToStream(render).pipe(process.stdout)
- 
-// function streamToString(stream) {
-//   return new Promise((res) => {
-//     let str = ''
-//     stream.on('data', (chunk) => {
-//       str += chunk
-//     })
-//     stream.on('end', () => res(str))
-//   })
-// }
+setInterval(() => {
+  console.log(SUSPENSE_ROOT)
+}, 500)
 
 http
   .createServer((req, res) => {
     if (req.url === '/') {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
       renderToStream(render).pipe(res)
       return
     }
@@ -94,8 +77,4 @@ http
   })
   .listen(8080, () => {
     console.log('http://localhost:8080')
-
-    // setInterval(() => {
-    //   console.log(SUSPENSE_ROOT)
-    // }, 500)
   })

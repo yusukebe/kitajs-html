@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 import { Readable } from 'node:stream'
 import { afterEach, describe, it, test } from 'node:test'
-import Html, { PropsWithChildren } from '../index'
-import { Suspense, renderToStream, SUSPENSE_ROOT } from '../suspense'
 import { setTimeout } from 'node:timers/promises'
+import Html, { PropsWithChildren } from '../index'
+import { Suspense, SuspenseScript, renderToStream } from '../suspense'
 
 function SleepForMs({ children }: PropsWithChildren): Promise<string> {
   const ms = Number(children)
@@ -29,16 +29,16 @@ function Throw(): string {
 // Detect leaks of pending promises
 afterEach(() => {
   assert.equal(
-    SUSPENSE_ROOT.pending.size,
+    SUSPENSE_ROOT.resources.size,
     0,
-    'Suspense root left pending values'
+    'Suspense root left pending resources'
   )
 
-  assert.equal(
-    SUSPENSE_ROOT.handlers.size,
-    0,
-    'Suspense root left pending handlers'
-  )
+  // Reset suspense root
+  SUSPENSE_ROOT.enabled = false
+  SUSPENSE_ROOT.autoScript = true
+  SUSPENSE_ROOT.requestCounter = 1
+  SUSPENSE_ROOT.resources.clear()
 })
 
 describe('Suspense', () => {
@@ -74,10 +74,14 @@ describe('Suspense', () => {
           <div>1</div>
         </div>
 
+        {SuspenseScript}
+
         <template id="N:1" data-sr>
           2
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
       </>
     )
   })
@@ -96,10 +100,14 @@ describe('Suspense', () => {
           <div>1</div>
         </div>
 
+        {SuspenseScript}
+
         <template id="N:1" data-sr>
           2
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
       </>
     )
   })
@@ -111,7 +119,12 @@ describe('Suspense', () => {
       </Suspense>
     ))
 
-    assert.equal(await streamToString(stream), '<div>2</div>')
+    assert.equal(
+      await streamToString(stream),
+      <>
+        <div>2</div>
+      </>
+    )
   })
 
   test('Multiple async renders cleanup', async () => {
@@ -133,10 +146,14 @@ describe('Suspense', () => {
                 <div>1</div>
               </div>
 
+              {SuspenseScript}
+
               <template id="N:1" data-sr>
                 2
               </template>
-              <script>$RC("N:1", "B:1");</script>
+              <script id="S:1" data-ss>
+                $RC(1)
+              </script>
             </>
           )
         })
@@ -159,10 +176,14 @@ describe('Suspense', () => {
             <div>1</div>
           </div>
 
+          {SuspenseScript}
+
           <template id="N:1" data-sr>
             2
           </template>
-          <script>$RC("N:1", "B:1");</script>
+          <script id="S:1" data-ss>
+            $RC(1)
+          </script>
         </>
       )
     }
@@ -200,20 +221,28 @@ describe('Suspense', () => {
           </div>
         </div>
 
+        {SuspenseScript}
+
         <template id="N:1" data-sr>
           4
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
 
         <template id="N:2" data-sr>
           5
         </template>
-        <script>$RC("N:2", "B:2");</script>
+        <script id="S:2" data-ss>
+          $RC(2)
+        </script>
 
         <template id="N:3" data-sr>
           6
         </template>
-        <script>$RC("N:3", "B:3");</script>
+        <script id="S:3" data-ss>
+          $RC(3)
+        </script>
       </>
     )
   })
@@ -268,42 +297,63 @@ describe('Suspense', () => {
             <div>1 loading</div>
           </div>
         </div>
+
+        {SuspenseScript}
+
         <template id="N:9" data-sr>
           1
         </template>
-        <script>$RC("N:9", "B:9");</script>
+        <script id="S:9" data-ss>
+          $RC(9)
+        </script>
         <template id="N:8" data-sr>
           2
         </template>
-        <script>$RC("N:8", "B:8");</script>
+        <script id="S:8" data-ss>
+          $RC(8)
+        </script>
         <template id="N:7" data-sr>
           3
         </template>
-        <script>$RC("N:7", "B:7");</script>
+        <script id="S:7" data-ss>
+          $RC(7)
+        </script>
         <template id="N:6" data-sr>
           4
         </template>
-        <script>$RC("N:6", "B:6");</script>
+        <script id="S:6" data-ss>
+          $RC(6)
+        </script>
         <template id="N:5" data-sr>
           5
         </template>
-        <script>$RC("N:5", "B:5");</script>
+        <script id="S:5" data-ss>
+          $RC(5)
+        </script>
         <template id="N:4" data-sr>
           6
         </template>
-        <script>$RC("N:4", "B:4");</script>
+        <script id="S:4" data-ss>
+          $RC(4)
+        </script>
         <template id="N:3" data-sr>
           7
         </template>
-        <script>$RC("N:3", "B:3");</script>
+        <script id="S:3" data-ss>
+          $RC(3)
+        </script>
         <template id="N:2" data-sr>
           8
         </template>
-        <script>$RC("N:2", "B:2");</script>
+        <script id="S:2" data-ss>
+          $RC(2)
+        </script>
         <template id="N:1" data-sr>
           9
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
       </>,
 
       <>
@@ -321,22 +371,33 @@ describe('Suspense', () => {
             <div>1 loading</div>
           </div>
         </div>
+
+        {SuspenseScript}
+
         <template id="N:4" data-sr>
           1
         </template>
-        <script>$RC("N:4", "B:4");</script>
+        <script id="S:4" data-ss>
+          $RC(4)
+        </script>
         <template id="N:3" data-sr>
           2
         </template>
-        <script>$RC("N:3", "B:3");</script>
+        <script id="S:3" data-ss>
+          $RC(3)
+        </script>
         <template id="N:2" data-sr>
           3
         </template>
-        <script>$RC("N:2", "B:2");</script>
+        <script id="S:2" data-ss>
+          $RC(2)
+        </script>
         <template id="N:1" data-sr>
           4
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
       </>,
 
       <>
@@ -363,40 +424,131 @@ describe('Suspense', () => {
             <div>1 loading</div>
           </div>
         </div>
+
+        {SuspenseScript}
+
         <template id="N:7" data-sr>
           1
         </template>
-        <script>$RC("N:7", "B:7");</script>
+        <script id="S:7" data-ss>
+          $RC(7)
+        </script>
         <template id="N:6" data-sr>
           2
         </template>
-        <script>$RC("N:6", "B:6");</script>
+        <script id="S:6" data-ss>
+          $RC(6)
+        </script>
         <template id="N:5" data-sr>
           3
         </template>
-        <script>$RC("N:5", "B:5");</script>
+        <script id="S:5" data-ss>
+          $RC(5)
+        </script>
         <template id="N:4" data-sr>
           4
         </template>
-        <script>$RC("N:4", "B:4");</script>
+        <script id="S:4" data-ss>
+          $RC(4)
+        </script>
         <template id="N:3" data-sr>
           5
         </template>
-        <script>$RC("N:3", "B:3");</script>
+        <script id="S:3" data-ss>
+          $RC(3)
+        </script>
         <template id="N:2" data-sr>
           6
         </template>
-        <script>$RC("N:2", "B:2");</script>
+        <script id="S:2" data-ss>
+          $RC(2)
+        </script>
         <template id="N:1" data-sr>
           7
         </template>
-        <script>$RC("N:1", "B:1");</script>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
       </>
     ])
+  })
+
+  it('ensures autoScript works', async () => {
+    let stream = renderToStream((r) => (
+      <Suspense rid={r} fallback={<div>1</div>}>
+        <div>2</div>
+      </Suspense>
+    ))
+    
+    // Sync does not needs autoScript
+    assert.equal(await streamToString(stream), <div>2</div>)
+
+    stream = renderToStream((r) => (
+      <Suspense rid={r} fallback={<div>1</div>}>
+        {Promise.resolve(<div>2</div>)}
+      </Suspense>
+    ))
+    
+    // Async renders SuspenseScript
+    assert.equal(
+      await streamToString(stream),
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+
+        {SuspenseScript}
+
+        <template id="N:1" data-sr>
+          <div>2</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
+    )
+
+    // Disable autoScript
+    SUSPENSE_ROOT.autoScript = false
+
+    stream = renderToStream((r) => (
+      <Suspense rid={r} fallback={<div>1</div>}>
+        {Promise.resolve(<div>2</div>)}
+      </Suspense>
+    ))
+    
+    // Async renders SuspenseScript
+    assert.equal(
+      await streamToString(stream),
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+        <template id="N:1" data-sr>
+          <div>2</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
+    )
   })
 })
 
 describe('Suspense errors', () => {
+  it('Throws when called outside of renderToStream', () => {
+    assert.throws(
+      () => (
+        <>
+          <Suspense rid={1} fallback={<div>loading</div>}>
+            <div>1</div>
+          </Suspense>
+        </>
+      ),
+      /Cannot use Suspense outside of a `renderToStream` call./
+    )
+  })
+
   it('tests sync errors are thrown', () => {
     assert.throws(() => {
       renderToStream((r) => (

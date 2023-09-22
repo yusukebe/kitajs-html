@@ -364,15 +364,15 @@ function contentsToString (contents, escape) {
       // https://jsperf.app/zipuvi
       if (content.then) {
         // @ts-expect-error - this is a promise
-        return content.then((resolved) =>
-          contentsToString(
+        return content.then(function resolveAsyncContent (resolved) {
+          return contentsToString(
             [result, resolved]
-            // if we also pass escape here, it would double escape this result
-            // with the above call.
+              // if we also pass escape here, it would double escape this result
+              // with the above call.
               .concat(contents.slice(index + 1)),
             escape
           )
-        )
+        })
       }
     }
 
@@ -439,8 +439,18 @@ function createElement (name, attrs, ...children) {
     // @ts-expect-error - it will be a promise here
     return children.then(
       /** @param {string} child */
-      (child) =>
-        '<' + name + attributesToString(attrs) + '>' + child + '</' + name + '>'
+      function asyncChildren (child) {
+        return (
+          '<' +
+          name +
+          attributesToString(attrs) +
+          '>' +
+          child +
+          '</' +
+          name +
+          '>'
+        )
+      }
     )
   }
 

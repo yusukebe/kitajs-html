@@ -560,15 +560,78 @@ describe('Suspense errors', () => {
     }
   })
 
-  it('tests suspense error boundary', async () => {
+  it('tests suspense without error boundary', async () => {
+    const err = new Error('component failed')
+
+    try {
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          {Promise.reject(err)}
+        </Suspense>
+      ))
+
+      assert.fail('should throw')
+    } catch (error) {
+      assert.equal(error, err)
+    }
+  })
+
+  it('tests stream suspense without error boundary', async () => {
+    const err = new Error('component failed')
+
+    const stream = renderToStream((r) => (
+      <Suspense rid={r} fallback={<div>1</div>}>
+        {Promise.reject(err)}
+      </Suspense>
+    ))
+
+    try {
+      for await (const data of stream) {
+        // Second stream would be the suspense result, which errors out
+        assert.equal(
+          data.toString(),
+          <div id="B:1" data-sf>
+            <div>1</div>
+          </div>
+        )
+      }
+
+      assert.fail('should throw')
+    } catch (error) {
+      assert.equal(error, err)
+    }
+  })
+
+  it('tests suspense with function error boundary', async () => {
+    const err = new Error('component failed')
+
     // Sync does not needs autoScript
     assert.equal(
       await renderToString((r) => (
-        <Suspense rid={r} fallback={<div>1</div>}>
-          <div>2</div>
+        <Suspense
+          rid={r}
+          fallback={<div>1</div>}
+          catch={(err2) => {
+            assert.equal(err2, err)
+
+            return <div>3</div>
+          }}>
+          {Promise.reject(err)}
         </Suspense>
       )),
-      <div>2</div>
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+
+        {SuspenseScript}
+        <template id="N:1" data-sr>
+          <div>3</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
     )
   })
 })

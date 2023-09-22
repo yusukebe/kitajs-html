@@ -32,15 +32,15 @@ const SuspenseScript = /* html */ `
       </script>
     `.replace(/\n\s*/g, '') // simply minification step
 
-// Creates the suspense root if it doesn't exist
-if (globalThis.SUSPENSE_ROOT === undefined) {
-  globalThis.SUSPENSE_ROOT = {
-    resources: new Map(),
-    requestCounter: 1,
-    enabled: false,
-    autoScript: true
-  }
-}
+/** @global  Creates the suspense root if it doesn't exist */
+const SUSPENSE_ROOT = globalThis.SUSPENSE_ROOT
+  ? globalThis.SUSPENSE_ROOT
+  : (globalThis.SUSPENSE_ROOT = {
+      resources: new Map(),
+      requestCounter: 1,
+      enabled: false,
+      autoScript: true
+    })
 
 /**
  * @type {import('./suspense').Suspense}
@@ -78,42 +78,46 @@ function Suspense(props) {
   const run = ++resource.running
 
   children
-    .then(function writeStreamTemplate(result) {
-      // Reloads the resource as it may have been closed
-      resource = SUSPENSE_ROOT.resources.get(props.rid)
-
-      if (!resource) {
-        return
+    .then(writeStreamTemplate)
+    .catch(function errorRecover(error) {
+      // No catch block was specified, so we can
+      // re-throw the error.
+      if (!props.catch) {
+        throw error
       }
 
-      const stream = resource.stream.deref()
+      let html
 
-      // Stream was probably already closed/cleared out.
-      // We can safely ignore this.
-      if (!stream || stream.closed) {
-        return
+      // unwraps error handler
+      if (typeof props.catch === 'function') {
+        html = props.catch(error)
+      } else {
+        html = props.catch
       }
 
-      // Writes the suspense script if its the first
-      // suspense component in this resource. This way following
-      // templates+scripts can be executed
-      if (SUSPENSE_ROOT.autoScript && resource.sent === false) {
-        stream.write(SuspenseScript)
-        resource.sent = true
+      // handles if catch block returns a string
+      if (typeof html === 'string') {
+        return writeStreamTemplate(html)
       }
 
-      // Writes the chunk
-      stream.write(
-        // prettier-ignore
-        '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$RC(' + run + ')</script>'
-      )
+      // must be a promise
+      return html.then(writeStreamTemplate)
     })
-    .catch(function writeStreamError(err) {
-      // There's nothing we can do as this block is
-      // executed asynchronously.
-      console.error(err)
+    .catch(function writeFatalError(error) {
+      if (resource) {
+        const stream = resource.stream.deref()
+
+        // stream.emit returns true if there's a listener
+        // so we can safely ignore the error
+        if (stream && stream.emit('error', error)) {
+          return
+        }
+      }
+
+      // Nothing else to do if no catch or listener was found
+      console.error(error)
     })
-    .finally(function resourceRemover() {
+    .finally(function cleanResource() {
       // Reloads the resource as it may have been closed
       resource = SUSPENSE_ROOT.resources.get(props.rid)
 
@@ -143,9 +147,46 @@ function Suspense(props) {
     return '<div id="B:' + run + '" data-sf>' + fallback + '</div>'
   }
 
-  return fallback.then(
-    (resolved) => '<div id="B:' + run + '" data-sf>' + resolved + '</div>'
-  )
+  return fallback.then(function resolveCallback(resolved) {
+    return '<div id="B:' + run + '" data-sf>' + resolved + '</div>'
+  })
+
+  /**
+   * This function may be called by the catch handler in case the error
+   * could be handled.
+   *
+   * @param {string} result
+   */
+  function writeStreamTemplate(result) {
+    // Reloads the resource as it may have been closed
+    resource = SUSPENSE_ROOT.resources.get(props.rid)
+
+    if (!resource) {
+      return
+    }
+
+    const stream = resource.stream.deref()
+
+    // Stream was probably already closed/cleared out.
+    // We can safely ignore this.
+    if (!stream || stream.closed) {
+      return
+    }
+
+    // Writes the suspense script if its the first
+    // suspense component in this resource. This way following
+    // templates+scripts can be executed
+    if (SUSPENSE_ROOT.autoScript && resource.sent === false) {
+      stream.write(SuspenseScript)
+      resource.sent = true
+    }
+
+    // Writes the chunk
+    stream.write(
+      // prettier-ignore
+      '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$RC(' + run + ')</script>'
+    )
+  }
 }
 
 /**
@@ -205,10 +246,13 @@ function renderToStream(factory, customRid) {
     .then(function writeStreamHtml(html) {
       stream.write(html)
     })
-    .catch(function catchError(err) {
-      // There's nothing we can do as this block is
-      // executed asynchronously.
-      console.error(err)
+    .catch(function catchError(error) {
+      // Emits the error down the stream or
+      // prints it to the console if there's no
+      // listener.
+      if (stream.emit('error', error) === false) {
+        console.error(error)
+      }
     })
     .finally(function endStream() {
       const updatedResource = SUSPENSE_ROOT.resources.get(requestId)

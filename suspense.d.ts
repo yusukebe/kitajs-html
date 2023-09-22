@@ -20,7 +20,7 @@ declare global {
         /** how many are still running */
         running: number
         /** the stream we should write */
-        stream: WeakRef<Pick<Writable, 'end' | 'closed' | 'write'>>
+        stream: WeakRef<Writable>
       }
     >
 
@@ -67,6 +67,26 @@ export function Suspense(props: SuspenseProps): JSX.Element
  * @param rid The resource id to identify the request, if not provided, a new
  * incrementing id will be used.
  *
+ * @example
+ *
+ * ```tsx
+ * // Simple nodejs webserver to render html
+ * http.createServer((req, res) => {
+ *   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
+ *
+ *   const stream = renderToStream(r => <AppWithSuspense rid={r} />)
+ *
+ *   stream.pipe(res)
+ * }).listen(1227)
+ *
+ * // Prints out the rendered stream
+ * const stream = renderToStream(r => <AppWithSuspense rid={r} />)
+ *
+ * for await (const html of stream) {
+ *   console.log(html.toString())
+ * }
+ * ```
+ *
  * @see {@linkcode Suspense}
  */
 export function renderToStream(
@@ -87,6 +107,16 @@ export function renderToStream(
  * @param factory The component tree to render.
  * @param rid The resource id to identify the request, if not provided, a new
  * incrementing id will be used.
+ *
+ * @example
+ * ```tsx
+ * // Does not uses suspense benefits! Useful for testing. Prefer to
+ * // use renderToStream instead.
+ * const html = await renderToString(r => <AppWithSuspense rid={r} />)
+ * console.log(html)
+ * ```
+ *
+ * @see {@linkcode renderToStream}
  */
 export function renderToString(
   factory: (this: void, rid: number) => JSX.Element,
@@ -121,4 +151,9 @@ export interface SuspenseProps {
    * The async children to render as soon as they are ready.
    */
   children: Children
+
+  /**
+   * The error boundary to use if the async children throw an error.
+   */
+  catch?: JSX.Element | ((error: unknown) => JSX.Element)
 }

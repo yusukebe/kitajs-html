@@ -214,7 +214,7 @@ Note that only at the very bottom of the HTML tree is where you should use the `
 
 ### Typescript Plugin
 
-By installing `@kitajs/ts-html-plugin`, we can add errors and warnings in your editor. To prevent IDE incompatibility and problems, please install it globally.
+By installing [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin), we can add errors and warnings in your editor. To prevent IDE incompatibility and problems, please install it globally.
 
 ```sh
 npm i -g @kitajs/ts-html-plugin
@@ -232,7 +232,17 @@ Make sure to enable it in your tsconfig.json, and you are ready to go!
 }
 ```
 
+```jsonc
+// .vscode/settings.json
+
+{
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
+```
+
 [Make sure to understand what language service plugins can and cannot do.](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin#whats-a-language-service-plugin)
+
+<br />
 
 <br />
 

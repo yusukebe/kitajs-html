@@ -45,7 +45,7 @@ const SUSPENSE_ROOT = globalThis.SUSPENSE_ROOT
 /**
  * @type {import('./suspense').Suspense}
  */
-function Suspense(props) {
+function Suspense (props) {
   if (!SUSPENSE_ROOT.enabled) {
     throw new Error('Cannot use Suspense outside of a `renderToStream` call.')
   }
@@ -79,7 +79,7 @@ function Suspense(props) {
 
   children
     .then(writeStreamTemplate)
-    .catch(function errorRecover(error) {
+    .catch(function errorRecover (error) {
       // No catch block was specified, so we can
       // re-throw the error.
       if (!props.catch) {
@@ -103,7 +103,7 @@ function Suspense(props) {
       // must be a promise
       return html.then(writeStreamTemplate)
     })
-    .catch(function writeFatalError(error) {
+    .catch(function writeFatalError (error) {
       if (resource) {
         const stream = resource.stream.deref()
 
@@ -117,7 +117,7 @@ function Suspense(props) {
       // Nothing else to do if no catch or listener was found
       console.error(error)
     })
-    .finally(function cleanResource() {
+    .finally(function cleanResource () {
       // Reloads the resource as it may have been closed
       resource = SUSPENSE_ROOT.resources.get(props.rid)
 
@@ -147,7 +147,7 @@ function Suspense(props) {
     return '<div id="B:' + run + '" data-sf>' + fallback + '</div>'
   }
 
-  return fallback.then(function resolveCallback(resolved) {
+  return fallback.then(function resolveCallback (resolved) {
     return '<div id="B:' + run + '" data-sf>' + resolved + '</div>'
   })
 
@@ -157,7 +157,7 @@ function Suspense(props) {
    *
    * @param {string} result
    */
-  function writeStreamTemplate(result) {
+  function writeStreamTemplate (result) {
     // Reloads the resource as it may have been closed
     resource = SUSPENSE_ROOT.resources.get(props.rid)
 
@@ -192,7 +192,7 @@ function Suspense(props) {
 /**
  * @type {import('./suspense').renderToStream}
  */
-function renderToStream(factory, customRid) {
+function renderToStream (factory, customRid) {
   // Enables suspense if it's not enabled yet
   if (SUSPENSE_ROOT.enabled === false) {
     SUSPENSE_ROOT.enabled = true
@@ -243,10 +243,10 @@ function renderToStream(factory, customRid) {
   }
 
   html
-    .then(function writeStreamHtml(html) {
+    .then(function writeStreamHtml (html) {
       stream.write(html)
     })
-    .catch(function catchError(error) {
+    .catch(function catchError (error) {
       // Emits the error down the stream or
       // prints it to the console if there's no
       // listener.
@@ -254,7 +254,7 @@ function renderToStream(factory, customRid) {
         console.error(error)
       }
     })
-    .finally(function endStream() {
+    .finally(function endStream () {
       const updatedResource = SUSPENSE_ROOT.resources.get(requestId)
 
       // This resource already resolved or no suspenses were used.
@@ -270,7 +270,7 @@ function renderToStream(factory, customRid) {
 /**
  * @type {import('./suspense').renderToString}
  */
-async function renderToString(factory, customRid) {
+async function renderToString (factory, customRid) {
   const stream = renderToStream(factory, customRid)
 
   /** @type {Buffer[]} */

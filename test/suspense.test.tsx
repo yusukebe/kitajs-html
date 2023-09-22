@@ -1,25 +1,19 @@
 import assert from 'node:assert'
-import { Readable } from 'node:stream'
 import { afterEach, describe, it, test } from 'node:test'
 import { setTimeout } from 'node:timers/promises'
 import Html, { PropsWithChildren } from '../index'
-import { Suspense, SuspenseScript, renderToStream } from '../suspense'
+import {
+  Suspense,
+  SuspenseScript,
+  renderToStream,
+  renderToString
+} from '../suspense'
 
 function SleepForMs({ children }: PropsWithChildren): Promise<string> {
   const ms = Number(children)
 
   // just to differentiate 1ms and 2ms better
   return setTimeout(ms * 1.5, String(ms))
-}
-
-function streamToString(stream: Readable) {
-  return new Promise((res) => {
-    let str = ''
-    stream.on('data', (chunk) => {
-      str += chunk
-    })
-    stream.on('end', () => res(str))
-  })
 }
 
 function Throw(): string {
@@ -43,32 +37,29 @@ afterEach(() => {
 
 describe('Suspense', () => {
   test('Sync without suspense', async () => {
-    let stream = renderToStream(() => <div></div>)
-    assert.equal(await streamToString(stream), <div></div>)
+    assert.equal(await renderToString(() => <div></div>), <div></div>)
 
-    stream = renderToStream(async () => <div></div>)
-    assert.equal(await streamToString(stream), <div></div>)
+    assert.equal(await renderToString(async () => <div></div>), <div></div>)
   })
 
   test('Suspense sync children', async () => {
-    let stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={<div>1</div>}>
-        <div>2</div>
-      </Suspense>
-    ))
-
-    assert.equal(await streamToString(stream), <div>2</div>)
+    assert.equal(
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          <div>2</div>
+        </Suspense>
+      )),
+      <div>2</div>
+    )
   })
 
   test('Suspense async children', async () => {
-    let stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={<div>1</div>}>
-        <SleepForMs>2</SleepForMs>
-      </Suspense>
-    ))
-
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          <SleepForMs>2</SleepForMs>
+        </Suspense>
+      )),
       <>
         <div id="B:1" data-sf>
           <div>1</div>
@@ -87,14 +78,12 @@ describe('Suspense', () => {
   })
 
   test('Suspense async children & fallback', async () => {
-    let stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-        <SleepForMs>2</SleepForMs>
-      </Suspense>
-    ))
-
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
+          <SleepForMs>2</SleepForMs>
+        </Suspense>
+      )),
       <>
         <div id="B:1" data-sf>
           <div>1</div>
@@ -113,14 +102,12 @@ describe('Suspense', () => {
   })
 
   test('Suspense async fallback sync children', async () => {
-    let stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-        <div>2</div>
-      </Suspense>
-    ))
-
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
+          <div>2</div>
+        </Suspense>
+      )),
       <>
         <div>2</div>
       </>
@@ -130,15 +117,13 @@ describe('Suspense', () => {
   test('Multiple async renders cleanup', async () => {
     await Promise.all(
       Array.from({ length: 100 }, () => {
-        return streamToString(
-          renderToStream((r) => {
-            return (
-              <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-                <SleepForMs>2</SleepForMs>
-              </Suspense>
-            )
-          })
-        ).then((res) => {
+        return renderToString((r) => {
+          return (
+            <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
+              <SleepForMs>2</SleepForMs>
+            </Suspense>
+          )
+        }).then((res) => {
           assert.equal(
             res,
             <>
@@ -163,14 +148,12 @@ describe('Suspense', () => {
 
   test('Multiple sync renders cleanup', async () => {
     for (let i = 0; i < 100; i++) {
-      let stream = renderToStream((r) => (
-        <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-          <SleepForMs>2</SleepForMs>
-        </Suspense>
-      ))
-
       assert.equal(
-        await streamToString(stream),
+        await renderToString((r) => (
+          <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
+            <SleepForMs>2</SleepForMs>
+          </Suspense>
+        )),
         <>
           <div id="B:1" data-sf>
             <div>1</div>
@@ -190,24 +173,22 @@ describe('Suspense', () => {
   })
 
   test('Multiple children', async () => {
-    let stream = renderToStream((r) => (
-      <div>
-        <Suspense rid={r} fallback={<div>1</div>}>
-          <SleepForMs>4</SleepForMs>
-        </Suspense>
-
-        <Suspense rid={r} fallback={<div>2</div>}>
-          <SleepForMs>5</SleepForMs>
-        </Suspense>
-
-        <Suspense rid={r} fallback={<div>3</div>}>
-          <SleepForMs>6</SleepForMs>
-        </Suspense>
-      </div>
-    ))
-
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <div>
+          <Suspense rid={r} fallback={<div>1</div>}>
+            <SleepForMs>4</SleepForMs>
+          </Suspense>
+
+          <Suspense rid={r} fallback={<div>2</div>}>
+            <SleepForMs>5</SleepForMs>
+          </Suspense>
+
+          <Suspense rid={r} fallback={<div>3</div>}>
+            <SleepForMs>6</SleepForMs>
+          </Suspense>
+        </div>
+      )),
       <>
         <div>
           <div id="B:1" data-sf>
@@ -248,11 +229,11 @@ describe('Suspense', () => {
   })
 
   test('Concurrent renders', async () => {
-    const streams = []
+    const promises = []
 
     for (const seconds of [9, 4, 7]) {
-      streams.push(
-        renderToStream((r) => (
+      promises.push(
+        renderToString((r) => (
           <div>
             {Array.from({ length: seconds }, (_, i) => (
               <Suspense rid={r} fallback={<div>{seconds - i} loading</div>}>
@@ -264,7 +245,7 @@ describe('Suspense', () => {
       )
     }
 
-    const results = await Promise.all(streams.map(streamToString))
+    const results = await Promise.all(promises)
 
     assert.deepEqual(results, [
       <>
@@ -474,24 +455,23 @@ describe('Suspense', () => {
   })
 
   it('ensures autoScript works', async () => {
-    let stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={<div>1</div>}>
-        <div>2</div>
-      </Suspense>
-    ))
-    
     // Sync does not needs autoScript
-    assert.equal(await streamToString(stream), <div>2</div>)
+    assert.equal(
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          <div>2</div>
+        </Suspense>
+      )),
+      <div>2</div>
+    )
 
-    stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={<div>1</div>}>
-        {Promise.resolve(<div>2</div>)}
-      </Suspense>
-    ))
-    
     // Async renders SuspenseScript
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          {Promise.resolve(<div>2</div>)}
+        </Suspense>
+      )),
       <>
         <div id="B:1" data-sf>
           <div>1</div>
@@ -511,15 +491,13 @@ describe('Suspense', () => {
     // Disable autoScript
     SUSPENSE_ROOT.autoScript = false
 
-    stream = renderToStream((r) => (
-      <Suspense rid={r} fallback={<div>1</div>}>
-        {Promise.resolve(<div>2</div>)}
-      </Suspense>
-    ))
-    
     // Async renders SuspenseScript
     assert.equal(
-      await streamToString(stream),
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          {Promise.resolve(<div>2</div>)}
+        </Suspense>
+      )),
       <>
         <div id="B:1" data-sf>
           <div>1</div>
@@ -580,5 +558,17 @@ describe('Suspense errors', () => {
     } catch (error: any) {
       assert.equal(error.message, 'test')
     }
+  })
+
+  it('tests suspense error boundary', async () => {
+    // Sync does not needs autoScript
+    assert.equal(
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          <div>2</div>
+        </Suspense>
+      )),
+      <div>2</div>
+    )
   })
 })

@@ -223,6 +223,23 @@ function renderToStream(factory, customRid) {
   return stream
 }
 
+/**
+ * @type {import('./suspense').renderToString}
+ */
+async function renderToString(factory, customRid) {
+  const stream = renderToStream(factory, customRid)
+
+  /** @type {Buffer[]} */
+  const chunks = []
+
+  for await (const chunk of stream) {
+    chunks.push(Buffer.from(chunk))
+  }
+
+  return Buffer.concat(chunks).toString('utf-8')
+}
+
 module.exports.Suspense = Suspense
 module.exports.renderToStream = renderToStream
+module.exports.renderToString = renderToString
 module.exports.SuspenseScript = SuspenseScript

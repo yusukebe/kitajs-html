@@ -1,8 +1,20 @@
 const { contentsToString } = require('./index')
 const { PassThrough } = require('stream')
 
+// Avoids double initialization in case this file is not cached by
+// module bundlers.
+if (!globalThis.SUSPENSE_ROOT) {
+  /* global SUSPENSE_ROOT */
+  globalThis.SUSPENSE_ROOT = {
+    resources: new Map(),
+    requestCounter: 1,
+    enabled: false,
+    autoScript: true
+  }
+}
+
 /**
- * Simple replace child scripts to replace the template streamed by the server.
+ * Simple IE11 compatible replace child scripts to replace the template streamed by the server.
  *
  * As this script is the only residue of this package that is actually sent
  * to the client, it's important to keep it as small as possible and also
@@ -20,7 +32,7 @@ const SuspenseScript = /* html */ `
             g=q('script[id="S:'+s+'"][data-ss]'),
             c;
 
-          if (n&&o){
+          if(n&&o){
             while(c=n.content.firstChild)
               f.appendChild(c);
             o.parentNode.replaceChild(f,o);
@@ -30,17 +42,9 @@ const SuspenseScript = /* html */ `
           g&&g.remove()
         }
       </script>
-    `.replace(/\n\s*/g, '') // simply minification step
-
-/** @global  Creates the suspense root if it doesn't exist */
-const SUSPENSE_ROOT = globalThis.SUSPENSE_ROOT
-  ? globalThis.SUSPENSE_ROOT
-  : (globalThis.SUSPENSE_ROOT = {
-      resources: new Map(),
-      requestCounter: 1,
-      enabled: false,
-      autoScript: true
-    })
+    `
+  // Removes line breaks added for readability
+  .replace(/\n\s*/g, '')
 
 /**
  * @type {import('./suspense').Suspense}

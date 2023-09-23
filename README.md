@@ -548,14 +548,14 @@ Just add this triple slash directive to the top of your file:
 
 This package is just a string builder on steroids, as you can see [how this works](#how-it-works). This means that most way to isolate performance differences is to micro benchmark.
 
-You can run this yourself by running `pnpm bench`. The bench below was with a Apple M1 Pro 8gb.
+You can run this yourself by running `pnpm bench`. The benchmark below ran with a 13600k @5.1GHz machine.
 
 ```markdown
 # Benchmark
 
-- 2023-09-20T03:18:01.545Z
-- Node: v20.6.1
-- V8: 11.3.244.8-node.14
+- 2023-09-23T19:26:24.506Z
+- Node: v20.7.0
+- V8: 11.3.244.8-node.15
 - OS: linux
 - Arch: x64
 
@@ -563,33 +563,33 @@ You can run this yourself by running `pnpm bench`. The bench below was with a Ap
 
 | Runs   | @kitajs/html | typed-html | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ---------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.0105ms     | 0.0142ms   | 1.35x | 0.0756ms   | 0.14x            | 0.19x          |
-| 10000  | 0.677ms      | 2.2098ms   | 3.26x | 0.3758ms   | 1.8x             | 5.88x          |
-| 100000 | 5.5433ms     | 14.3708ms  | 2.59x | 1.7392ms   | 3.19x            | 8.26x          |
+| 10     | 0.0071ms     | 0.0123ms   | 1.72x | 0.0459ms   | 0.16x            | 0.27x          |
+| 10000  | 0.4891ms     | 1.9689ms   | 4.03x | 0.4315ms   | 1.13x            | 4.56x          |
+| 100000 | 4.717ms      | 13.653ms   | 2.89x | 1.5551ms   | 3.03x            | 8.78x          |
 
 ## Mdn Homepage
 
 | Runs   | @kitajs/html | typed-html   | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ------------ | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.7832ms     | 4.5548ms     | 5.82x | 0.0033ms   | 237.63x          | 1381.92x       |
-| 10000  | 766.6816ms   | 3633.8914ms  | 4.74x | 0.3101ms   | 2472.18x         | 11717.54x      |
-| 100000 | 7289.5123ms  | 34943.7809ms | 4.79x | 1.7747ms   | 4107.43x         | 19689.83x      |
+| 10     | 0.6441ms     | 3.0466ms     | 4.73x | 0.0029ms   | 221.57x          | 1048.03x       |
+| 10000  | 601.5763ms   | 3013.5356ms  | 5.01x | 0.2293ms   | 2623.21x         | 13140.72x      |
+| 100000 | 5953.055ms   | 30076.7341ms | 5.05x | 1.1917ms   | 4995.36x         | 25238.17x      |
 
 ## Many Props
 
 | Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.2521ms     | 1.11ms      | 4.4x  | 0.0047ms   | 53.76x           | 236.72x        |
-| 10000  | 221.9241ms   | 938.6489ms  | 4.23x | 0.754ms    | 294.34x          | 1244.95x       |
-| 100000 | 2106.7762ms  | 8763.8641ms | 4.16x | 4.1149ms   | 511.99x          | 2129.81x       |
+| 10     | 0.1971ms     | 0.9631ms    | 4.89x | 0.0026ms   | 76.26x           | 372.58x        |
+| 10000  | 164.2186ms   | 698.8376ms  | 4.26x | 0.682ms    | 240.78x          | 1024.67x       |
+| 100000 | 1688.9518ms  | 7065.3811ms | 4.18x | 2.8688ms   | 588.73x          | 2462.82x       |
 
 ## Many Components
 
 | Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
 | ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.2818ms     | 0.6042ms    | 2.14x | 0.0056ms   | 50.39x           | 108.05x        |
-| 10000  | 194.1914ms   | 443.3157ms  | 2.28x | 1.4394ms   | 134.91x          | 307.99x        |
-| 100000 | 1876.636ms   | 4357.6772ms | 2.32x | 7.9442ms   | 236.23x          | 548.54x        |
+| 10     | 0.2367ms     | 0.4481ms    | 1.89x | 0.0041ms   | 57.64x           | 109.14x        |
+| 10000  | 148.0245ms   | 368.8733ms  | 2.49x | 1.2694ms   | 116.61x          | 290.6x         |
+| 100000 | 1548.758ms   | 3748.9902ms | 2.42x | 6.009ms    | 257.74x          | 623.9x         |
 ```
 
 <br />

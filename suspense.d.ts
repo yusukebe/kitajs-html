@@ -1,5 +1,5 @@
 import type { Children } from './'
-import type { Writable, Readable } from 'stream'
+import type { Readable } from 'stream'
 
 declare global {
   /**
@@ -153,7 +153,12 @@ export interface SuspenseProps {
   children: Children
 
   /**
-   * The error boundary to use if the async children throw an error.
+   * This error boundary is used to catch any error thrown by an async component
+   * and streams its fallback instead.
+   *
+   * This does not catches for errors thrown by the suspense itself or async
+   * fallback components. Please use {@linkcode ErrorBoundary} to catch them
+   * instead.
    */
   catch?: JSX.Element | ((error: unknown) => JSX.Element)
 }

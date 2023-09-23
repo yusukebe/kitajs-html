@@ -13,7 +13,7 @@ function SleepForMs({ children }: PropsWithChildren): Promise<string> {
   const ms = Number(children)
 
   // just to differentiate 1ms and 2ms better
-  return setTimeout(ms * 1.5, String(ms))
+  return setTimeout(ms * 2, String(ms))
 }
 
 function Throw(): string {

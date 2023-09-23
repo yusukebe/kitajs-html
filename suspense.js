@@ -1,5 +1,5 @@
 const { contentsToString } = require('./index')
-const { PassThrough } = require('stream')
+const { Readable } = require('stream')
 
 // Avoids double initialization in case this file is not cached by
 // module bundlers.
@@ -138,7 +138,7 @@ function Suspense (props) {
         const stream = resource.stream.deref()
 
         if (stream) {
-          stream.end()
+          stream.push(null) // ends stream
         }
 
         // Removes the current state
@@ -181,12 +181,12 @@ function Suspense (props) {
     // suspense component in this resource. This way following
     // templates+scripts can be executed
     if (SUSPENSE_ROOT.autoScript && resource.sent === false) {
-      stream.write(SuspenseScript)
+      stream.push(SuspenseScript)
       resource.sent = true
     }
 
     // Writes the chunk
-    stream.write(
+    stream.push(
       // prettier-ignore
       '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$RC(' + run + ')</script>'
     )
@@ -207,7 +207,7 @@ function renderToStream (factory, customRid) {
   }
 
   const requestId = customRid || SUSPENSE_ROOT.requestCounter++
-  const stream = new PassThrough()
+  const stream = new Readable({ read: function noop () {} })
 
   SUSPENSE_ROOT.resources.set(requestId, {
     stream: new WeakRef(stream),
@@ -225,7 +225,7 @@ function renderToStream (factory, customRid) {
     // nothing we can do unless closing the stream
     // and re-throwing the error.
 
-    stream.end()
+    stream.push(null) // ends stream
     SUSPENSE_ROOT.resources.delete(requestId)
 
     throw renderError
@@ -233,13 +233,13 @@ function renderToStream (factory, customRid) {
 
   // root resolves to promise
   if (typeof html === 'string') {
-    stream.write(html)
+    stream.push(html)
 
     const updatedResource = SUSPENSE_ROOT.resources.get(requestId)
 
     // This resource already resolved or no suspenses were used.
     if (!updatedResource || updatedResource.running === 0) {
-      stream.end()
+      stream.push(null) // ends stream
       SUSPENSE_ROOT.resources.delete(requestId)
     }
 
@@ -248,7 +248,7 @@ function renderToStream (factory, customRid) {
 
   html
     .then(function writeStreamHtml (html) {
-      stream.write(html)
+      stream.push(html)
     })
     .catch(function catchError (error) {
       // Emits the error down the stream or
@@ -263,7 +263,7 @@ function renderToStream (factory, customRid) {
 
       // This resource already resolved or no suspenses were used.
       if (!updatedResource || updatedResource.running === 0) {
-        stream.end()
+        stream.push(null) // ends stream
         SUSPENSE_ROOT.resources.delete(requestId)
       }
     })

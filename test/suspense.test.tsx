@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { afterEach, describe, it, test } from 'node:test'
+import { afterEach, describe, it, mock, test } from 'node:test'
 import { setTimeout } from 'node:timers/promises'
 import Html, { PropsWithChildren } from '../index'
 import {
@@ -504,6 +504,53 @@ describe('Suspense', () => {
         </div>
         <template id="N:1" data-sr>
           <div>2</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
+    )
+  })
+
+  test('renderToStream', async () => {
+    const stream = renderToStream((r) => (
+      <div>
+        <Suspense rid={r} fallback={<div>2</div>}>
+          {Promise.resolve(<div>1</div>)}
+        </Suspense>
+      </div>
+    ))
+
+    assert(stream.readable)
+
+    // emits end event
+    const fn = mock.fn()
+    stream.on('end', fn)
+
+    const chunks = []
+
+    for await (const chunk of stream) {
+      chunks.push(chunk)
+    }
+
+    assert.equal(fn.mock.calls.length, 1)
+    assert.equal(chunks.length, 2)
+
+    assert.equal(
+      chunks[0].toString(),
+      <div>
+        <div id="B:1" data-sf>
+          <div>2</div>
+        </div>
+      </div>
+    )
+
+    assert.equal(
+      chunks[1].toString(),
+      <>
+        {SuspenseScript}
+        <template id="N:1" data-sr>
+          <div>1</div>
         </template>
         <script id="S:1" data-ss>
           $RC(1)

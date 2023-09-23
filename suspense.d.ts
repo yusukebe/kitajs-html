@@ -20,7 +20,7 @@ declare global {
         /** how many are still running */
         running: number
         /** the stream we should write */
-        stream: WeakRef<Writable>
+        stream: WeakRef<Readable>
       }
     >
 

@@ -10,7 +10,7 @@ try {
 }
 
 // Avoids multiple registrations
-if(!root.Html) {
+if (!root.Html) {
   root.Html = require('./index')
 }
 

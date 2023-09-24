@@ -9,7 +9,10 @@ try {
   root = window
 }
 
-root.Html = require('./index')
+// Avoids multiple registrations
+if(!root.Html) {
+  root.Html = require('./index')
+}
 
 // Removes the default export wrapper
 if (root.Html.default) {

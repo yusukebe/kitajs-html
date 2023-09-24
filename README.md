@@ -99,7 +99,7 @@ console.log(<div>Hello World</div>) // '<div>Hello World</div>'
 // Maybe your own server-side html frontend
 function route(request, response) {
   return response
-    .header('Content-Type', 'text/html')
+    .header('Content-Type', 'text/html; charset=utf-8')
     .send(<div>Hello World</div>)
 }
 

@@ -1,46 +1,37 @@
-import assert from 'node:assert'
-import { afterEach, describe, it, mock, test } from 'node:test'
-import { setTimeout } from 'node:timers/promises'
-import Html, { PropsWithChildren } from '../index'
-import {
-  Suspense,
-  SuspenseScript,
-  renderToStream,
-  renderToString
-} from '../suspense'
+import assert from 'node:assert';
+import { afterEach, describe, it, mock, test } from 'node:test';
+import { setTimeout } from 'node:timers/promises';
+import Html, { PropsWithChildren } from '../index';
+import { Suspense, SuspenseScript, renderToStream, renderToString } from '../suspense';
 
 function SleepForMs({ children }: PropsWithChildren): Promise<string> {
-  const ms = Number(children)
+  const ms = Number(children);
 
   // just to differentiate 1ms and 2ms better
-  return setTimeout(ms * 2, String(ms))
+  return setTimeout(ms * 2, String(ms));
 }
 
 function Throw(): string {
-  throw new Error('test')
+  throw new Error('test');
 }
 
 // Detect leaks of pending promises
 afterEach(() => {
-  assert.equal(
-    SUSPENSE_ROOT.resources.size,
-    0,
-    'Suspense root left pending resources'
-  )
+  assert.equal(SUSPENSE_ROOT.resources.size, 0, 'Suspense root left pending resources');
 
   // Reset suspense root
-  SUSPENSE_ROOT.enabled = false
-  SUSPENSE_ROOT.autoScript = true
-  SUSPENSE_ROOT.requestCounter = 1
-  SUSPENSE_ROOT.resources.clear()
-})
+  SUSPENSE_ROOT.enabled = false;
+  SUSPENSE_ROOT.autoScript = true;
+  SUSPENSE_ROOT.requestCounter = 1;
+  SUSPENSE_ROOT.resources.clear();
+});
 
 describe('Suspense', () => {
   test('Sync without suspense', async () => {
-    assert.equal(await renderToString(() => <div></div>), <div></div>)
+    assert.equal(await renderToString(() => <div></div>), <div></div>);
 
-    assert.equal(await renderToString(async () => <div></div>), <div></div>)
-  })
+    assert.equal(await renderToString(async () => <div></div>), <div></div>);
+  });
 
   test('Suspense sync children', async () => {
     assert.equal(
@@ -50,8 +41,8 @@ describe('Suspense', () => {
         </Suspense>
       )),
       <div>2</div>
-    )
-  })
+    );
+  });
 
   test('Suspense async children', async () => {
     assert.equal(
@@ -74,8 +65,8 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    )
-  })
+    );
+  });
 
   test('Suspense async children & fallback', async () => {
     assert.equal(
@@ -98,8 +89,8 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    )
-  })
+    );
+  });
 
   test('Suspense async fallback sync children', async () => {
     assert.equal(
@@ -111,8 +102,8 @@ describe('Suspense', () => {
       <>
         <div>2</div>
       </>
-    )
-  })
+    );
+  });
 
   test('Multiple async renders cleanup', async () => {
     await Promise.all(
@@ -122,7 +113,7 @@ describe('Suspense', () => {
             <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
               <SleepForMs>2</SleepForMs>
             </Suspense>
-          )
+          );
         }).then((res) => {
           assert.equal(
             res,
@@ -140,11 +131,11 @@ describe('Suspense', () => {
                 $RC(1)
               </script>
             </>
-          )
-        })
+          );
+        });
       })
-    )
-  })
+    );
+  });
 
   test('Multiple sync renders cleanup', async () => {
     for (let i = 0; i < 100; i++) {
@@ -168,9 +159,9 @@ describe('Suspense', () => {
             $RC(1)
           </script>
         </>
-      )
+      );
     }
-  })
+  });
 
   test('Multiple children', async () => {
     assert.equal(
@@ -225,11 +216,11 @@ describe('Suspense', () => {
           $RC(3)
         </script>
       </>
-    )
-  })
+    );
+  });
 
   test('Concurrent renders', async () => {
-    const promises = []
+    const promises = [];
 
     for (const seconds of [9, 4, 7]) {
       promises.push(
@@ -242,10 +233,10 @@ describe('Suspense', () => {
             ))}
           </div>
         ))
-      )
+      );
     }
 
-    const results = await Promise.all(promises)
+    const results = await Promise.all(promises);
 
     assert.deepEqual(results, [
       <>
@@ -451,8 +442,8 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    ])
-  })
+    ]);
+  });
 
   it('ensures autoScript works', async () => {
     // Sync does not needs autoScript
@@ -463,7 +454,7 @@ describe('Suspense', () => {
         </Suspense>
       )),
       <div>2</div>
-    )
+    );
 
     // Async renders SuspenseScript
     assert.equal(
@@ -486,10 +477,10 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    )
+    );
 
     // Disable autoScript
-    SUSPENSE_ROOT.autoScript = false
+    SUSPENSE_ROOT.autoScript = false;
 
     // Async renders SuspenseScript
     assert.equal(
@@ -509,8 +500,8 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    )
-  })
+    );
+  });
 
   test('renderToStream', async () => {
     const stream = renderToStream((r) => (
@@ -519,22 +510,22 @@ describe('Suspense', () => {
           {Promise.resolve(<div>1</div>)}
         </Suspense>
       </div>
-    ))
+    ));
 
-    assert(stream.readable)
+    assert(stream.readable);
 
     // emits end event
-    const fn = mock.fn()
-    stream.on('end', fn)
+    const fn = mock.fn();
+    stream.on('end', fn);
 
-    const chunks = []
+    const chunks = [];
 
     for await (const chunk of stream) {
-      chunks.push(chunk)
+      chunks.push(chunk);
     }
 
-    assert.equal(fn.mock.calls.length, 1)
-    assert.equal(chunks.length, 2)
+    assert.equal(fn.mock.calls.length, 1);
+    assert.equal(chunks.length, 2);
 
     assert.equal(
       chunks[0].toString(),
@@ -543,7 +534,7 @@ describe('Suspense', () => {
           <div>2</div>
         </div>
       </div>
-    )
+    );
 
     assert.equal(
       chunks[1].toString(),
@@ -556,9 +547,26 @@ describe('Suspense', () => {
           $RC(1)
         </script>
       </>
-    )
-  })
-})
+    );
+  });
+
+  test('renderToStream without suspense', async () => {
+    const stream = renderToStream(() => '<div>not suspense</div>', 1227);
+
+    assert.equal(stream.rid, 1227)
+    assert.ok(stream.readable);
+
+    const data = stream.read()
+
+    assert.equal(data.toString(), '<div>not suspense</div>')
+
+    for await (const _ of stream) {
+      assert.fail('should not stream anything more')
+    }
+
+    assert.ok(stream.closed);
+  });
+});
 
 describe('Suspense errors', () => {
   it('Throws when called outside of renderToStream', () => {
@@ -571,8 +579,8 @@ describe('Suspense errors', () => {
         </>
       ),
       /Cannot use Suspense outside of a `renderToStream` call./
-    )
-  })
+    );
+  });
 
   it('tests sync errors are thrown', () => {
     assert.throws(() => {
@@ -580,9 +588,9 @@ describe('Suspense errors', () => {
         <Suspense rid={r} fallback={<div>fallback</div>}>
           <Throw />
         </Suspense>
-      ))
-    }, /test/)
-  })
+      ));
+    }, /test/);
+  });
 
   it('test sync errors after suspense', () => {
     try {
@@ -599,38 +607,38 @@ describe('Suspense errors', () => {
             <Throw />
           </div>
         </div>
-      ))
+      ));
 
-      assert.fail('should throw')
+      assert.fail('should throw');
     } catch (error: any) {
-      assert.equal(error.message, 'test')
+      assert.equal(error.message, 'test');
     }
-  })
+  });
 
   it('tests suspense without error boundary', async () => {
-    const err = new Error('component failed')
+    const err = new Error('component failed');
 
     try {
       await renderToString((r) => (
         <Suspense rid={r} fallback={<div>1</div>}>
           {Promise.reject(err)}
         </Suspense>
-      ))
+      ));
 
-      assert.fail('should throw')
+      assert.fail('should throw');
     } catch (error) {
-      assert.equal(error, err)
+      assert.equal(error, err);
     }
-  })
+  });
 
   it('tests stream suspense without error boundary', async () => {
-    const err = new Error('component failed')
+    const err = new Error('component failed');
 
     const stream = renderToStream((r) => (
       <Suspense rid={r} fallback={<div>1</div>}>
         {Promise.reject(err)}
       </Suspense>
-    ))
+    ));
 
     try {
       for await (const data of stream) {
@@ -640,17 +648,17 @@ describe('Suspense errors', () => {
           <div id="B:1" data-sf>
             <div>1</div>
           </div>
-        )
+        );
       }
 
-      assert.fail('should throw')
+      assert.fail('should throw');
     } catch (error) {
-      assert.equal(error, err)
+      assert.equal(error, err);
     }
-  })
+  });
 
   it('tests suspense with function error boundary', async () => {
-    const err = new Error('component failed')
+    const err = new Error('component failed');
 
     // Sync does not needs autoScript
     assert.equal(
@@ -659,10 +667,11 @@ describe('Suspense errors', () => {
           rid={r}
           fallback={<div>1</div>}
           catch={(err2) => {
-            assert.equal(err2, err)
+            assert.equal(err2, err);
 
-            return <div>3</div>
-          }}>
+            return <div>3</div>;
+          }}
+        >
           {Promise.reject(err)}
         </Suspense>
       )),
@@ -679,6 +688,6 @@ describe('Suspense errors', () => {
           $RC(1)
         </script>
       </>
-    )
-  })
-})
+    );
+  });
+});

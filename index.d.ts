@@ -14,11 +14,6 @@ type Html = typeof Html
  */
 declare namespace Html {
   /**
-   * A const used to represent a html fragment.
-   */
-  export const Fragment: unique symbol
-
-  /**
    * Returns true if the character at the given index is an uppercase character.
    *
    * @param {string} input the string to check.
@@ -83,7 +78,7 @@ declare namespace Html {
   /**
    * Generates a html string from the given contents.
    *
-   * @param {string | Function | typeof Fragment} name the name of the element to create or a function that creates the element.
+   * @param {string | Function  } name the name of the element to create or a function that creates the element.
    * @param {{children?: object}} [attributes] a record of literal values to use as attributes. A property named `children` will be used as the children of the element.
    * @param  {...string} contents the inner contents of the element.
    * @returns {string} the generated html string.
@@ -91,7 +86,7 @@ declare namespace Html {
    */
   export function createElement<
     C extends Children[],
-    N extends string | Function | typeof Fragment
+    N extends string | Function
   >(
     this: void,
     name: N,
@@ -166,6 +161,17 @@ declare namespace Html {
    * Here for interop with `preact` and many build systems.
    */
   export const h: typeof createElement
+
+  /**
+   * A JSX Fragment is used to return multiple elements from a component.
+   *
+   * @example
+   * ```tsx
+   * // renders <div>1</div> and <div>2</div> without needing a wrapper element
+   * const html = <><div>1</div><div>2</div></>
+   * ```
+   */
+  export function Fragment(props: PropsWithChildren): JSX.Element
 
   export type Children =
     | number

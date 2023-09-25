@@ -4,11 +4,6 @@ const ESCAPED_REGEX = /[<"'&]/
 const CAMEL_REGEX = /[a-z][A-Z]/
 
 /**
- * @type {typeof import('.').Fragment}
- */
-const Fragment = Symbol.for('kHtmlFragment')
-
-/**
  * @type {import('.').isUpper}
  */
 function isUpper (input, index) {
@@ -416,10 +411,6 @@ function createElement (name, attrs, ...children) {
     return name(attrs)
   }
 
-  if (name === Fragment) {
-    return contentsToString(children)
-  }
-
   // Switches the tag name when this custom `tag` is present.
   if (name === 'tag') {
     name = String(attrs.of)
@@ -457,6 +448,13 @@ function createElement (name, attrs, ...children) {
   return (
     '<' + name + attributesToString(attrs) + '>' + children + '</' + name + '>'
   )
+}
+
+/**
+ * @type {import('.').Fragment}
+ */
+function Fragment(props) {
+  return Html.contentsToString([props.children])
 }
 
 /**

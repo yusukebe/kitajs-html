@@ -29,7 +29,8 @@
 <br />
 
 > [!WARNING]  
-> Learn how to [sanitize](#sanitization) and avoid [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
+> Learn how to [sanitize](#sanitization) and avoid
+> [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
 
 <br />
 
@@ -71,7 +72,8 @@ npm install @kitajs/html @kitajs/ts-html-plugin  # or yarn add @kitajs/html @kit
 
 ## Getting Started
 
-Install `@kitajs/html` with your favorite package manager, import it into the top of your `jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
+Install `@kitajs/html` with your favorite package manager, import it into the top of your
+`jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
 
 ```jsonc
 // tsconfig.json
@@ -137,7 +139,8 @@ console.log(<Layout name="World">I'm in the body!</Layout>)
 typeof (<div>Hello World</div>) === 'string'
 ```
 
-This package just provides functions to transpile JSX to a HTML string, you can imagine doing something like this before, but now with type checking and intellisense:
+This package just provides functions to transpile JSX to a HTML string, you can imagine
+doing something like this before, but now with type checking and intellisense:
 
 ```ts
 // without @kitajs/html
@@ -155,11 +158,15 @@ const html = <div>Hello World!<div> ✅
 ## Sanitization
 
 > [!IMPORTANT]  
-> Please use our `@kitajs/ts-html-plugin` to emit TS errors on where you are exposed to XSS. Head over to [getting started](#getting-started) to install it.
+> Please use our `@kitajs/ts-html-plugin` to emit TS errors on where you are exposed to
+> XSS. Head over to [getting started](#getting-started) to install it.
 
 <br />
 
-This package sanitizes every attribute by default. However, as the result is always a string, we cannot differentiate a html element created by a `<tag>` or from a user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually call `Html.escapeHtml`.
+This package sanitizes every attribute by default. However, as the result is always a
+string, we cannot differentiate a html element created by a `<tag>` or from a user input.
+This forces you to use the provided [`safe`](#the-safe-attribute) or manually call
+`Html.escapeHtml`.
 
 ```jsx
 <div>⚠️ This will NOT be escaped. and WILL expose you to XSS</div>
@@ -190,7 +197,8 @@ user = {
 
 ### The safe attribute
 
-You should always use the `safe` attribute when you are rendering uncontrolled user input. This will sanitize its contents and avoid XSS attacks.
+You should always use the `safe` attribute when you are rendering uncontrolled user input.
+This will sanitize its contents and avoid XSS attacks.
 
 ```jsx
 function UserCard({ name, description, date, about }) {
@@ -205,17 +213,20 @@ function UserCard({ name, description, date, about }) {
       <br />
       <p safe>{about}</p>
     </div>
-  )
+  );
 }
 ```
 
-Note that only at the very bottom of the HTML tree is where you should use the `safe` attribute, to only escape where its needed.
+Note that only at the very bottom of the HTML tree is where you should use the `safe`
+attribute, to only escape where its needed.
 
 <br />
 
 ### Typescript Plugin
 
-By installing [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin), we can add errors and warnings in your editor. To prevent IDE incompatibility and problems, please install it globally.
+By installing [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin), we can
+add errors and warnings in your editor. To prevent IDE incompatibility and problems,
+please install it globally.
 
 ```sh
 npm i -g @kitajs/ts-html-plugin
@@ -249,7 +260,10 @@ Make sure to enable it in your tsconfig.json, and you are ready to go!
 
 ## Migrating from HTML
 
-Migrating from plain HTML to JSX can be a pain to convert it all manually, as you will find yourself hand placing quotes and closing void elements. Luckily for us, there's a tool called [htmltojsx](https://magic.reactjs.net/htmltojsx.htm) that can help us with that.
+Migrating from plain HTML to JSX can be a pain to convert it all manually, as you will
+find yourself hand placing quotes and closing void elements. Luckily for us, there's a
+tool called [htmltojsx](https://magic.reactjs.net/htmltojsx.htm) that can help us with
+that.
 
 ```html
 <!-- Hello world -->
@@ -277,28 +291,25 @@ Generates:
 
 ### Base HTML templates
 
-Often you will have a "template" html with doctype, things on the head, body and so on... The layout is also a very good component to be compiled. Here is a effective example on how to do it:.
+Often you will have a "template" html with doctype, things on the head, body and so on...
+The layout is also a very good component to be compiled. Here is a effective example on
+how to do it:.
 
 ```tsx
-export const Layout = html.compile(
-  (p: Html.PropsWithChildren<{ head: string }>) => (
-    <>
-      {'<!doctype html>'}
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <title>Document</title>
-          {p.head}
-        </head>
-        <body>{p.children}</body>
-      </html>
-    </>
-  )
-)
+export const Layout = html.compile((p: Html.PropsWithChildren<{ head: string }>) => (
+  <>
+    {'<!doctype html>'}
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        {p.head}
+      </head>
+      <body>{p.children}</body>
+    </html>
+  </>
+));
 
 const html = (
   <Layout
@@ -307,134 +318,137 @@ const html = (
         <link rel="stylesheet" href="/style.css" />
         <script src="/script.js" />
       </>
-    }>
+    }
+  >
     <div>Hello World</div>
   </Layout>
-)
+);
 ```
 
 <br />
 
 ### Htmx
 
-The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why we also provide type definitions for all HTMX attributes.
+The usage of [htmx.org](https://htmx.org/) is super common with this project, this is why
+we also provide type definitions for all HTMX attributes.
 
 You just need to add this triple slash directive to the top of your file:
 
 ```tsx
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
-import '@kitajs/html/register'
+import '@kitajs/html/register';
 
 const html = (
   // Type checking and intellisense for all HTMX attributes
   <div hx-get="/api" hx-trigger="click" hx-target="#target">
     Click me!
   </div>
-)
+);
 ```
 
 <br />
 
 ### Hotwire Turbo
 
-This project supports the usage of [Turbo Hotwire](https://turbo.hotwired.dev/). We provide a separate export
-that you can use to provide type definitions for the elements and attributes used with Turbo Hotwire.
+This project supports the usage of [Turbo Hotwire](https://turbo.hotwired.dev/). We
+provide a separate export that you can use to provide type definitions for the elements
+and attributes used with Turbo Hotwire.
 
 You just need to add this triple slash directive to the top of your file:
 
 ```tsx
 /// <reference types="@kitajs/html/hotwire-turbo.d.ts" />
 
-import '@kitajs/html/register'
+import '@kitajs/html/register';
 
 const html = (
   // Type checking and intellisense for all HTMX attributes
   <turbo-frame id="messages">
-    <a href="/messages/expanded">
-      Show all expanded messages in this frame.
-    </a>
+    <a href="/messages/expanded">Show all expanded messages in this frame.</a>
 
-    <form action="/messages">
-      Show response from this form within this frame.
-    </form>
+    <form action="/messages">Show response from this form within this frame.</form>
   </turbo-frame>
-)
+);
 ```
 
 <br />
 
 ## Compiling HTML
 
-Compiles a **clean component** into a super fast component. This does not
-support unclean components / props processing.
+Compiles a **clean component** into a super fast component. This does not support unclean
+components / props processing.
 
-This mode works just like prepared statements in SQL. Compiled components can give up to [**2000**](#performance) times faster html generation. This is a opt-in feature that you may not be able to use everywhere!
+This mode works just like prepared statements in SQL. Compiled components can give up to
+[**2000**](#performance) times faster html generation. This is a opt-in feature that you
+may not be able to use everywhere!
 
 ```tsx
-import Html from '@kitajs/html'
+import Html from '@kitajs/html';
 
 function Component(props: Html.PropsWithChildren<{ name: string }>) {
-  return <div>Hello {props.name}</div>
+  return <div>Hello {props.name}</div>;
 }
 
-const compiled = Html.compile<typeof Component>(Component)
+const compiled = Html.compile<typeof Component>(Component);
 
-compiled({ name: 'World' })
+compiled({ name: 'World' });
 // <div>Hello World</div>
 
-const compiled = Html.compile((p) => <div>Hello {p.name}</div>)
+const compiled = Html.compile((p) => <div>Hello {p.name}</div>);
 
-compiled({ name: 'World' })
+compiled({ name: 'World' });
 // <div>Hello World</div>
 ```
 
-Properties passed for compiled components **ARE NOT** what will be passed as argument to the generated function.
+Properties passed for compiled components **ARE NOT** what will be passed as argument to
+the generated function.
 
 ```tsx
 const compiled = Html.compile((t) => {
   // THIS WILL NOT print 123, but a string used by .compile instead
-  console.log(t.asd)
-  return <div></div>
-})
+  console.log(t.asd);
+  return <div></div>;
+});
 
-compiled({ asd: 123 })
+compiled({ asd: 123 });
 ```
 
-That's the reason on why you cannot compile unclean components, as they need to process the props before rendering.
+That's the reason on why you cannot compile unclean components, as they need to process
+the props before rendering.
 
 <br />
 
 ### Clean Components
 
-A **clean component** is a component that does not process props before
-applying them to the element. This means that the props are applied to the
-element as is, and you need to process them before passing them to the
-component.
+A **clean component** is a component that does not process props before applying them to
+the element. This means that the props are applied to the element as is, and you need to
+process them before passing them to the component.
 
 ```tsx
 // Clean component, render as is
 function Clean(props: PropsWithChildren<{ repeated: string }>) {
-  return <div>{props.repeated}</div>
+  return <div>{props.repeated}</div>;
 }
 
 // Calculation is done before passing to the component
-html = <Clean name={'a'.repeat(5)} />
+html = <Clean name={'a'.repeat(5)} />;
 
 // Unclean component, process before render
 function Unclean(props: { repeat: string; n: number }) {
-  return <div>{props.repeat.repeat(props.n)}</div>
+  return <div>{props.repeat.repeat(props.n)}</div>;
 }
 
 // Calculation is done inside the component, thus cannot be used with .compile()
-html = <Unclean repeat="a" n={5} />
+html = <Unclean repeat="a" n={5} />;
 ```
 
 <br />
 
 ## Fragments
 
-JSX does not allow multiple root elements, but you can use a fragment to group multiple elements:
+JSX does not allow multiple root elements, but you can use a fragment to group multiple
+elements:
 
 ```jsx
 const html = (
@@ -442,7 +456,7 @@ const html = (
     <div>1</div>
     <div>2</div>
   </>
-)
+);
 ```
 
 [Learn more about JSX syntax here!](https://react.dev/learn/writing-markup-with-jsx)
@@ -456,13 +470,15 @@ All HTML elements and attributes should be supported.
 - [Supported html elements](https://html.spec.whatwg.org/multipage#toc-semantics)
 - [Supported html events](https://www.w3schools.com/tags/ref_eventattributes.asp)
 
-**Missing an element or attribute?** Please create an issue or a PR to add it. It's easy to add.
+**Missing an element or attribute?** Please create an issue or a PR to add it. It's easy
+to add.
 
 <br />
 
 ### The `tag` tag
 
-The `<tag of="">` tag is a custom internal tag that allows you to render any runtime selected tag you want. Possibly reasons to prefer this tag over extending types:
+The `<tag of="">` tag is a custom internal tag that allows you to render any runtime
+selected tag you want. Possibly reasons to prefer this tag over extending types:
 
 - You want to render a tag that is chosen at runtime.
 - You don't want to mess up with extending globally available types.
@@ -478,15 +494,18 @@ The `<tag of="">` tag is a custom internal tag that allows you to render any run
 // <my-custom-KEBAB></my-custom-KEBAB>
 ```
 
-We do recommend using [extending types](#extending-types) instead, as it will give you intellisense and type checking.
+We do recommend using [extending types](#extending-types) instead, as it will give you
+intellisense and type checking.
 
 <br />
 
 ## Async Components
 
-Async components are supported. When any child or sub child of a component tree is a promise, the whole tree will return a promise of the html string.
+Async components are supported. When any child or sub child of a component tree is a
+promise, the whole tree will return a promise of the html string.
 
-If no async components are found, the result will be simply a string, and you can safely cast it into a string.
+If no async components are found, the result will be simply a string, and you can safely
+cast it into a string.
 
 ```jsx
 async function Async() {
@@ -503,26 +522,32 @@ const async = <div><Async /></div> as Promise<string>
 const sync: string = <div><Sync /></div> as string
 ```
 
-A `JSX.Element` will always be a string. Once a children element is a async component, the entire upper tree will also be async.
+A `JSX.Element` will always be a string. Once a children element is a async component, the
+entire upper tree will also be async.
 
 <br />
 
 ### Why JSX.Element is a Promise?
 
-> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets implemented, you need to manually cast `JSX.Element` into strings if you are sure there is no inner async components in your component tree.
+> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
+> implemented, you need to manually cast `JSX.Element` into strings if you are sure there
+> is no inner async components in your component tree.
 
-JSX elements are mostly strings everywhere. However, as the nature of this package, once a children element is a async component, the entire upper tree will also be async. Unless you are sure that no other component in your entire codebase is async, you should always handle both string and promise cases.
+JSX elements are mostly strings everywhere. However, as the nature of this package, once a
+children element is a async component, the entire upper tree will also be async. Unless
+you are sure that no other component in your entire codebase is async, you should always
+handle both string and promise cases.
 
 ```jsx
 // It may or may not have inner async components.
-const html = <Layout />
+const html = <Layout />;
 
 if (html instanceof Promise) {
   // I'm a promise, I should be awaited
-  console.log(await html)
+  console.log(await html);
 } else {
   // I'm a string, I can be used as is
-  console.log(html)
+  console.log(html);
 }
 ```
 
@@ -530,7 +555,8 @@ if (html instanceof Promise) {
 
 ## Extending types
 
-Just as exemplified above, you may also want to add custom properties to your elements. You can do this by extending the `JSX` namespace.
+Just as exemplified above, you may also want to add custom properties to your elements.
+You can do this by extending the `JSX` namespace.
 
 ```tsx
 declare global {
@@ -539,15 +565,15 @@ declare global {
     interface IntrinsicElements {
       mathPower: HtmlTag & {
         // Changes properties to the math-power element
-        ['my-exponential']: number
+        ['my-exponential']: number;
         // this property becomes the <>{children}</> type
-        children: number
-      }
+        children: number;
+      };
     }
 
     // Adds hxBoost property to all elements native elements (those who extends HtmlTag)
     interface HtmlTag {
-      ['hx-boost']: boolean
+      ['hx-boost']: boolean;
       // TIP: We already provide HTMX types, check them out!
     }
   }
@@ -557,13 +583,14 @@ const element = (
   <mathPower my-exponential={2} hx-boost>
     {3}
   </mathPower>
-)
+);
 // Becomes <math-power my-exponential="2" hx-boost>3</math-power>
 ```
 
 ### Allow everything!
 
-We also provide a way to allow any tag/attribute combination, altough we **do not recommend using it**.
+We also provide a way to allow any tag/attribute combination, altough we **do not
+recommend using it**.
 
 Just add this triple slash directive to the top of your file:
 
@@ -575,9 +602,12 @@ Just add this triple slash directive to the top of your file:
 
 ## Performance
 
-This package is just a string builder on steroids, as you can see [how this works](#how-it-works). This means that most way to isolate performance differences is to micro benchmark.
+This package is just a string builder on steroids, as you can see
+[how this works](#how-it-works). This means that most way to isolate performance
+differences is to micro benchmark.
 
-You can run this yourself by running `pnpm bench`. The benchmark below ran with a 13600k @5.1GHz machine.
+You can run this yourself by running `pnpm bench`. The benchmark below ran with a 13600k
+@5.1GHz machine.
 
 ```markdown
 # Benchmark
@@ -625,7 +655,9 @@ You can run this yourself by running `pnpm bench`. The benchmark below ran with 
 
 ## How it works
 
-This package just aims to be a drop in replacement syntax for JSX, and it works because you [tell tsc to transpile](#getting-started) JSX syntax to calls to our own `html` namespace.
+This package just aims to be a drop in replacement syntax for JSX, and it works because
+you [tell tsc to transpile](#getting-started) JSX syntax to calls to our own `html`
+namespace.
 
 ```jsx
 <ol start={2}>
@@ -642,52 +674,59 @@ Html.createElement(
   'ol',
   { start: 2 },
   [1, 2].map((i) => Html.createElement('li', null, i))
-)
+);
 ```
 
 Which, when called, returns this string:
 
 ```js
-'<ol start="2"><li>1</li><li>2</li></ol>'
+'<ol start="2"><li>1</li><li>2</li></ol>';
 ```
 
 <br />
 
 ## Format HTML output
 
-This package emits HTML as a compact string, useful for over the wire environments. However, if your use case really needs the output
-HTML to be pretty printed, you can use an external JS library to do so, like [html-prettify](https://www.npmjs.com/package/html-prettify).
+This package emits HTML as a compact string, useful for over the wire environments.
+However, if your use case really needs the output HTML to be pretty printed, you can use
+an external JS library to do so, like
+[html-prettify](https://www.npmjs.com/package/html-prettify).
 
 ```jsx
-import Html from '@kitajs/html'
-import prettify from 'html-prettify'
+import Html from '@kitajs/html';
+import prettify from 'html-prettify';
 
 const html = (
   <div>
     <div>1</div>
     <div>2</div>
   </div>
-)
+);
 
-console.log(html)
+console.log(html);
 // <div><div>1</div><div>2</div></div>
 
-console.log(prettify(html))
+console.log(prettify(html));
 // <div>
 //   <div>1</div>
 //   <div>2</div>
 // </div>
 ```
 
-👉 There's an open PR to implement this feature natively, wanna work on it? Check [this PR](https://github.com/kitajs/html/pull/1).
+👉 There's an open PR to implement this feature natively, wanna work on it? Check
+[this PR](https://github.com/kitajs/html/pull/1).
 
 <br />
 
 ## Fork credits
 
-This repository was initially forked from [typed-html](https://github.com/nicojs/typed-html) and modified to add some features and increase performance.
+This repository was initially forked from
+[typed-html](https://github.com/nicojs/typed-html) and modified to add some features and
+increase performance.
 
-Initial credits to [nicojs](https://github.com/nicojs) and [contributors](https://github.com/nicojs/typed-html/graphs/contributors) for the amazing work.
+Initial credits to [nicojs](https://github.com/nicojs) and
+[contributors](https://github.com/nicojs/typed-html/graphs/contributors) for the amazing
+work.
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
 

@@ -69,7 +69,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
           <header
             class="top-navigation main-document-header-container 
  dark
-">
+"
+          >
             <div class="container ">
               <div class="top-navigation-wrap">
                 <a href="/pt-BR/" class="logo" aria-label="MDN homepage">
@@ -79,7 +80,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     viewBox="0 0 361 104.2"
                     style={{ background: 'new 0 0 361 104.2' }}
                     xmlSpace="preserve"
-                    role="img">
+                    role="img"
+                  >
                     <title>MDN Web Docs</title>
                     <path
                       d="M197.6 73.2h-17.1v-5.5h3.8V51.9c0-3.7-.7-6.3-2.1-7.9-1.4-1.6-3.3-2.3-5.7-2.3-3.2 0-5.6 1.1-7.2 3.4s-2.4 4.6-2.5 6.9v15.6h6v5.5h-17.1v-5.5h3.8V51.9c0-3.8-.7-6.4-2.1-7.9-1.4-1.5-3.3-2.3-5.6-2.3-3.2 0-5.5 1.1-7.2 3.3-1.6 2.2-2.4 4.5-2.5 6.9v15.8h6.9v5.5h-20.2v-5.5h6V42.4h-6.1v-5.6h13.4v6.4c1.2-2.1 2.7-3.8 4.7-5.2 2-1.3 4.4-2 7.3-2s5.3.7 7.5 2.1c2.2 1.4 3.7 3.5 4.5 6.4 1.1-2.5 2.7-4.5 4.9-6.1s4.8-2.4 7.9-2.4c3.5 0 6.5 1.1 8.9 3.3s3.7 5.6 3.7 10.2v18.2h6.1v5.5zm42.5 0h-13.2V66c-1.2 2.2-2.8 4.1-4.9 5.6-2.1 1.6-4.8 2.4-8.3 2.4-4.8 0-8.7-1.6-11.6-4.9-2.9-3.2-4.3-7.7-4.3-13.3 0-5 1.3-9.6 4-13.7 2.6-4.1 6.9-6.2 12.8-6.2s9.8 2.2 12.3 6.5V22.7h-8.6v-5.6h15.8v50.6h6v5.5zm-13.3-16.8V52c-.1-3-1.2-5.5-3.2-7.3s-4.4-2.8-7.2-2.8c-3.6 0-6.3 1.3-8.2 3.9-1.9 2.6-2.8 5.8-2.8 9.6 0 4.1 1 7.3 3 9.5s4.5 3.3 7.4 3.3c3.2 0 5.8-1.3 7.8-3.8 2.1-2.6 3.1-5.3 3.2-8zm61.5 16.8H269v-5.5h6V51.9c0-3.7-.7-6.3-2.2-7.9-1.4-1.6-3.4-2.3-5.7-2.3-3.1 0-5.6 1-7.4 3s-2.8 4.4-2.9 7v15.9h6v5.5h-19.3v-5.5h6V42.4h-6.2v-5.6h13.6V43c2.6-4.6 6.8-6.9 12.7-6.9 3.6 0 6.7 1.1 9.2 3.3s3.7 5.6 3.7 10.2v18.2h6v5.4h-.2z"
@@ -98,7 +100,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   class="button action has-icon main-menu-toggle"
                   aria-haspopup="menu"
                   aria-label="Open main menu"
-                  aria-expanded="false">
+                  aria-expanded="false"
+                >
                   <span class="button-wrap">
                     <span class="icon icon-menu " />
                     <span class="visually-hidden">Open main menu</span>
@@ -114,7 +117,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         id="references-button"
                         class="top-level-entry menu-toggle"
                         aria-controls="references-menu"
-                        aria-expanded="false">
+                        aria-expanded="false"
+                      >
                         References
                       </button>
                       <a href="/pt-BR/docs/Web" class="top-level-entry">
@@ -123,7 +127,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <ul
                         id="references-menu"
                         class="submenu references hidden inline-submenu-lg"
-                        aria-labelledby="references-button">
+                        aria-labelledby="references-button"
+                      >
                         <li class="apis-link-container mobile-only ">
                           <a href="/pt-BR/docs/Web" class="submenu-item ">
                             <div class="submenu-icon" />
@@ -160,9 +165,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           </a>
                         </li>
                         <li class="javascript-link-container ">
-                          <a
-                            href="/pt-BR/docs/Web/JavaScript"
-                            class="submenu-item ">
+                          <a href="/pt-BR/docs/Web/JavaScript" class="submenu-item ">
                             <div class="submenu-icon javascript" />
                             <div class="submenu-content-container">
                               <div class="submenu-item-heading">JavaScript</div>
@@ -197,12 +200,11 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         <li class="apis-link-container ">
                           <a
                             href="/pt-BR/docs/Mozilla/Add-ons/WebExtensions"
-                            class="submenu-item ">
+                            class="submenu-item "
+                          >
                             <div class="submenu-icon" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                Web Extensions
-                              </div>
+                              <div class="submenu-item-heading">Web Extensions</div>
                               <p class="submenu-item-description">
                                 Developing extensions for web browsers
                               </p>
@@ -213,9 +215,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           <a href="/pt-BR/docs/Web" class="submenu-item ">
                             <div class="submenu-icon" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                Web Technology
-                              </div>
+                              <div class="submenu-item-heading">Web Technology</div>
                               <p class="submenu-item-description">
                                 Web technology reference for developers
                               </p>
@@ -230,7 +230,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         id="guides-button"
                         class="top-level-entry menu-toggle"
                         aria-controls="guides-menu"
-                        aria-expanded="false">
+                        aria-expanded="false"
+                      >
                         Guides
                       </button>
                       <a href="/pt-BR/docs/Learn" class="top-level-entry">
@@ -239,7 +240,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <ul
                         id="guides-menu"
                         class="submenu guides hidden inline-submenu-lg"
-                        aria-labelledby="guides-button">
+                        aria-labelledby="guides-button"
+                      >
                         <li class="apis-link-container mobile-only ">
                           <a href="/pt-BR/docs/Learn" class="submenu-item ">
                             <div class="submenu-icon learn" />
@@ -257,9 +259,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           <a href="/pt-BR/docs/Learn" class="submenu-item ">
                             <div class="submenu-icon learn" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                MDN Learning Area
-                              </div>
+                              <div class="submenu-item-heading">MDN Learning Area</div>
                               <p class="submenu-item-description">
                                 Learn web development
                               </p>
@@ -267,9 +267,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           </a>
                         </li>
                         <li class="html-link-container ">
-                          <a
-                            href="/pt-BR/docs/Learn/HTML"
-                            class="submenu-item ">
+                          <a href="/pt-BR/docs/Learn/HTML" class="submenu-item ">
                             <div class="submenu-icon html" />
                             <div class="submenu-content-container">
                               <div class="submenu-item-heading">HTML</div>
@@ -291,9 +289,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           </a>
                         </li>
                         <li class="javascript-link-container ">
-                          <a
-                            href="/pt-BR/docs/Learn/JavaScript"
-                            class="submenu-item ">
+                          <a href="/pt-BR/docs/Learn/JavaScript" class="submenu-item ">
                             <div class="submenu-icon javascript" />
                             <div class="submenu-content-container">
                               <div class="submenu-item-heading">JavaScript</div>
@@ -304,14 +300,10 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           </a>
                         </li>
                         <li class=" ">
-                          <a
-                            href="/pt-BR/docs/Web/Accessibility"
-                            class="submenu-item ">
+                          <a href="/pt-BR/docs/Web/Accessibility" class="submenu-item ">
                             <div class="submenu-icon" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                Accessibility
-                              </div>
+                              <div class="submenu-item-heading">Accessibility</div>
                               <p class="submenu-item-description">
                                 Learn to make the web accessible to all
                               </p>
@@ -326,7 +318,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         id="mdn-plus-button"
                         class="top-level-entry menu-toggle"
                         aria-controls="mdn-plus-menu"
-                        aria-expanded="false">
+                        aria-expanded="false"
+                      >
                         Plus
                       </button>
                       <a href="/pt-BR/plus" class="top-level-entry">
@@ -335,7 +328,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <ul
                         id="mdn-plus-menu"
                         class="submenu mdn-plus hidden inline-submenu-lg"
-                        aria-labelledby="mdn-plus-button">
+                        aria-labelledby="mdn-plus-button"
+                      >
                         <li class=" ">
                           <a href="/pt-BR/plus" class="submenu-item ">
                             <div class="submenu-icon" />
@@ -351,9 +345,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                           <a href="/pt-BR/plus/ai-help" class="submenu-item ">
                             <div class="submenu-icon" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                AI Help (beta)
-                              </div>
+                              <div class="submenu-item-heading">AI Help (beta)</div>
                               <p class="submenu-item-description">
                                 Get real-time assistance and support
                               </p>
@@ -374,12 +366,11 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         <li class=" ">
                           <a
                             href="/en-US/plus/docs/features/overview"
-                            class="submenu-item ">
+                            class="submenu-item "
+                          >
                             <div class="submenu-icon" />
                             <div class="submenu-content-container">
-                              <div class="submenu-item-heading">
-                                Documentation
-                              </div>
+                              <div class="submenu-item-heading">Documentation</div>
                               <p class="submenu-item-description">
                                 Learn how to use MDN Plus
                               </p>
@@ -410,9 +401,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       </a>
                     </li>
                     <li class="top-level-entry-container">
-                      <a
-                        class="top-level-entry menu-link"
-                        href="/en-US/plus/ai-help/">
+                      <a class="top-level-entry menu-link" href="/en-US/plus/ai-help/">
                         AI Help <sup class="new beta">Beta</sup>
                       </a>
                     </li>
@@ -423,11 +412,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     action="/pt-BR/search"
                     class="search-form search-widget"
                     id="top-nav-search-form"
-                    role="search">
+                    role="search"
+                  >
                     <label
                       id="top-nav-search-label"
                       htmlFor="top-nav-search-input"
-                      class="visually-hidden">
+                      class="visually-hidden"
+                    >
                       Search MDN
                     </label>
                     <input
@@ -448,15 +439,14 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     />
                     <button
                       type="button"
-                      class="button action has-icon clear-search-button">
+                      class="button action has-icon clear-search-button"
+                    >
                       <span class="button-wrap">
                         <span class="icon icon-cancel " />
                         <span class="visually-hidden">Clear search input</span>
                       </span>
                     </button>
-                    <button
-                      type="submit"
-                      class="button action has-icon search-button">
+                    <button type="submit" class="button action has-icon search-button">
                       <span class="button-wrap">
                         <span class="icon icon-search " />
                         <span class="visually-hidden">Search</span>
@@ -473,7 +463,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <button
                     type="button"
                     class="button action has-icon theme-switcher-menu small"
-                    aria-haspopup="menu">
+                    aria-haspopup="menu"
+                  >
                     <span class="button-wrap">
                       <span class="icon icon-theme-os-default " />
                       Theme
@@ -485,7 +476,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     <a
                       href="/users/fxa/login/authenticate/?next=%2Fpt-BR%2F"
                       class="login-link"
-                      rel="nofollow">
+                      rel="nofollow"
+                    >
                       Log in
                     </a>
                   </li>
@@ -493,7 +485,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     <a
                       href="/users/fxa/login/authenticate/?next=%2Fpt-BR%2F"
                       target="_self"
-                      class="button primary mdn-plus-subscribe-link">
+                      class="button primary mdn-plus-subscribe-link"
+                    >
                       <span class="button-wrap">Sign up for free</span>
                     </a>
                   </li>
@@ -509,19 +502,21 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     Resources for <u>Developers</u>,<br /> by Developers
                   </h1>
                   <p>
-                    Documenting web technologies, including CSS, HTML, and
-                    JavaScript, since 2005.
+                    Documenting web technologies, including CSS, HTML, and JavaScript,
+                    since 2005.
                   </p>
                   <div class="homepage-hero-search">
                     <form
                       action="/pt-BR/search"
                       class="search-form search-widget"
                       id="hp-search-form"
-                      role="search">
+                      role="search"
+                    >
                       <label
                         id="hp-search-label"
                         htmlFor="hp-search-input"
-                        class="visually-hidden">
+                        class="visually-hidden"
+                      >
                         Search MDN
                       </label>
                       <input
@@ -542,17 +537,14 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       />
                       <button
                         type="button"
-                        class="button action has-icon clear-search-button">
+                        class="button action has-icon clear-search-button"
+                      >
                         <span class="button-wrap">
                           <span class="icon icon-cancel " />
-                          <span class="visually-hidden">
-                            Clear search input
-                          </span>
+                          <span class="visually-hidden">Clear search input</span>
                         </span>
                       </button>
-                      <button
-                        type="submit"
-                        class="button action has-icon search-button">
+                      <button type="submit" class="button action has-icon search-button">
                         <span class="button-wrap">
                           <span class="icon icon-search " />
                           <span class="visually-hidden">Search</span>
@@ -566,9 +558,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     </form>
                   </div>
                 </section>
-                <div
-                  class="mandala-container  homepage-hero-bg"
-                  aria-hidden="true">
+                <div class="mandala-container  homepage-hero-bg" aria-hidden="true">
                   <div class="mandala-translate mandala-rotate">
                     <div class="mandala-svg-container">
                       <svg
@@ -577,7 +567,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         viewBox="0 0 675 675"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="mandala">
+                        class="mandala"
+                      >
                         <title>Mandala</title>
                         <defs>
                           <path
@@ -623,13 +614,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         <text dy={70} textLength={1760}>
                           <textPath textLength={1760} href="#circle2">
                             {' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
                           </textPath>
                         </text>
                         <text dy={70} textLength={1507}>
@@ -711,14 +702,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <div class="article-tile">
                     <h3 class="tile-title">
                       <a href="/en-US/blog/regular-expressions-reference-updates/">
-                        New reference pages on MDN for JavaScript regular
-                        expressions
+                        New reference pages on MDN for JavaScript regular expressions
                       </a>
                     </h3>
                     <p>
-                      See the latest updates to the MDN reference pages about
-                      JavaScript regular expressions, including new sections on
-                      sub-features and browser compatibility information.
+                      See the latest updates to the MDN reference pages about JavaScript
+                      regular expressions, including new sections on sub-features and
+                      browser compatibility information.
                     </p>
                   </div>
                   <div class="article-tile">
@@ -728,9 +718,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       </a>
                     </h3>
                     <p>
-                      Learn what HTML landmark roles are, how they improve
-                      accessibility, and how you can include them on your
-                      website effectively.
+                      Learn what HTML landmark roles are, how they improve accessibility,
+                      and how you can include them on your website effectively.
                     </p>
                   </div>
                   <div class="article-tile">
@@ -738,13 +727,11 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       Web APIs
                     </a>
                     <h3 class="tile-title">
-                      <a href="/en-US/docs/Web/API/Performance_API">
-                        Performance API
-                      </a>
+                      <a href="/en-US/docs/Web/API/Performance_API">Performance API</a>
                     </h3>
                     <p>
-                      The Performance API is a group of standards used to
-                      measure the performance of web applications.
+                      The Performance API is a group of standards used to measure the
+                      performance of web applications.
                     </p>
                   </div>
                   <div class="article-tile">
@@ -752,16 +739,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       CSS
                     </a>
                     <h3 class="tile-title">
-                      <a href="/en-US/docs/Web/CSS/font-palette">
-                        font-palette
-                      </a>
+                      <a href="/en-US/docs/Web/CSS/font-palette">font-palette</a>
                     </h3>
                     <p>
-                      The font-palette CSS property allows specifying one of the
-                      many palettes contained in a font that a user agent should
-                      use for the font. Users can also override the values in a
-                      palette or create a new palette by using the
-                      @font-palette-values at-rule.
+                      The font-palette CSS property allows specifying one of the many
+                      palettes contained in a font that a user agent should use for the
+                      font. Users can also override the values in a palette or create a
+                      new palette by using the @font-palette-values at-rule.
                     </p>
                   </div>
                 </div>
@@ -777,9 +761,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         </a>
                       </span>
                       <span>
-                        <a
-                          class="news-source"
-                          href="https://blog.mozilla.org/en/latest/">
+                        <a class="news-source" href="https://blog.mozilla.org/en/latest/">
                           blog.mozilla.org
                         </a>
                       </span>
@@ -790,8 +772,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     <p class="news-title">
                       <span>
                         <a href="/en-US/blog/introducing-ai-help/">
-                          Introducing AI Help: Your Trusted Companion for Web
-                          Development
+                          Introducing AI Help: Your Trusted Companion for Web Development
                         </a>
                       </span>
                       <span>
@@ -806,8 +787,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     <p class="news-title">
                       <span>
                         <a href="/en-US/blog/introducing-the-mdn-playground/">
-                          Introducing the MDN Playground: Bring your code to
-                          life!
+                          Introducing the MDN Playground: Bring your code to life!
                         </a>
                       </span>
                       <span>
@@ -829,9 +809,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         Fix a level of a heading
                       </a>
                       <span>
-                        <a
-                          class="request-repo"
-                          href="https://github.com/mdn/content">
+                        <a class="request-repo" href="https://github.com/mdn/content">
                           mdn/content
                         </a>
                       </span>
@@ -841,13 +819,10 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <li class="request-item">
                     <p class="request-title">
                       <a href="https://github.com/mdn/content/pull/29149">
-                        Fix issue 22955: clarify description of destination
-                        property
+                        Fix issue 22955: clarify description of destination property
                       </a>
                       <span>
-                        <a
-                          class="request-repo"
-                          href="https://github.com/mdn/content">
+                        <a class="request-repo" href="https://github.com/mdn/content">
                           mdn/content
                         </a>
                       </span>
@@ -862,7 +837,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <span>
                         <a
                           class="request-repo"
-                          href="https://github.com/mdn/translated-content">
+                          href="https://github.com/mdn/translated-content"
+                        >
                           mdn/translated-content
                         </a>
                       </span>
@@ -877,7 +853,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <span>
                         <a
                           class="request-repo"
-                          href="https://github.com/mdn/translated-content">
+                          href="https://github.com/mdn/translated-content"
+                        >
                           mdn/translated-content
                         </a>
                       </span>
@@ -892,7 +869,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <span>
                         <a
                           class="request-repo"
-                          href="https://github.com/mdn/translated-content">
+                          href="https://github.com/mdn/translated-content"
+                        >
                           mdn/translated-content
                         </a>
                       </span>
@@ -907,7 +885,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <span>
                         <a
                           class="request-repo"
-                          href="https://github.com/mdn/translated-content">
+                          href="https://github.com/mdn/translated-content"
+                        >
                           mdn/translated-content
                         </a>
                       </span>
@@ -922,7 +901,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       <span>
                         <a
                           class="request-repo"
-                          href="https://github.com/mdn/translated-content">
+                          href="https://github.com/mdn/translated-content"
+                        >
                           mdn/translated-content
                         </a>
                       </span>
@@ -935,9 +915,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         link `at` and `with` together
                       </a>
                       <span>
-                        <a
-                          class="request-repo"
-                          href="https://github.com/mdn/content">
+                        <a class="request-repo" href="https://github.com/mdn/content">
                           mdn/content
                         </a>
                       </span>
@@ -946,13 +924,9 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   </li>
                   <li class="request-item">
                     <p class="request-title">
-                      <a href="https://github.com/mdn/content/pull/29148">
-                        fix typos
-                      </a>
+                      <a href="https://github.com/mdn/content/pull/29148">fix typos</a>
                       <span>
-                        <a
-                          class="request-repo"
-                          href="https://github.com/mdn/content">
+                        <a class="request-repo" href="https://github.com/mdn/content">
                           mdn/content
                         </a>
                       </span>
@@ -962,13 +936,11 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <li class="request-item">
                     <p class="request-title">
                       <a href="https://github.com/mdn/content/pull/28962">
-                        Detail about &lt;number&gt;s in rgb-related color
-                        functions and glossary
+                        Detail about &lt;number&gt;s in rgb-related color functions and
+                        glossary
                       </a>
                       <span>
-                        <a
-                          class="request-repo"
-                          href="https://github.com/mdn/content">
+                        <a class="request-repo" href="https://github.com/mdn/content">
                           mdn/content
                         </a>
                       </span>
@@ -981,17 +953,14 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                 <div class="wrapper">
                   <div class="text-col">
                     <h3>Contributor Spotlight</h3>
-                    <a
-                      class="contributor-name"
-                      href="/pt-BR/community/spotlight/yuji">
+                    <a class="contributor-name" href="/pt-BR/community/spotlight/yuji">
                       Yuji
                     </a>
                     <blockquote>
                       <span class="icon icon-quote " />
-                      MDN Web Docs has the most up-to-date and accurate
-                      information and the content is presented in an
-                      easy-to-understand manner. I also like that it's available
-                      in many languages (very important!).
+                      MDN Web Docs has the most up-to-date and accurate information and
+                      the content is presented in an easy-to-understand manner. I also
+                      like that it's available in many languages (very important!).
                     </blockquote>
                     <a href="/en-US/community" class="spotlight-cta">
                       Get involved →
@@ -1015,7 +984,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         viewBox="0 0 675 675"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="mandala">
+                        class="mandala"
+                      >
                         <title>Mandala</title>
                         <defs>
                           <path
@@ -1061,13 +1031,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         <text dy={70} textLength={1760}>
                           <textPath textLength={1760} href="#circle2">
                             {' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>{' '}
-                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+                            +<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan> +
+                            <tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
                           </textPath>
                         </text>
                         <text dy={70} textLength={1507}>
@@ -1155,7 +1125,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   height={17}
                   viewBox="0 0 48 17"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <title id="mdn-footer-logo-svg">MDN logo</title>
                   <path
                     d="M20.04 16.512H15.504V10.416C15.504 9.488 15.344 8.824 15.024 8.424C14.72 8.024 14.264 7.824 13.656 7.824C12.92 7.824 12.384 8.064 12.048 8.544C11.728 9.024 11.568 9.64 11.568 10.392V14.184H13.008V16.512H8.472V10.416C8.472 9.488 8.312 8.824 7.992 8.424C7.688 8.024 7.232 7.824 6.624 7.824C5.872 7.824 5.336 8.064 5.016 8.544C4.696 9.024 4.536 9.64 4.536 10.392V14.184H6.6V16.512H0V14.184H1.44V8.04H0.024V5.688H4.536V7.32C5.224 6.088 6.32 5.472 7.824 5.472C8.608 5.472 9.328 5.664 9.984 6.048C10.64 6.432 11.096 7.016 11.352 7.8C11.992 6.248 13.168 5.472 14.88 5.472C15.856 5.472 16.72 5.776 17.472 6.384C18.224 6.992 18.6 7.936 18.6 9.216V14.184H20.04V16.512Z"
@@ -1178,7 +1149,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     class="icon icon-twitter"
                     href="https://twitter.com/mozdevnet"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     <span class="visually-hidden">MDN on Twitter</span>
                   </a>
                 </li>
@@ -1187,15 +1159,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     class="icon icon-github-mark-small"
                     href="https://github.com/mdn/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     <span class="visually-hidden">MDN on GitHub</span>
                   </a>
                 </li>
                 <li>
-                  <a
-                    class="icon icon-feed"
-                    href="/en-US/blog/rss.xml"
-                    target="_blank">
+                  <a class="icon icon-feed" href="/en-US/blog/rss.xml" target="_blank">
                     <span class="visually-hidden">MDN Blog RSS Feed</span>
                   </a>
                 </li>
@@ -1214,7 +1184,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <a
                     href="https://www.mozilla.org/en-US/careers/listings/?team=Marketing"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Careers
                   </a>
                 </li>
@@ -1229,14 +1200,13 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                 <li class="footer-nav-item">
                   <a
                     class="footer-nav-link"
-                    href="https://support.mozilla.org/products/mdn-plus">
+                    href="https://support.mozilla.org/products/mdn-plus"
+                  >
                     Product help
                   </a>
                 </li>
                 <li class="footer-nav-item">
-                  <a
-                    class="footer-nav-link"
-                    href="/pt-BR/docs/MDN/Community/Issues">
+                  <a class="footer-nav-link" href="/pt-BR/docs/MDN/Community/Issues">
                     Report an issue
                   </a>
                 </li>
@@ -1255,7 +1225,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     class="footer-nav-link"
                     href="https://discourse.mozilla.org/c/mdn/236"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     MDN Forum
                   </a>
                 </li>
@@ -1264,7 +1235,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     class="footer-nav-link"
                     href="https://discord.gg/hkGN8VKvvD"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     MDN Chat
                   </a>
                 </li>
@@ -1292,7 +1264,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                   <a
                     href="https://hacks.mozilla.org/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Hacks Blog
                   </a>
                 </li>
@@ -1303,12 +1276,14 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                 href="https://www.mozilla.org/"
                 class="footer-moz-logo-link"
                 target="_blank"
-                rel="noopener noreferrer">
+                rel="noopener noreferrer"
+              >
                 <svg
                   width={112}
                   height={32}
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <title id="mozilla-footer-logo-svg">Mozilla logo</title>
                   <path
                     d="M41.753 14.218c-2.048 0-3.324 1.522-3.324 4.157 0 2.423 1.119 4.286 3.29 4.286 2.082 0 3.447-1.678 3.447-4.347 0-2.826-1.522-4.096-3.413-4.096Zm54.89 7.044c0 .901.437 1.618 1.645 1.618 1.427 0 2.949-1.024 3.044-3.352-.649-.095-1.365-.185-2.02-.185-1.426-.005-2.668.397-2.668 1.92Z"
@@ -1326,7 +1301,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     href="https://www.mozilla.org/privacy/websites/"
                     class="footer-moz-link"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Website Privacy Notice
                   </a>
                 </li>
@@ -1335,7 +1311,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     href="https://www.mozilla.org/privacy/websites/#cookies"
                     class="footer-moz-link"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Cookies
                   </a>
                 </li>
@@ -1344,7 +1321,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     href="https://www.mozilla.org/about/legal/terms/mozilla"
                     class="footer-moz-link"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Legal
                   </a>
                 </li>
@@ -1353,7 +1331,8 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                     href="https://www.mozilla.org/about/governance/policies/participation/"
                     class="footer-moz-link"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     Community Participation Guidelines
                   </a>
                 </li>
@@ -1365,19 +1344,21 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                 <a
                   href="https://www.mozilla.org"
                   target="_blank"
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   Mozilla Corporation’s
                 </a>{' '}
                 {/* */}not-for-profit parent, the{/* */}{' '}
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href="https://foundation.mozilla.org/">
+                  href="https://foundation.mozilla.org/"
+                >
                   Mozilla Foundation
                 </a>
                 .<br />
-                Portions of this content are ©1998–{/* */}2023{/* */} by
-                individual mozilla.org contributors. Content available under
+                Portions of this content are ©1998–{/* */}2023{/* */} by individual
+                mozilla.org contributors. Content available under
                 {/* */}{' '}
                 <a href="/pt-BR/docs/MDN/Writing_guidelines/Attrib_copyright_license">
                   a Creative Commons license
@@ -1389,5 +1370,5 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
         </footer>
       </div>
     </div>
-  )
+  );
 }

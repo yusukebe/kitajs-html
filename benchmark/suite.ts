@@ -1,42 +1,42 @@
-import Kita from '../index'
-import { round, run } from './util/math'
+import Kita from '../index';
+import { round, run } from './util/math';
 // Avoids type-conflicts
-const TypedHtml = require('typed-html')
+const TypedHtml = require('typed-html');
 
 export function bench(name: string, runs: number, fn: Function) {
-  const compiled = Kita.compile((p: { name: string }) => fn(Kita, p.name))
+  const compiled = Kita.compile((p: { name: string }) => fn(Kita, p.name));
 
   function kita() {
-    void fn(Kita, name)
+    void fn(Kita, name);
   }
 
   function compiledKita() {
-    void compiled({ name })
+    void compiled({ name });
   }
 
   function typedHtml() {
-    void fn(TypedHtml, name)
+    void fn(TypedHtml, name);
   }
 
   // warms up the JIT
-  run(100, kita)
-  run(100, compiledKita)
-  run(100, typedHtml)
+  run(100, kita);
+  run(100, compiledKita);
+  run(100, typedHtml);
 
   // Prevents the GC from running in the middle of the benchmark
-  gc!()
+  gc!();
 
-  const kitaTime = run(runs, kita)
-
-  // Prevents the GC from running in the middle of the benchmark
-  gc!()
-
-  const typedHtmlTime = run(runs, typedHtml)
+  const kitaTime = run(runs, kita);
 
   // Prevents the GC from running in the middle of the benchmark
-  gc!()
+  gc!();
 
-  const compiledKitaTime = run(runs, compiledKita)
+  const typedHtmlTime = run(runs, typedHtml);
+
+  // Prevents the GC from running in the middle of the benchmark
+  gc!();
+
+  const compiledKitaTime = run(runs, compiledKita);
 
   return {
     ['Runs']: `${runs}`,
@@ -50,5 +50,5 @@ export function bench(name: string, runs: number, fn: Function) {
 
     ['+ / @kitajs/html']: `${round(kitaTime / compiledKitaTime, 2)}x`,
     ['+ / typed-html']: `${round(typedHtmlTime / compiledKitaTime, 2)}x`
-  } as const
+  } as const;
 }

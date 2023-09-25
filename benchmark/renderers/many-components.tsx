@@ -1,7 +1,4 @@
-export function ManyComponents(
-  Html: { createElement: Function },
-  name: string
-) {
+export function ManyComponents(Html: { createElement: Function }, name: string) {
   return (
     <div>
       <div>
@@ -39,9 +36,7 @@ export function ManyComponents(
                                                                       <div>
                                                                         <div>
                                                                           <div>
-                                                                            {
-                                                                              name
-                                                                            }
+                                                                            {name}
                                                                           </div>
                                                                         </div>
                                                                       </div>
@@ -113,9 +108,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -188,9 +181,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -263,9 +254,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -338,9 +327,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -413,9 +400,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -488,9 +473,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -563,9 +546,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -638,9 +619,7 @@ export function ManyComponents(
                                                                         <div>
                                                                           <div>
                                                                             <div>
-                                                                              {
-                                                                                name
-                                                                              }
+                                                                              {name}
                                                                             </div>
                                                                           </div>
                                                                         </div>
@@ -678,5 +657,5 @@ export function ManyComponents(
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -2,29 +2,28 @@
   "name": "@kitajs/html",
   "version": "2.2.2",
   "description": "Fast and type safe HTML templates using TypeScript.",
+  "bugs": "https://github.com/kitajs/html/issues",
+  "repository": "https://github.com/kitajs/html",
+  "funding": "https://github.com/kitajs/html?sponsor=1",
+  "license": "Apache-2.0",
+  "author": "arthurfiorette <npm@arthur.place>",
+  "sideEffects": false,
   "main": "index.js",
   "types": "index.d.ts",
-  "repository": "https://github.com/kitajs/html",
-  "bugs": "https://github.com/kitajs/html/issues",
-  "funding": "https://github.com/kitajs/html?sponsor=1",
-  "author": "arthurfiorette <npm@arthur.place>",
-  "license": "Apache-2.0",
-  "sideEffects": false,
   "scripts": {
-    "test": "tsc && node --trace-warnings --test dist/test",
-    "test:only": "tsc; node --trace-warnings --test-only --test dist/test",
     "bench": "tsc && node --expose-gc dist/benchmark",
     "format": "prettier --write .",
-    "lint": "standard"
+    "test": "tsc && node --trace-warnings --test dist/test",
+    "test:only": "tsc; node --trace-warnings --test-only --test dist/test"
   },
   "dependencies": {
     "csstype": "^3.1.2"
   },
   "devDependencies": {
+    "@arthurfiorette/prettier-config": "^1.0.9",
     "@types/node": "^20.4.2",
     "benny": "^3.7.1",
     "prettier": "^3.0.0",
-    "standard": "^17.1.0",
     "tslib": "^2.6.1",
     "typed-html": "^3.0.1",
     "typescript": "^5.1.6"

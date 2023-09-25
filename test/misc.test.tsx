@@ -1,8 +1,8 @@
 /// <reference path="../htmx.d.ts" />
 
-import assert from 'node:assert'
-import test, { describe } from 'node:test'
-import Html from '../index'
+import assert from 'node:assert';
+import test, { describe } from 'node:test';
+import Html from '../index';
 
 describe('Miscellaneous', () => {
   test('Htmx properties', () => {
@@ -11,13 +11,14 @@ describe('Miscellaneous', () => {
       <div
         //
         hx-boost
-        hx-headers></div>,
+        hx-headers
+      ></div>,
       '<div hx-boost hx-headers></div>'
-    )
+    );
 
-    assert.equal(<div hx-boost></div>, '<div hx-boost></div>')
-    assert.equal(<div hx-target="find "></div>, '<div hx-target="find "></div>')
-  })
+    assert.equal(<div hx-boost></div>, '<div hx-boost></div>');
+    assert.equal(<div hx-target="find "></div>, '<div hx-target="find "></div>');
+  });
 
   test('Falsy values', () => {
     assert.equal(
@@ -31,34 +32,30 @@ describe('Miscellaneous', () => {
         false null undefined 0 NaN true
       </>,
       '0true' + 'false null undefined 0 NaN true'
-    )
+    );
 
     assert.equal(
-      <div
-        id="truthy"
-        hidden={false}
-        spellcheck={true}
-        translate={undefined}></div>,
+      <div id="truthy" hidden={false} spellcheck={true} translate={undefined}></div>,
       '<div id="truthy" spellcheck></div>'
-    )
-  })
+    );
+  });
 
   test('Events', () => {
     assert.equal(
       '<div onclick="click" onmouseover="mouseover" ondrag="ondrag"></div>',
       <div onclick="click" onmouseover="mouseover" ondrag="ondrag"></div>
-    )
+    );
 
     assert.equal(
       '<form onfocus="focus"><input onblur="blur"/></form>',
       <form onfocus="focus">
         <input onblur="blur"></input>
       </form>
-    )
+    );
 
     assert.equal(
       '<video onabort="abort" onseeking="seeking"></video>',
       <video onabort="abort" onseeking="seeking"></video>
-    )
-  })
-})
+    );
+  });
+});

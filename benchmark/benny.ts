@@ -1,31 +1,31 @@
-import Kita from '../index'
-import { MdnHomepage } from './renderers/mdn-homepage'
-import { HelloWorld } from './renderers/hello-world'
-import { ManyProps } from './renderers/many-props'
+import Kita from '../index';
+import { HelloWorld } from './renderers/hello-world';
+import { ManyProps } from './renderers/many-props';
+import { MdnHomepage } from './renderers/mdn-homepage';
 // Avoids type-conflicts
-const TypedHtml = require('typed-html')
-const benny = require('benny')
+const TypedHtml = require('typed-html');
+const benny = require('benny');
 
 export function suite(name: string, fn: Function) {
-  const compiled = Kita.compile<{ name: string }>((p) => fn(Kita, p.name))
+  const compiled = Kita.compile<{ name: string }>((p) => fn(Kita, p.name));
 
   function kita() {
-    return fn(Kita, name)
+    return fn(Kita, name);
   }
 
   function compiledKita() {
-    return compiled({ name })
+    return compiled({ name });
   }
 
   function typedHtml() {
-    return fn(TypedHtml, name)
+    return fn(TypedHtml, name);
   }
 
   // warms up the JIT
   for (let i = 0; i < 100; i++) {
-    kita()
-    compiledKita()
-    typedHtml()
+    kita();
+    compiledKita();
+    typedHtml();
   }
 
   return benny.suite(
@@ -43,9 +43,9 @@ export function suite(name: string, fn: Function) {
     }),
     benny.cycle(),
     benny.complete()
-  )
+  );
 }
 
-suite('Hello World', HelloWorld)
-suite('Many Props', ManyProps)
-suite('Big Component', MdnHomepage)
+suite('Hello World', HelloWorld);
+suite('Many Props', ManyProps);
+suite('Big Component', MdnHomepage);

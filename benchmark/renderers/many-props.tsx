@@ -56,7 +56,8 @@ export function ManyProps(Html: { createElement: Function }, name: string) {
       aria-valuenow={1}
       aria-valuetext="valuetext"
       contenteditable="dfg"
-      dir="ltr">
+      dir="ltr"
+    >
       Hello {name}!
       <div
         accesskey="a"
@@ -114,7 +115,8 @@ export function ManyProps(Html: { createElement: Function }, name: string) {
         aria-valuenow={1}
         aria-valuetext="valuetext"
         contenteditable="dfg"
-        dir="ltr">
+        dir="ltr"
+      >
         Hello {name}!
       </div>
       <div
@@ -173,7 +175,8 @@ export function ManyProps(Html: { createElement: Function }, name: string) {
         aria-valuenow={1}
         aria-valuetext="valuetext"
         contenteditable="dfg"
-        dir="ltr">
+        dir="ltr"
+      >
         Hello {name}!
       </div>
       <div
@@ -232,9 +235,10 @@ export function ManyProps(Html: { createElement: Function }, name: string) {
         aria-valuenow={1}
         aria-valuetext="valuetext"
         contenteditable="dfg"
-        dir="ltr">
+        dir="ltr"
+      >
         Hello {name}!
       </div>
     </div>
-  )
+  );
 }

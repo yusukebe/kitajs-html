@@ -1,3 +1,3 @@
 export function HelloWorld(Html: { createElement: Function }, name: string) {
-  return <div>Hello {name}!</div>
+  return <div>Hello {name}!</div>;
 }

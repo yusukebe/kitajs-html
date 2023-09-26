@@ -553,15 +553,15 @@ describe('Suspense', () => {
   test('renderToStream without suspense', async () => {
     const stream = renderToStream(() => '<div>not suspense</div>', 1227);
 
-    assert.equal(stream.rid, 1227)
+    assert.equal(stream.rid, 1227);
     assert.ok(stream.readable);
 
-    const data = stream.read()
+    const data = stream.read();
 
-    assert.equal(data.toString(), '<div>not suspense</div>')
+    assert.equal(data.toString(), '<div>not suspense</div>');
 
     for await (const _ of stream) {
-      assert.fail('should not stream anything more')
+      assert.fail('should not stream anything more');
     }
 
     assert.ok(stream.closed);

@@ -1,31 +1,40 @@
+<p align="center">
+   <b>Using this package?</b> Please consider <a href="https://github.com/sponsors/arthurfiorette" target="_blank">donating</a> to support my open source work ❤️
+  <br />
+  <sup>
+   Help @kitajs/html grow! Star and share this amazing repository with your friends and co-workers!
+  </sup>
+</p>
+
 <br />
 
-[![Issues](https://img.shields.io/github/issues/kitajs/html?logo=github&label=Issues)](https://github.com/kitajs/html/issues)
-[![Stars](https://img.shields.io/github/stars/kitajs/html?logo=github&label=Stars)](https://github.com/kitajs/html/stargazers)
-[![License](https://img.shields.io/github/license/kitajs/html?logo=githu&label=License)](https://github.com/kitajs/html/blob/master/LICENSE)
-[![Speed Blazing](https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-brightgreen.svg)](https://twitter.com/acdlite/status/974390255393505280)
-[![Latest Version](https://img.shields.io/npm/v/@kitajs/html)](https://www.npmjs.com/package/@kitajs/html)
-
-[![Downloads](https://img.shields.io/npm/dw/@kitajs/html)](https://www.npmjs.com/package/@kitajs/html)
-[![JsDelivr](https://data.jsdelivr.com/v1/package/npm/@kitajs/html/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@kitajs/html)
-[![Bundlephobia](https://img.shields.io/bundlephobia/minzip/@kitajs/html/latest?style=flat)](https://bundlephobia.com/package/@kitajs/html@latest)
-[![Packagephobia](https://packagephobia.com/badge?p=@kitajs/html@latest)](https://packagephobia.com/result?p=@kitajs/html@latest)
-[![codecov](https://codecov.io/gh/kitajs/html/graph/badge.svg?token=nR7BoSEDlg)](https://codecov.io/gh/kitajs/html)
+<p align="center" >
+  <a href="https://kita.js.org/hmtl" target="_blank" rel="noopener noreferrer">
+    <img src="https://kita.js.org/logo.png" width="180" alt="Kita JS logo" />
+  </a>
+</p>
 
 <br />
 
 <div align="center">
-  <pre>
-  <h1>🏛️<br />KitaJS Html</h1>
-  </pre>
-  <br />
+  <a title="MIT license" target="_blank" href="https://github.com/kitajs/html/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/kitajs/html?color=bfb434"></a>
+  <a title="Codecov" target="_blank" href="https://app.codecov.io/gh/kitajs/html"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/kitajs/html?token=ML0KGCU0VM&color=d2a72d"></a>
+  <a title="NPM Package" target="_blank" href="https://www.npmjs.com/package/@kitajs/html"><img alt="Downloads" src="https://img.shields.io/npm/dw/@kitajs/html?style=flat&color=de8f2e"></a>
+  <a title="Bundle size" target="_blank" href="https://bundlephobia.com/package/@kitajs/html@latest"><img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/@kitajs/html/latest?style=flat&color=e87430"></a>
+  <a title="Last Commit" target="_blank" href="https://github.com/kitajs/html/commits/master"><img alt="Last commit" src="https://img.shields.io/github/last-commit/kitajs/html?color=f15633"></a>
+  <a href="https://github.com/kitajs/html/stargazers"><img src="https://img.shields.io/github/stars/kitajs/html?logo=github&label=Stars&color=fa3737" alt="Stars"></a>
 </div>
 
-<h3 align="center">
+<br />
+<br />
+
+# 🏛️ KitaJS Html
+
+<p align="center">
   <code>@kitajs/html</code> is a no dependencies, fast and concise package to generate HTML through JavaScript with JSX syntax.
   <br />
   <br />
-</h3>
+</p>
 
 <br />
 
@@ -37,29 +46,30 @@
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [Installing](#installing)
-- [Getting Started](#getting-started)
-- [Sanitization](#sanitization)
-  - [The safe attribute](#the-safe-attribute)
-  - [Typescript Plugin](#typescript-plugin)
-- [Migrating from HTML](#migrating-from-html)
-  - [Base HTML templates](#base-html-templates)
-  - [Htmx](#htmx)
-  - [Hotwire Turbo](#hotwire-turbo)
-- [Compiling HTML](#compiling-html)
-  - [Clean Components](#clean-components)
-- [Fragments](#fragments)
-- [Supported HTML](#supported-html)
-  - [The `tag` tag](#the-tag-tag)
-- [Async Components](#async-components)
-  - [Why JSX.Element is a Promise?](#why-jsxelement-is-a-promise)
-- [Extending types](#extending-types)
-  - [Allow everything!](#allow-everything)
-- [Performance](#performance)
-- [How it works](#how-it-works)
-- [Format HTML output](#format-html-output)
-- [Fork credits](#fork-credits)
+- [🏛️ KitaJS Html](#️-kitajs-html)
+  - [Table of Contents](#table-of-contents)
+  - [Installing](#installing)
+  - [Getting Started](#getting-started)
+  - [Sanitization](#sanitization)
+    - [The safe attribute](#the-safe-attribute)
+    - [Typescript Plugin](#typescript-plugin)
+  - [Migrating from HTML](#migrating-from-html)
+    - [Base HTML templates](#base-html-templates)
+    - [Htmx](#htmx)
+    - [Hotwire Turbo](#hotwire-turbo)
+  - [Compiling HTML](#compiling-html)
+    - [Clean Components](#clean-components)
+  - [Fragments](#fragments)
+  - [Supported HTML](#supported-html)
+    - [The `tag` tag](#the-tag-tag)
+  - [Async Components](#async-components)
+    - [Why JSX.Element is a Promise?](#why-jsxelement-is-a-promise)
+  - [Extending types](#extending-types)
+    - [Allow everything!](#allow-everything)
+  - [Performance](#performance)
+  - [How it works](#how-it-works)
+  - [Format HTML output](#format-html-output)
+  - [Fork credits](#fork-credits)
 
 <br />
 

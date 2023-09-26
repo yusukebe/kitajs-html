@@ -28,7 +28,7 @@
 <br />
 <br />
 
-# 🏛️ KitaJS Html
+<h1>🏛️ KitaJS Html</h1>
 
 <p align="center">
   <code>@kitajs/html</code> is a no dependencies, fast and concise package to generate HTML through JavaScript with JSX syntax.
@@ -38,32 +38,30 @@
 
 <br />
 
-## Table of Contents
-
-- [🏛️ KitaJS Html](#️-kitajs-html)
-  - [Table of Contents](#table-of-contents)
-  - [Installing](#installing)
-  - [Getting Started](#getting-started)
-  - [Sanitization](#sanitization)
-    - [The safe attribute](#the-safe-attribute)
-    - [Typescript Plugin](#typescript-plugin)
-  - [Migrating from HTML](#migrating-from-html)
-    - [Base HTML templates](#base-html-templates)
-    - [Htmx](#htmx)
-    - [Hotwire Turbo](#hotwire-turbo)
-  - [Compiling HTML](#compiling-html)
-    - [Clean Components](#clean-components)
-  - [Fragments](#fragments)
-  - [Supported HTML](#supported-html)
-    - [The `tag` tag](#the-tag-tag)
-  - [Async Components](#async-components)
-    - [Why JSX.Element is a Promise?](#why-jsxelement-is-a-promise)
-  - [Extending types](#extending-types)
-    - [Allow everything!](#allow-everything)
-  - [Performance](#performance)
-  - [How it works](#how-it-works)
-  - [Format HTML output](#format-html-output)
-  - [Fork credits](#fork-credits)
+- [Installing](#installing)
+- [Getting Started](#getting-started)
+- [Sanitization](#sanitization)
+  - [The safe attribute](#the-safe-attribute)
+  - [Typescript Plugin](#typescript-plugin)
+- [Async Components](#async-components)
+  - [Suspense component](#suspense-component)
+  - [Error boundaries](#error-boundaries)
+  - [Why JSX.Element is a Promise?](#why-jsxelement-is-a-promise)
+- [Migrating from HTML](#migrating-from-html)
+  - [Htmx](#htmx)
+  - [Hotwire Turbo](#hotwire-turbo)
+  - [Base HTML templates](#base-html-templates)
+- [Compiling HTML](#compiling-html)
+  - [Clean Components](#clean-components)
+- [Fragments](#fragments)
+- [Supported HTML](#supported-html)
+  - [The `tag` tag](#the-tag-tag)
+- [Extending types](#extending-types)
+  - [Allow everything!](#allow-everything)
+- [Performance](#performance)
+- [How it works](#how-it-works)
+- [Format HTML output](#format-html-output)
+- [Fork credits](#fork-credits)
 
 <br />
 <br />
@@ -117,31 +115,36 @@ your own editor.
 
 ## Getting Started
 
-Install `@kitajs/html` with your favorite package manager, import it into the top of your
-`jsx`/`tsx` file and change your tsconfig.json to transpile jsx syntax.
+After installing and configuring your project, you can start using JSX syntax to generate
+HTML. You have two options for importing this package:
 
-```jsonc
-// tsconfig.json
-
-{
-  "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "Html.createElement",
-    "jsxFragmentFactory": "Html.Fragment",
-    // Plugin to add XSS warnings and alerts.
-    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
-  }
-}
-```
+1. Import the register to add `Html` namespace into the global scope.
 
 ```jsx
-// Unique import to the top of your main.ts file.
-import '@kitajs/html/register'
-// Or import it directly everywhere you need it.
-import Html from '@kitajs/html'
+// Import the register to globally register all needed fun
+import '@kitajs/html/register';
+
+// another-file.tsx
+console.log(<div>Hello World!</div>);
+```
+
+2. Or import it manually everywhere you need it, and avoid polluting the global scope.
+
+```jsx
+// my-file.tsx
+import Html from '@kitajs/html';
+
+console.log(<div>Hello World!</div>);
+```
+
+<br />
+
+```jsx
+// Anywhere you want! All JSX becomes a string
+typeof (<div>Hello World</div>) === 'string'
 
 // Using as a simple html builder
-console.log(<div>Hello World</div>) // '<div>Hello World</div>'
+console.log(<div>Hello World</div>)
 
 // Maybe your own server-side html frontend
 function route(request, response) {
@@ -179,24 +182,10 @@ function Layout({ name, children }: Html.PropsWithChildren<{ name: string }>) {
 }
 
 console.log(<Layout name="World">I'm in the body!</Layout>)
-
-// Anywhere you want! All JSX becomes a string
-typeof (<div>Hello World</div>) === 'string'
 ```
 
-This package just provides functions to transpile JSX to a HTML string, you can imagine
-doing something like this before, but now with type checking and intellisense:
-
-```ts
-// without @kitajs/html
-const html = `<div> Hello World!<div>` ❌
-```
-
-```jsx
-// with @kitajs/html
-const html = <div>Hello World!<div> ✅
-// Also results into a string, but with type checks.
-```
+This package just provides functions to transpile JSX into HTML strings, you could already
+do this with plain JS, but we add type checking and intellisense.
 
 <br />
 
@@ -208,10 +197,10 @@ const html = <div>Hello World!<div> ✅
 
 <br />
 
-This package sanitizes every attribute by default. However, as the result is always a
-string, we cannot differentiate a html element created by a `<tag>` or from a user input.
-This forces you to use the provided [`safe`](#the-safe-attribute) or manually call
-`Html.escapeHtml`.
+This package sanitizes every attribute by default. However, as the resulting element is
+always a string, we cannot differentiate a html element created by a `<tag>` or from a
+user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually
+call `Html.escapeHtml`.
 
 ```jsx
 <div>⚠️ This will NOT be escaped. and WILL expose you to XSS</div>
@@ -231,11 +220,15 @@ user = {
 
 <div class="user-card">{user.description}</div>
 // Renders this html which will execute malicious code:
-<div class="user-card"><script>getStoredPasswordAndSentToBadGuysServer()</script></div>
+<div class="user-card">
+  <script>getStoredPasswordAndSentToBadGuysServer()</script>
+</div>
 
 <div class="user-card" safe>{user.description}</div>
 // Renders this safe html, which will NOT execute any malicious code:
-<div class="user-card">&lt;/div&gt;&lt;script&gt;getStoredPasswordAndSentToBadGuysServer()&lt;/script&gt;</div>
+<div class="user-card">
+  &lt;/div&gt;&lt;script&gt;getStoredPasswordAndSentToBadGuysServer()&lt;/script&gt;
+</div>
 ```
 
 <br />
@@ -301,6 +294,198 @@ Make sure to enable it in your tsconfig.json, and you are ready to go!
 
 <br />
 
+## Async Components
+
+Async components are supported. When any child or sub child of a component tree is a
+promise, the whole tree will return a promise of the html string.
+
+If no async components are found, the result will be simply a string, and you can safely
+cast it into a string.
+
+```jsx
+async function Async() {
+  await callApi();
+  return <div>Async!</div>
+}
+
+function Sync() {
+  return <div>Sync!</div>
+}
+
+// Safe to cast into a string
+const async = <div><Async /></div> as Promise<string>
+const sync: string = <div><Sync /></div> as string
+```
+
+A `JSX.Element` will always be a string. Once a children element is a async component, the
+entire upper tree will also be async.
+
+<br />
+
+### Suspense component
+
+The only problem when rendering templates is that you must wait the whole template to be
+rendered before sending it to the client. This is not a problem for small templates, but
+it can be a problem for large templates.
+
+To solve this problem, we provide a `Suspense` component that will render a fallback while
+it waits for his children to be rendered. This is a perfect combo to use with
+[async components](#async-components).
+
+```tsx
+import { Suspense, renderToStream } from '@kitajs/html/suspense';
+
+async function MyAsyncComponent() {
+  const data = await database.query();
+  return <User name={data.username} />;
+}
+
+function renderUserPage(rid: number) {
+  return (
+    <Suspense
+      rid={rid}
+      fallback={<div>Loading username...</div>}
+      catch={(err) => <div>Error: {err.stack}</div>}
+    >
+      <MyAsyncComponent />
+    </Suspense>
+  );
+}
+
+// Html is a string readable stream that can be piped to the client
+const html = renderToStream(renderUserPage);
+```
+
+> [!NOTE]  
+> The render to stream is a framework agnostic implementation, head over to our
+> [suspense-server](examples/suspense-server.tsx) example to see how to use it with
+> node:http, Express or Fastify servers.
+
+The above example would render `<div>Loading username...</div>` while waiting for the
+`MyAsyncComponent` to be rendered.
+
+When using `Suspense`, you cannot just call the component and get the html string, you
+need to use the `renderToStream` function to get a stream that can be piped to the client
+with updates. Otherwise, the fallback would render forever.
+
+As the result of any JSX component is always a string, you must use the `rid` provided by
+`renderToStream` into all your suspense components, this way we can identify which
+suspense is for which request and be able to render concurrent requests.
+
+Suspense also accepts async fallbacks, but it blocks rendering until the fallback is
+resolved.
+
+```tsx
+function renderTemplate(rid: number) {
+  return (
+    <Suspense
+      rid={rid}
+      fallback={<MyAsyncFallback />}
+      catch={(err) => <div>Error: {err.stack}</div>}
+    >
+      <MyAsyncComponent />
+    </Suspense>
+  );
+}
+```
+
+The above example would only return anything after `MyAsyncFallback` is resolved. To catch
+async fallback errors, you must wrap it into a [`ErrorBoundary`](#error-boundaries).
+
+<br />
+
+### Error boundaries
+
+The same way as promises must be awaited to resolve its own html, errors must be caught.
+Outside of suspense components, you can use the provided error boundaries to catch errors.
+
+```tsx
+import { ErrorBoundary } from '@kitajs/html/error-boundary';
+
+async function MyAsyncComponent() {
+  const data = await database.query(); // this promise may reject
+  return <User name={data.username} />;
+}
+
+function renderTemplate() {
+  return (
+    <ErrorBoundary catch={(err) => <div>Error: {err.stack}</div>}>
+      <MyAsyncComponent />
+    </ErrorBoundary>
+  );
+}
+
+// If MyAsyncComponent throws an error, it will render <div>Error: ...</div>
+const html = await renderTemplate();
+```
+
+Error boundaries will only work for errors thrown inside async components, for sync
+components you must use try/catch.
+
+```tsx
+function MySyncComponent() {
+  try {
+    const data = database.query(); // this may throw an error
+    return <User name={data.username} />;
+  } catch (err) {
+    return <div>Error: {err.stack}</div>;
+  }
+}
+```
+
+Error boundaries outside suspense components will only catch errors thrown by the fallback
+component. You must use the Suspense's `catch` property to handle errors thrown by its
+children components.
+
+```tsx
+function renderTemplate(rid: number) {
+  return (
+    <ErrorBoundary catch={<div>fallback error</div>}>
+      <Suspense
+        rid={rid}
+        fallback={<MyAsyncFallback />}
+        catch={<div>Children error</div>}
+      >
+        <MyAsyncComponent />
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
+const html = renderToStream(renderTemplate);
+```
+
+The above example would render `<div>Children error</div>` if `MyAsyncComponent` throws an
+error, or `<div>fallback error</div>` if `MyAsyncFallback` throws an error. If both throws
+an error, the first error will be changed to the second error as soon as the children
+error is thrown.
+
+<br />
+
+### Why JSX.Element is a Promise?
+
+> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
+> implemented, you need to manually cast `JSX.Element` into strings if you are sure there
+> is no inner async components in your component tree.
+
+JSX elements are mostly strings everywhere. However, as the nature of this package, once a
+children element is a async component, the entire upper tree will also be async. Unless
+you are sure that no other component in your entire codebase is async, you should always
+handle both string and promise cases.
+
+```jsx
+// It may or may not have inner async components.
+const html = <Layout />;
+
+if (html instanceof Promise) {
+  // I'm a promise, I should be awaited
+  console.log(await html);
+} else {
+  // I'm a string, I can be used as is
+  console.log(html);
+}
+```
+
 <br />
 
 ## Migrating from HTML
@@ -330,44 +515,6 @@ Generates:
   </div>
   <p>Enter your HTML here</p>
 </>
-```
-
-<br />
-
-### Base HTML templates
-
-Often you will have a "template" html with doctype, things on the head, body and so on...
-The layout is also a very good component to be compiled. Here is a effective example on
-how to do it:.
-
-```tsx
-export const Layout = html.compile((p: Html.PropsWithChildren<{ head: string }>) => (
-  <>
-    {'<!doctype html>'}
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        {p.head}
-      </head>
-      <body>{p.children}</body>
-    </html>
-  </>
-));
-
-const html = (
-  <Layout
-    head={
-      <>
-        <link rel="stylesheet" href="/style.css" />
-        <script src="/script.js" />
-      </>
-    }
-  >
-    <div>Hello World</div>
-  </Layout>
-);
 ```
 
 <br />
@@ -414,6 +561,44 @@ const html = (
 
     <form action="/messages">Show response from this form within this frame.</form>
   </turbo-frame>
+);
+```
+
+<br />
+
+### Base HTML templates
+
+Often you will have a "template" html with doctype, things on the head, body and so on...
+The layout is also a very good component to be compiled. Here is a effective example on
+how to do it:.
+
+```tsx
+export const Layout = html.compile((p: Html.PropsWithChildren<{ head: string }>) => (
+  <>
+    {'<!doctype html>'}
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        {p.head}
+      </head>
+      <body>{p.children}</body>
+    </html>
+  </>
+));
+
+const html = (
+  <Layout
+    head={
+      <>
+        <link rel="stylesheet" href="/style.css" />
+        <script src="/script.js" />
+      </>
+    }
+  >
+    <div>Hello World</div>
+  </Layout>
 );
 ```
 
@@ -541,60 +726,6 @@ selected tag you want. Possibly reasons to prefer this tag over extending types:
 
 We do recommend using [extending types](#extending-types) instead, as it will give you
 intellisense and type checking.
-
-<br />
-
-## Async Components
-
-Async components are supported. When any child or sub child of a component tree is a
-promise, the whole tree will return a promise of the html string.
-
-If no async components are found, the result will be simply a string, and you can safely
-cast it into a string.
-
-```jsx
-async function Async() {
-  await callApi();
-  return <div>Async!</div>
-}
-
-function Sync() {
-  return <div>Sync!</div>
-}
-
-// Safe to cast into a string
-const async = <div><Async /></div> as Promise<string>
-const sync: string = <div><Sync /></div> as string
-```
-
-A `JSX.Element` will always be a string. Once a children element is a async component, the
-entire upper tree will also be async.
-
-<br />
-
-### Why JSX.Element is a Promise?
-
-> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
-> implemented, you need to manually cast `JSX.Element` into strings if you are sure there
-> is no inner async components in your component tree.
-
-JSX elements are mostly strings everywhere. However, as the nature of this package, once a
-children element is a async component, the entire upper tree will also be async. Unless
-you are sure that no other component in your entire codebase is async, you should always
-handle both string and promise cases.
-
-```jsx
-// It may or may not have inner async components.
-const html = <Layout />;
-
-if (html instanceof Promise) {
-  // I'm a promise, I should be awaited
-  console.log(await html);
-} else {
-  // I'm a string, I can be used as is
-  console.log(html);
-}
-```
 
 <br />
 

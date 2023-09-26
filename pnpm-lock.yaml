@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@kitajs/ts-html-plugin':
+    specifier: '>=1'
+    version: 1.0.2(@kitajs/html@2.2.2)(typescript@5.2.2)
   csstype:
     specifier: ^3.1.2
     version: 3.1.2
@@ -106,6 +109,24 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@kitajs/html@2.2.2:
+    resolution: {integrity: sha512-NSTExqcjRUZ1kfnw487hTR+6OxQ53qvXNxVCk7W06+SKMALFptDxPMF5Ga5q0+jt/evUiBRpG7usCSU5lrFHiw==}
+    engines: {node: '>=12'}
+    dependencies:
+      csstype: 3.1.2
+    dev: false
+
+  /@kitajs/ts-html-plugin@1.0.2(@kitajs/html@2.2.2)(typescript@5.2.2):
+    resolution: {integrity: sha512-2dBQSrozw9PyKDrHnOi4tRrWmsdi3z+BGaR5XvSqnoU3PdhHd58NwzKLYDcjBuUfv6rXji3LbpXvVOzBNQL3QA==}
+    peerDependencies:
+      '@kitajs/html': '>=2'
+      typescript: '>=5'
+    dependencies:
+      '@kitajs/html': 2.2.2
+      tslib: 2.6.2
+      typescript: 5.2.2
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1313,7 +1334,6 @@ packages:
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
-    dev: true
 
   /type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
@@ -1329,7 +1349,6 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /unist-util-stringify-position@3.0.3:
     resolution: {integrity: sha512-k5GzIBZ/QatR8N5X2y+drfpWG8IDBzdnVj6OInRNWm1oXrzydiaAT2OQiA8DPRRZyAKb9b6I2a6PxYklZD0gKg==}

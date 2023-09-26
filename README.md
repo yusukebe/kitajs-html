@@ -38,12 +38,6 @@
 
 <br />
 
-> [!WARNING]  
-> Learn how to [sanitize](#sanitization) and avoid
-> [xss](https://owasp.org/www-community/attacks/xss) vulnerabilities in your code!
-
-<br />
-
 ## Table of Contents
 
 - [🏛️ KitaJS Html](#️-kitajs-html)
@@ -72,12 +66,52 @@
   - [Fork credits](#fork-credits)
 
 <br />
+<br />
 
 ## Installing
 
+Firstly, install all required npm packages, `kitajs/html` and `kitajs/ts-html-plugin` to
+enable editor intellisense.
+
 ```sh
-npm install @kitajs/html @kitajs/ts-html-plugin  # or yarn add @kitajs/html @kitajs/ts-html-plugin
+npm install @kitajs/html @kitajs/ts-html-plugin
 ```
+
+After, configure your project to transpile TSX/JSX into JS:
+
+```jsonc
+// tsconfig.json
+
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "Html.createElement",
+    "jsxFragmentFactory": "Html.Fragment",
+    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
+  }
+}
+```
+
+And last, make sure your editor is loading your project's typescript and not the global
+installed one.
+
+This is how you can do if you are using `VSCode`. You can also google how to do it for
+your own editor.
+
+```jsonc
+// .vscode/settings.json
+
+{
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
+```
+
+<br />
+
+> [!WARNING]  
+> Write `console.log(<div>{'<' + '/div>'}</div>);` into your editor. If it does not errors
+> out, you probably have something wrong with your setup. Go to
+> [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) to learn more.
 
 <br />
 

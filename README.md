@@ -9,7 +9,7 @@
 <br />
 
 <p align="center" >
-  <a href="https://kita.js.org/hmtl" target="_blank" rel="noopener noreferrer">
+  <a href="https://kita.js.org" target="_blank" rel="noopener noreferrer">
     <img src="https://kita.js.org/logo.png" width="180" alt="Kita JS logo" />
   </a>
 </p>
@@ -328,8 +328,9 @@ The only problem when rendering templates is that you must wait the whole templa
 rendered before sending it to the client. This is not a problem for small templates, but
 it can be a problem for large templates.
 
-To solve this problem, we provide a `Suspense` component that will render a fallback while
-it waits for his children to be rendered. This is a perfect combo to use with
+To solve this problem, we provide a `Suspense` component that combined with
+`renderToStream()` rendering method, will stream a fallback component while it waits for
+his children to be rendered. This is a perfect combo to use with
 [async components](#async-components).
 
 ```tsx
@@ -357,7 +358,7 @@ const html = renderToStream(renderUserPage);
 ```
 
 > [!NOTE]  
-> The render to stream is a framework agnostic implementation, head over to our
+> The `renderToStream()` is returns a native node/bun stream, head over to our
 > [suspense-server](examples/suspense-server.tsx) example to see how to use it with
 > node:http, Express or Fastify servers.
 

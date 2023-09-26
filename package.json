@@ -13,7 +13,7 @@
   "scripts": {
     "bench": "tsc && node --expose-gc dist/benchmark",
     "format": "prettier --write .",
-    "test": "tsc && node --trace-warnings --test dist/test",
+    "test": "tsc && c8 --reporter lcov node --trace-warnings --test dist/test",
     "test:only": "tsc; node --trace-warnings --test-only --test dist/test"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@arthurfiorette/prettier-config": "^1.0.9",
     "@types/node": "^20.4.2",
     "benny": "^3.7.1",
+    "c8": "^8.0.1",
     "prettier": "^3.0.0",
     "tslib": "^2.6.1",
     "typed-html": "^3.0.1",

@@ -206,9 +206,10 @@ function renderToStream(factory, customRid) {
   }
 
   const resourceId = customRid || SUSPENSE_ROOT.requestCounter++;
-  const stream = new Readable({ read: function noop() {} });
 
-  // @ts-expect-error Defines the resource id used
+  /** @type {import('./suspense').HtmlStream} */
+  //@ts-expect-error - we manually set the rid
+  const stream = new Readable({ read: function noop() {} });
   stream.rid = resourceId;
 
   SUSPENSE_ROOT.resources.set(resourceId, {

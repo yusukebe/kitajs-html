@@ -63,28 +63,24 @@ function renderLayout(rid: number) {
 }
 
 http
-  .createServer((req, res): void => {
+  .createServer((req, response) => {
     // This simple webserver only has a index.html file
     if (req.url !== '/' && req.url !== '/index.html') {
-      res.end();
+      response.end();
       return;
     }
 
-    // Charset utf8 is important to avoid old browsers utf7 xss attacks
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    // ⚠️ Charset utf8 is important to avoid old browsers utf7 xss attacks
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-    const stream = renderToStream(renderLayout);
-    console.log(`[${stream.rid}] Rendering ${req.url}`);
+    // Creates the html stream
+    const htmlStream = renderToStream(renderLayout);
 
-    stream
-      // Streaming stuff happens after first chunk (fallback) is sent
-      .once('data', () => {
-        stream.on('data', () => {
-          console.log(`${stream.rid}> Streaming for ${req.url}`);
-        });
-      })
-      .once('close', () => console.log(`<${stream.rid} Finished stream for ${req.url}`))
-      .pipe(res);
+    // Pipes it into the response
+    htmlStream.pipe(response);
+
+    // If its an express or fastify server, just use
+    // response.type('text/html; charset=utf-8').send(htmlStream);
   })
   .listen(8080, () => {
     console.log('Listening to http://localhost:8080');

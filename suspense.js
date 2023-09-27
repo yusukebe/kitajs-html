@@ -116,7 +116,7 @@ function Suspense(props) {
           return;
         }
       }
-
+      /* c8 ignore next 2 */
       // Nothing else to do if no catch or listener was found
       console.error(error);
     })
@@ -136,7 +136,7 @@ function Suspense(props) {
       } else {
         const stream = resource.stream.deref();
 
-        if (stream) {
+        if (stream && !stream.closed) {
           stream.push(null); // ends stream
         }
 
@@ -256,7 +256,9 @@ function renderToStream(factory, customRid) {
     .catch(function catchError(error) {
       // Emits the error down the stream or
       // prints it to the console if there's no
-      // listener.
+      // listener (default node impl always has a listener)
+
+      /* c8 ignore next 4 */
       if (stream.emit('error', error) === false) {
         console.error(error);
       }

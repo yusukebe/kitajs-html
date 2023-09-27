@@ -589,6 +589,29 @@ describe('Suspense', () => {
       /Suspense resource closed before all suspense components were resolved./
     );
   });
+
+  it('works with async error handlers', async () => {
+    assert.equal(
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>} catch={Promise.resolve(<div>2</div>)}>
+          {Promise.reject(<div>3</div>)}
+        </Suspense>
+      )),
+
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+        {SuspenseScript}
+        <template id="N:1" data-sr>
+          <div>2</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
+    );
+  });
 });
 
 describe('Suspense errors', () => {
@@ -738,5 +761,76 @@ describe('Suspense errors', () => {
         </script>
       </>
     );
+  });
+
+  it('does not write anything if stream is closed', async () => {
+    const stream = renderToStream(async (r) => {
+      // Closes the stream rightly after
+      const resource = SUSPENSE_ROOT.resources.get(r)!;
+      const stream = resource.stream.deref()!;
+
+      return (
+        <Suspense rid={r} fallback={<div>1</div>} catch={<div>2</div>}>
+          {setTimeout(5).then(async () => {
+            stream.push(null);
+            await new Promise((res) => stream.once('close', res));
+            return <div>3</div>;
+          })}
+        </Suspense>
+      );
+    });
+
+    const firstChunk = await new Promise<string>((resolve) => {
+      stream.once('data', resolve);
+    });
+
+    await new Promise((res) => stream.once('close', res));
+
+    assert.equal(
+      firstChunk.toString(),
+      <div id="B:1" data-sf>
+        <div>1</div>
+      </div>
+    );
+
+    // In case any .push() is called after the stream is closed,
+    // The error below would be thrown:
+    // Error [ERR_STREAM_PUSH_AFTER_EOF]: stream.push() after EOF
+    for await (const _ of stream) {
+      console.log(1, _.toString());
+      assert.fail('should not stream anything');
+    }
+  });
+
+  it('does not allows to use the same rid', () => {
+    function render(r: number) {
+      return (
+        <Suspense rid={r} fallback={<div>1</div>}>
+          {Promise.resolve(<div>2</div>)}
+        </Suspense>
+      );
+    }
+
+    renderToStream(render, 1);
+    assert.throws(
+      () => renderToStream(render, 1),
+      /Error: The provided resource ID is already in use: 1./
+    );
+  });
+
+  it('emits error if factory function throws', async () => {
+    const stream = renderToStream(async () => {
+      throw new Error('Factory error');
+    });
+
+    try {
+      for await (const _ of stream) {
+        assert.fail('should not stream anything');
+      }
+
+      assert.fail('should throw');
+    } catch (error: any) {
+      assert.equal(error.message, 'Factory error');
+    }
   });
 });

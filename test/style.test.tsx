@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import test, { describe } from 'node:test';
-import Html from '../index';
+import Html, { styleToString } from '../index';
 
 describe('Style', () => {
   test('camel case property', () => {
@@ -23,5 +23,18 @@ describe('Style', () => {
     };
 
     assert.equal(<div style={style} />, '<div style="color:red;not:defined;"></div>');
+  });
+
+  test('Weird values', () => {
+    assert.equal(
+      styleToString({
+        a: 0,
+        b: undefined,
+        c: 1,
+        d: '2',
+        e: { f: 3 }
+      }),
+      'a:0;c:1;d:2;e:[object Object];'
+    );
   });
 });

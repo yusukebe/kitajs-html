@@ -71,6 +71,11 @@ describe('HTML Escaping', () => {
     );
   });
 
+  test('handles unknown values', () => {
+    assert.equal(Html.escapeHtml(''), '');
+    assert.equal(Html.escapeHtml({ a: 1 }), '[object Object]');
+  });
+
   // The matrix of cases we need to test for:
   // 1. Works with short strings
   // 2. Works with long strings

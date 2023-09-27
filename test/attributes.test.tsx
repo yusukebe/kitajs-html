@@ -48,4 +48,11 @@ describe('Attributes', () => {
 
     assert.equal('<form novalidate></form>', <form novalidate></form>);
   });
+
+  test('Dates & Objects', () => {
+    const date = new Date();
+    assert.equal(<del datetime={date} />, `<del datetime="${date.toISOString()}"></del>`);
+
+    assert.equal(<div test={{}}></div>, '<div test="[object Object]"></div>');
+  });
 });

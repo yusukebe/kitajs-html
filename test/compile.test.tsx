@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import test, { describe } from 'node:test';
-import Html from '../index';
+import Html, { compile } from '../index';
 
 type Props = Html.PropsWithChildren<{ color: string }>;
 
@@ -116,5 +116,28 @@ describe('Compiled components', () => {
       </Compiled>,
       '<div><div>1</div><div>2</div></div>'
     );
+  });
+
+  test('validations', () => {
+    assert.throws(
+      //@ts-expect-error - should complain
+      () => compile('not a function'),
+      /Error: The first argument must be a function./
+    );
+
+    async function AsyncComponent() {
+      return <div></div>;
+    }
+
+    assert.throws(
+      () => compile(AsyncComponent),
+      /Error: You cannot use compile\(\) with async components./
+    );
+  });
+
+  test('escapes backtick', () => {
+    const compiled = compile<{ prop: string }>((p) => <div>` {p.prop}</div>);
+
+    assert.equal(compiled({ prop: 'test' }), '<div>` test</div>');
   });
 });

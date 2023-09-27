@@ -97,6 +97,7 @@ let escapeHtml = function (value) {
   return escaped;
 };
 
+/* c8 ignore next 2 */
 // @ts-ignore - bun runtime have its own escapeHTML function.
 if (typeof Bun !== 'undefined') escapeHtml = Bun.escapeHTML;
 
@@ -214,10 +215,6 @@ function styleToString(style) {
 
 /** @type {import('.').attributesToString} */
 function attributesToString(attributes) {
-  if (!attributes) {
-    return '';
-  }
-
   const keys = Object.keys(attributes);
   const length = keys.length;
 
@@ -473,7 +470,7 @@ function compile(htmlFn, strict = true, separator = '/*\x00*/') {
   );
 
   if (typeof html !== 'string') {
-    throw new Error('You cannot use compile() with async components');
+    throw new Error('You cannot use compile() with async components.');
   }
 
   const sepLength = separator.length;
@@ -494,14 +491,6 @@ function compile(htmlFn, strict = true, separator = '/*\x00*/') {
       html.slice(index + 1, index + sepLength + 1) !== separator
     ) {
       body += html.slice(nextStart, index) + '\\`';
-      nextStart = index + 1;
-      continue;
-    }
-
-    // Escapes the backslash character because it will be used to escape the
-    // backtick character.
-    if (html[index] === '\\') {
-      body += html.slice(nextStart, index) + '\\\\';
       nextStart = index + 1;
       continue;
     }

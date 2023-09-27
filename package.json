@@ -13,7 +13,7 @@
   "scripts": {
     "bench": "tsc && node --expose-gc dist/benchmark",
     "format": "prettier --write .",
-    "test": "tsc && c8 --reporter lcov node --trace-warnings --test dist/test",
+    "test": "tsc && c8 --reporter lcov --reporter text node --trace-warnings --test dist/test",
     "test:only": "tsc; node --trace-warnings --test-only --test dist/test"
   },
   "dependencies": {

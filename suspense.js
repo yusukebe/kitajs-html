@@ -57,7 +57,7 @@ function Suspense(props) {
   const fallback = contentsToString([props.fallback]);
 
   if (!props.children) {
-    return fallback;
+    return '';
   }
 
   const children = contentsToString([props.children]);

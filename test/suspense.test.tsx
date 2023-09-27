@@ -566,6 +566,29 @@ describe('Suspense', () => {
 
     assert.ok(stream.closed);
   });
+
+  it('tests suspense without children', async () => {
+    assert.equal(
+      await renderToString((r) => (
+        //@ts-expect-error - testing invalid children
+        <Suspense rid={r} fallback={<div>1</div>} />
+      )),
+      ''
+    );
+  });
+
+  it('throws if no stream is used', () => {
+    SUSPENSE_ROOT.enabled = true;
+
+    assert.throws(
+      () => (
+        <Suspense rid={1} fallback={'1'}>
+          {Promise.resolve(2)}
+        </Suspense>
+      ),
+      /Suspense resource closed before all suspense components were resolved./
+    );
+  });
 });
 
 describe('Suspense errors', () => {
@@ -672,6 +695,32 @@ describe('Suspense errors', () => {
             return <div>3</div>;
           }}
         >
+          {Promise.reject(err)}
+        </Suspense>
+      )),
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+
+        {SuspenseScript}
+        <template id="N:1" data-sr>
+          <div>3</div>
+        </template>
+        <script id="S:1" data-ss>
+          $RC(1)
+        </script>
+      </>
+    );
+  });
+
+  it('tests suspense with error boundary', async () => {
+    const err = new Error('component failed');
+
+    // Sync does not needs autoScript
+    assert.equal(
+      await renderToString((r) => (
+        <Suspense rid={r} fallback={<div>1</div>} catch={<div>3</div>}>
           {Promise.reject(err)}
         </Suspense>
       )),

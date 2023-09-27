@@ -4,6 +4,7 @@
 let root;
 try {
   root = Function('return this')();
+  /* c8 ignore next 3 */
 } catch (_) {
   root = window;
 }

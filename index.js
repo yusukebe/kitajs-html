@@ -404,22 +404,17 @@ function createElement(name, attrs, ...children) {
     return '<' + name + attributesToString(attrs) + '/>';
   }
 
-  // @ts-expect-error - joins the children
-  children = contentsToString(children, attrs.safe);
+  let contents = contentsToString(children, attrs.safe);
 
   // Faster than checking if `children instanceof Promise`
   // https://jsperf.app/zipuvi
-  if (typeof children !== 'string') {
-    // @ts-expect-error - it will be a promise here
-    return children.then(
-      /** @param {string} child */
-      function asyncChildren(child) {
-        return '<' + name + attributesToString(attrs) + '>' + child + '</' + name + '>';
-      }
-    );
+  if (typeof contents === 'string') {
+    return '<' + name + attributesToString(attrs) + '>' + contents + '</' + name + '>';
   }
 
-  return '<' + name + attributesToString(attrs) + '>' + children + '</' + name + '>';
+  return contents.then(function asyncChildren(child) {
+    return '<' + name + attributesToString(attrs) + '>' + child + '</' + name + '>';
+  });
 }
 
 /** @type {import('.').Fragment} */

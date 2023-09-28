@@ -332,9 +332,7 @@ function contentsToString(contents, escape) {
         continue;
       }
 
-      // @ts-expect-error - faster than checking if Array.isArray
-      if (content.length !== undefined) {
-        // @ts-expect-error - this is an array
+      if (Array.isArray(content)) {
         content = contentsToString(content);
       }
 

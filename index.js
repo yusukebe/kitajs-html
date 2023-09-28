@@ -161,8 +161,7 @@ function styleToString(style) {
   const keys = Object.keys(style);
   const length = keys.length;
 
-  let key;
-  let value;
+  let key, value, end, start;
   let index = 0;
   let result = '';
 
@@ -184,7 +183,7 @@ function styleToString(style) {
       continue;
     }
 
-    let end = value.indexOf('"');
+    end = value.indexOf('"');
 
     // This is a optimization to avoid having to look twice for the " character.
     // And make the loop already start in the middle
@@ -194,7 +193,7 @@ function styleToString(style) {
     }
 
     const length = value.length;
-    let start = 0;
+    start = 0;
 
     // Escapes double quotes to be used inside attributes
     // Faster than using regex
@@ -218,7 +217,7 @@ function attributesToString(attributes) {
   const keys = Object.keys(attributes);
   const length = keys.length;
 
-  let key, value, type;
+  let key, value, type, end, start;
   let result = '';
   let index = 0;
 
@@ -282,7 +281,7 @@ function attributesToString(attributes) {
       value = value.toString();
     }
 
-    let end = value.indexOf('"');
+    end = value.indexOf('"');
 
     // This is a optimization to avoid having to look twice for the " character.
     // And make the loop already start in the middle
@@ -294,7 +293,7 @@ function attributesToString(attributes) {
     result += '="';
 
     const length = value.length;
-    let start = 0;
+    start = 0;
 
     // Escapes double quotes to be used inside attributes
     // Faster than using regex

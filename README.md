@@ -146,7 +146,6 @@ to generate HTML. Here are two options for importing the `@kitajs/html` package:
 
    ```tsx
    // my-file.tsx
-   import Html from '@kitajs/html';
 
    console.log(<div>Html import needs to be in scope!</div>);
    ```
@@ -287,7 +286,6 @@ const async = (
 );
 
 async instanceof Promise;
-
 
 const sync: string = (
   <div>
@@ -474,9 +472,9 @@ if (html instanceof Promise) {
 ## Migrating from HTML
 
 Migrating from plain HTML to JSX can be a pain to convert it all manually, as you will
-find yourself hand placing quotes and closing void elements. Luckily for us, there's a
-tool called [htmltojsx](https://magic.reactjs.net/htmltojsx.htm) that can help us with
-that.
+find yourself hand placing quotes and closing void elements.
+
+You can use [**Html To Jsx**](https://magic.reactjs.net/htmltojsx.htm).
 
 ```html
 <!-- Hello world -->
@@ -487,7 +485,7 @@ that.
 <p>Enter your HTML here</p>
 ```
 
-Generates:
+Results into:
 
 ```tsx
 <>
@@ -852,7 +850,6 @@ an external JS library to do so, like
 [html-prettify](https://www.npmjs.com/package/html-prettify).
 
 ```tsx
-import Html from '@kitajs/html';
 import prettify from 'html-prettify';
 
 const html = (

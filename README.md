@@ -134,6 +134,8 @@ To use the `@kitajs/html` package, follow these steps:
 > in your editor. If it **PRODUCE ERRORS**, your setup is correct. Refer to the [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin)
 > repository for more details on setting up editor intellisense.
 
+<br />
+
 ## Getting Started
 
 After successfully installing and configuring your project, you can start using JSX syntax

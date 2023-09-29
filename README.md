@@ -68,124 +68,82 @@
 
 ## Installing
 
-Firstly, install all required npm packages, `kitajs/html` and `kitajs/ts-html-plugin` to
-enable editor intellisense.
+To use the `@kitajs/html` package, follow these steps:
 
-```sh
-npm install @kitajs/html @kitajs/ts-html-plugin
-```
+1. Install the required npm packages, `@kitajs/html` and `@kitajs/ts-html-plugin`, to
+   enable editor intellisense. Open your terminal and run:
 
-After, configure your project to transpile TSX/JSX into JS:
+   ```sh
+   npm install @kitajs/html @kitajs/ts-html-plugin
+   ```
 
-```jsonc
-// tsconfig.json
+2. Configure your TypeScript project to transpile TSX/JSX into JavaScript. Update your
+   `tsconfig.json` file with the following settings:
 
-{
-  "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "Html.createElement",
-    "jsxFragmentFactory": "Html.Fragment",
-    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
-  }
-}
-```
+   ```jsonc
+   // tsconfig.json
 
-And last, make sure your editor is loading your project's typescript and not the global
-installed one.
+   {
+     "compilerOptions": {
+       "jsx": "react",
+       "jsxFactory": "Html.createElement",
+       "jsxFragmentFactory": "Html.Fragment",
+       "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
+     }
+   }
+   ```
 
-This is how you can do if you are using `VSCode`. You can also google how to do it for
-your own editor.
+3. Ensure that your code editor is using the TypeScript version from your project's
+   `node_modules` instead of the globally installed TypeScript. For Visual Studio Code,
+   you can configure this in your workspace settings:
 
-```jsonc
-// .vscode/settings.json
+   ```jsonc
+   // .vscode/settings.json
 
-{
-  "typescript.tsdk": "node_modules/typescript/lib"
-}
-```
-
-<br />
+   {
+     "typescript.tsdk": "node_modules/typescript/lib"
+   }
+   ```
 
 > [!WARNING]  
-> Write `console.log(<div>{'<' + '/div>'}</div>);` into your editor. If it does not errors
-> out, you probably have something wrong with your setup. Go to
-> [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) to learn more.
-
-<br />
+>  Make sure to verify that your setup is correct by writing `console.log(<div>{'<' + '/div>'}</div>);`
+> in your editor. If it **PRODUCE ERRORS**, your setup is correct. Refer to the [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin)
+> repository for more details on setting up editor intellisense.
 
 ## Getting Started
 
-After installing and configuring your project, you can start using JSX syntax to generate
-HTML. You have two options for importing this package:
+After successfully installing and configuring your project, you can start using JSX syntax
+to generate HTML. Here are two options for importing the `@kitajs/html` package:
 
-1. Import the register to add `Html` namespace into the global scope.
+1. **Import it manually**: Import the package in your TypeScript files where you need it,
+   avoiding global scope pollution.
 
-```jsx
-// Import the register to globally register all needed fun
-import '@kitajs/html/register';
+   ```jsx
+   // my-file.tsx
+   import Html from '@kitajs/html';
 
-// another-file.tsx
-console.log(<div>Hello World!</div>);
-```
+   console.log(<div>Html import needs to be in scope!</div>);
+   ```
 
-2. Or import it manually everywhere you need it, and avoid polluting the global scope.
+2. **Use the register to add a global namespace**: Import the `register` to globally
+   register all necessary functions for convenience.
 
-```jsx
-// my-file.tsx
-import Html from '@kitajs/html';
+   ```jsx
+   // Import the register to globally register all needed functions
+   import '@kitajs/html/register';
 
-console.log(<div>Hello World!</div>);
-```
+   // another-file.tsx
+   console.log(<div>It works without importing!</div>);
+   ```
 
-<br />
+Now you can use JSX to generate HTML throughout your project. Remember to prioritize
+security by following code sanitization practices. Always use the `safe` attribute or
+manually call `Html.escapeHtml` to protect against XSS vulnerabilities when rendering user
+input.
 
-```jsx
-// Anywhere you want! All JSX becomes a string
-typeof (<div>Hello World</div>) === 'string'
-
-// Using as a simple html builder
-console.log(<div>Hello World</div>)
-
-// Maybe your own server-side html frontend
-function route(request, response) {
-  return response
-    .header('Content-Type', 'text/html; charset=utf-8')
-    .send(<div>Hello World</div>)
-}
-
-// What about generating a static html file?
-fs.writeFileSync(
-  'index.html',
-  <html>
-    <head>
-      <title>Hello World</title>
-    </head>
-    <body>
-      <div>Hello World</div>
-    </body>
-  </html>
-)
-
-// Also as a component library
-function Layout({ name, children }: Html.PropsWithChildren<{ name: string }>) {
-  return (
-    <html>
-      <head>
-        <title>Hello World</title>
-      </head>
-      <body>
-        <div>Hello {name}</div>
-        {children}
-      </body>
-    </html>
-  )
-}
-
-console.log(<Layout name="World">I'm in the body!</Layout>)
-```
-
-This package just provides functions to transpile JSX into HTML strings, you could already
-do this with plain JS, but we add type checking and intellisense.
+It's crucial to take XSS prevention seriously to ensure the security of your application.
+Use the provided [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) to
+catch XSS issues in your editor and improve your code's security.
 
 <br />
 

@@ -41,8 +41,8 @@
 - [Installing](#installing)
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
-  - [The safe attribute](#the-safe-attribute)
-  - [Typescript Plugin](#typescript-plugin)
+  - [The Safe Attribute](#the-safe-attribute)
+  - [TypeScript Plugin](#typescript-plugin)
 - [Async Components](#async-components)
   - [Suspense component](#suspense-component)
   - [Error boundaries](#error-boundaries)
@@ -136,39 +136,37 @@ to generate HTML. Here are two options for importing the `@kitajs/html` package:
    console.log(<div>It works without importing!</div>);
    ```
 
-Now you can use JSX to generate HTML throughout your project. Remember to prioritize
-security by following code sanitization practices. Always use the `safe` attribute or
-manually call `Html.escapeHtml` to protect against XSS vulnerabilities when rendering user
-input.
+Now you can use JSX to generate HTML throughout your project. Always use the `safe`
+attribute or manually call `Html.escapeHtml` to protect against XSS vulnerabilities when
+rendering user input.
 
-It's crucial to take XSS prevention seriously to ensure the security of your application.
-Use the provided [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) to
-catch XSS issues in your editor and improve your code's security.
+Ensuring XSS prevention is vital to guarantee your application's security. You can employ
+the [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) to catch XSS
+issues in your code editor and enhance your code's security.
 
 <br />
 
 ## Sanitization
 
 > [!IMPORTANT]  
-> Please use our `@kitajs/ts-html-plugin` to emit TS errors on where you are exposed to
-> XSS. Head over to [getting started](#getting-started) to install it.
+> Please utilize our `@kitajs/ts-html-plugin` to emit TypeScript errors wherever you are
+> exposed to XSS. Refer to [Getting Started](#getting-started) for installation
+> instructions.
 
-<br />
-
-This package sanitizes every attribute by default. However, as the resulting element is
-always a string, we cannot differentiate a html element created by a `<tag>` or from a
-user input. This forces you to use the provided [`safe`](#the-safe-attribute) or manually
-call `Html.escapeHtml`.
+This package sanitizes every attribute by default. However, since the resulting element is
+always a string, it's impossible to differentiate an HTML element created by a `<tag>` or
+from user input. This necessitates the use of the provided [`safe`](#the-safe-attribute)
+or manual invocation of `Html.escapeHtml`.
 
 ```jsx
-<div>⚠️ This will NOT be escaped. and WILL expose you to XSS</div>
+<div>⚠️ This will NOT be escaped and WILL expose you to XSS</div>
 
 <div attr="This WILL be escaped"></div>
 <div safe>This WILL be escaped</div>
 <div>{Html.escapeHtml('This WILL be escaped')}</div>
 ```
 
-Here's an example of how this is **DANGEROUS** to your application:
+Here's an example of how this is **DANGEROUS** for your application:
 
 ```jsx
 user = {
@@ -177,13 +175,13 @@ user = {
 }
 
 <div class="user-card">{user.description}</div>
-// Renders this html which will execute malicious code:
+// Renders this HTML, which will execute malicious code:
 <div class="user-card">
   <script>getStoredPasswordAndSentToBadGuysServer()</script>
 </div>
 
 <div class="user-card" safe>{user.description}</div>
-// Renders this safe html, which will NOT execute any malicious code:
+// Renders this safe HTML, which will NOT execute any malicious code:
 <div class="user-card">
   &lt;/div&gt;&lt;script&gt;getStoredPasswordAndSentToBadGuysServer()&lt;/script&gt;
 </div>
@@ -191,10 +189,10 @@ user = {
 
 <br />
 
-### The safe attribute
+### The Safe Attribute
 
-You should always use the `safe` attribute when you are rendering uncontrolled user input.
-This will sanitize its contents and avoid XSS attacks.
+Always use the `safe` attribute when rendering uncontrolled user input. This will sanitize
+the contents and prevent XSS attacks.
 
 ```jsx
 function UserCard({ name, description, date, about }) {
@@ -204,7 +202,7 @@ function UserCard({ name, description, date, about }) {
       <br />
       <p safe>{description}</p>
       <br />
-      // controlled input, no need to sanitize
+      // Controlled input, no need to sanitize
       <time datetime={date.toISOString()}>{date.toDateString()}</time>
       <br />
       <p safe>{about}</p>
@@ -213,22 +211,20 @@ function UserCard({ name, description, date, about }) {
 }
 ```
 
-Note that only at the very bottom of the HTML tree is where you should use the `safe`
-attribute, to only escape where its needed.
+Note that you should only use the `safe` attribute at the very bottom of the HTML tree
+where it's needed.
 
-<br />
+### TypeScript Plugin
 
-### Typescript Plugin
-
-By installing [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin), we can
-add errors and warnings in your editor. To prevent IDE incompatibility and problems,
-please install it globally.
+To add errors and warnings to your code editor, install
+[`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) globally. This will
+prevent IDE incompatibility and problems.
 
 ```sh
 npm i -g @kitajs/ts-html-plugin
 ```
 
-Make sure to enable it in your tsconfig.json, and you are ready to go!
+Ensure it's enabled in your `tsconfig.json`, and you'll be ready to go!
 
 ```jsonc
 // tsconfig.json

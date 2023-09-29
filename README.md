@@ -144,7 +144,7 @@ to generate HTML. Here are two options for importing the `@kitajs/html` package:
 1. **Import it manually**: Import the package in your TypeScript files where you need it,
    avoiding global scope pollution.
 
-   ```jsx
+   ```tsx
    // my-file.tsx
    import Html from '@kitajs/html';
 
@@ -154,7 +154,7 @@ to generate HTML. Here are two options for importing the `@kitajs/html` package:
 2. **Use the register to add a global namespace**: Import the `register` to globally
    register all necessary functions for convenience.
 
-   ```jsx
+   ```tsx
    // Import the register to globally register all needed functions
    import '@kitajs/html/register';
 
@@ -184,7 +184,7 @@ always a string, it's impossible to differentiate an HTML element created by a `
 from user input. This necessitates the use of the provided [`safe`](#the-safe-attribute)
 or manual invocation of `Html.escapeHtml`.
 
-```jsx
+```tsx
 <div>⚠️ This will NOT be escaped and WILL expose you to XSS</div>
 
 <div attr="This WILL be escaped"></div>
@@ -194,7 +194,7 @@ or manual invocation of `Html.escapeHtml`.
 
 Here's an example of how this is **DANGEROUS** for your application:
 
-```jsx
+```tsx
 user = {
   name: 'Bad guy',
   description: '</div><script>getStoredPasswordAndSentToBadGuysServer()</script>'
@@ -220,7 +220,7 @@ user = {
 Always use the `safe` attribute when rendering uncontrolled user input. This will sanitize
 the contents and prevent XSS attacks.
 
-```jsx
+```tsx
 function UserCard({ name, description, date, about }) {
   return (
     <div class="card">
@@ -270,23 +270,37 @@ promise, the whole tree will return a promise of the html string.
 If no async components are found, the result will be simply a string, and you can safely
 cast it into a string.
 
-```jsx
+```tsx
 async function Async() {
   await callApi();
-  return <div>Async!</div>
+  return <div>Async!</div>;
 }
 
 function Sync() {
-  return <div>Sync!</div>
+  return <div>Sync!</div>;
 }
 
-// Safe to cast into a string
-const async = <div><Async /></div> as Promise<string>
-const sync: string = <div><Sync /></div> as string
+const async = (
+  <div>
+    <Async />
+  </div>
+);
+
+async instanceof Promise;
+
+
+const sync: string = (
+  <div>
+    <Sync />
+  </div>
+);
+
+typeof sync === 'string';
 ```
 
 A `JSX.Element` will always be a string. Once a children element is a async component, the
 entire upper tree will also be async.
+[Learn when JSX.Element is a Promise](#why-jsxelement-is-a-promise).
 
 <br />
 
@@ -442,7 +456,7 @@ children element is a async component, the entire upper tree will also be async.
 you are sure that no other component in your entire codebase is async, you should always
 handle both string and promise cases.
 
-```jsx
+```tsx
 // It may or may not have inner async components.
 const html = <Layout />;
 
@@ -475,7 +489,7 @@ that.
 
 Generates:
 
-```jsx
+```tsx
 <>
   {/* Hello world */}
   <div className="awesome" style={{ border: '1px solid red' }}>
@@ -649,7 +663,7 @@ html = <Unclean repeat="a" n={5} />;
 JSX does not allow multiple root elements, but you can use a fragment to group multiple
 elements:
 
-```jsx
+```tsx
 const html = (
   <>
     <div>1</div>
@@ -685,7 +699,7 @@ selected tag you want. Possibly reasons to prefer this tag over extending types:
 - You are writing a library and should not extend types globally.
 - You need to use kebab-case tags, which JSX syntax does not support.
 
-```jsx
+```tsx
 <tag of="asd" />
 // <asd></asd>
 
@@ -804,7 +818,7 @@ This package just aims to be a drop in replacement syntax for JSX, and it works 
 you [tell tsc to transpile](#getting-started) JSX syntax to calls to our own `html`
 namespace.
 
-```jsx
+```tsx
 <ol start={2}>
   {[1, 2].map((i) => (
     <li>{i}</li>
@@ -837,7 +851,7 @@ However, if your use case really needs the output HTML to be pretty printed, you
 an external JS library to do so, like
 [html-prettify](https://www.npmjs.com/package/html-prettify).
 
-```jsx
+```tsx
 import Html from '@kitajs/html';
 import prettify from 'html-prettify';
 

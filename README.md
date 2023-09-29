@@ -235,10 +235,9 @@ where it's needed.
 
 ## Editor Intellisense and CLI tool
 
-<br />
-<br />
-<br />
-<br />
+<p align="center">
+  <img align="center" src="https://github.com/kitajs/ts-html-plugin/blob/main/assets/preview.png?raw=true" alt="Example of an error thrown by @kitajs/ts-html-plugin." width="75%" />
+</p>
 
 <h2>⚠️</h2>
 

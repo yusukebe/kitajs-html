@@ -42,7 +42,7 @@
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
   - [The Safe Attribute](#the-safe-attribute)
-  - [TypeScript Plugin](#typescript-plugin)
+- [Editor Intellisense and CLI tool](#editor-intellisense-and-cli-tool)
 - [Async Components](#async-components)
   - [Suspense component](#suspense-component)
   - [Error boundaries](#error-boundaries)
@@ -77,8 +77,9 @@ To use the `@kitajs/html` package, follow these steps:
    npm install @kitajs/html @kitajs/ts-html-plugin
    ```
 
-2. Configure your TypeScript project to transpile TSX/JSX into JavaScript. Update your
-   `tsconfig.json` file with the following settings:
+2. Configure your TypeScript project to transpile TSX/JSX into JavaScript and using our
+   [LSP Plugin](#editor-intellisense-and-cli-tool). Update your `tsconfig.json` file with
+   the following settings:
 
    ```jsonc
    // tsconfig.json
@@ -230,38 +231,27 @@ function UserCard({ name, description, date, about }) {
 Note that you should only use the `safe` attribute at the very bottom of the HTML tree
 where it's needed.
 
-### TypeScript Plugin
+<br />
 
-To add errors and warnings to your code editor, install
-[`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) globally. This will
-prevent IDE incompatibility and problems.
+## Editor Intellisense and CLI tool
 
-```sh
-npm i -g @kitajs/ts-html-plugin
-```
+<br />
+<br />
+<br />
+<br />
 
-Ensure it's enabled in your `tsconfig.json`, and you'll be ready to go!
+<h2>⚠️</h2>
 
-```jsonc
-// tsconfig.json
+**Note:** This section has been relocated to the
+[@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository.
 
-{
-  "compilerOptions": {
-    "plugins": [{ "name": "@kitajs/ts-html-plugin" }]
-  }
-}
-```
+Please consult their
+"[Getting Started](https://github.com/kitajs/ts-html-plugin#getting-started)" section for
+instructions on enabling editor IntelliSense and using the CLI tool.
 
-```jsonc
-// .vscode/settings.json
-
-{
-  "typescript.tsdk": "node_modules/typescript/lib"
-}
-```
-
-[Make sure to understand what language service plugins can and cannot do.](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin#whats-a-language-service-plugin)
-
+<br />
+<br />
+<br />
 <br />
 
 ## Async Components

@@ -38,6 +38,7 @@
 
 <br />
 
+- [Preview](#preview)
 - [Installing](#installing)
 - [Getting Started](#getting-started)
 - [Sanitization](#sanitization)
@@ -64,6 +65,12 @@
 - [Fork credits](#fork-credits)
 
 <br />
+<br />
+
+## Preview
+
+<img align="center" src="assets/preview.png" alt="Example of an error thrown by this LSP plugin." />
+
 <br />
 
 ## Installing

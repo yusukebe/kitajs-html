@@ -1,6 +1,6 @@
 {
   "name": "@kitajs/html",
-  "version": "2.2.2",
+  "version": "3.0.0",
   "description": "Fast and type safe HTML templates using TypeScript.",
   "bugs": "https://github.com/kitajs/html/issues",
   "repository": "https://github.com/kitajs/html",
@@ -30,7 +30,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@kitajs/ts-html-plugin": ">=1"
+    "@kitajs/ts-html-plugin": ">=1.1"
   },
   "packageManager": "pnpm@8.7.5",
   "engines": {

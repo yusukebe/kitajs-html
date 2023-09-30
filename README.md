@@ -609,8 +609,8 @@ const html = (
 
 ## Compiling HTML
 
-`Html.compile` interface compiles a **clean component** into a super fast component. This
-does not support unclean components / props processing.
+`Html.compile` interface compiles a [clean component](#clean-components) into a super fast
+component. This does not support unclean components / props processing.
 
 <br />
 
@@ -626,6 +626,11 @@ does not support unclean components / props processing.
 This mode works just like prepared statements in SQL. Compiled components can give up to
 [**2000**](#performance) times faster html generation. This is a opt-in feature that you
 may not be able to use everywhere!
+
+Due to the nature of
+[`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+objects, the spread operator (`...`) will not work with compiled components. You need to
+manually pass all props to their components.
 
 ```tsx
 import Html from '@kitajs/html';
@@ -671,20 +676,20 @@ process them before passing them to the component.
 
 ```tsx
 // Clean component, render as is
-function Clean(props: PropsWithChildren<{ repeated: string }>) {
-  return <div>{props.repeated}</div>;
+function Clean(props: PropsWithChildren<{ sum: number }>) {
+  return <div>{props.sum}</div>;
 }
 
 // Calculation is done before passing to the component
-html = <Clean name={'a'.repeat(5)} />;
+html = <Clean sum={3 * 2} />;
 
 // Unclean component, process before render
-function Unclean(props: { repeat: string; n: number }) {
-  return <div>{props.repeat.repeat(props.n)}</div>;
+function Unclean(props: { a: number; b: number }) {
+  return <div>{props.a * props.b}</div>;
 }
 
 // Calculation is done inside the component, thus cannot be used with .compile()
-html = <Unclean repeat="a" n={5} />;
+html = <Unclean a={3} b={2} />;
 ```
 
 <br />

@@ -24,8 +24,8 @@ describe('Components', () => {
     );
 
     assert.equal(
-      '<button type="button" class="override"></button>',
-      <Button class="override" />
+      '<button type="button" class="override" test="a" b="3"></button>',
+      <Button class="override" test="a" b={3} />
     );
 
     assert.equal(

@@ -347,7 +347,8 @@ const html = renderToStream(renderUserPage);
 
 <br />
 
-> [!NOTE] The `renderToStream()` is returns a native node/bun stream, head over to our
+> [!NOTE]  
+> The `renderToStream()` is returns a native node/bun stream, head over to our
 > [suspense-server](examples/suspense-server.tsx) example to see how to use it with
 > node:http, Express or Fastify servers.
 
@@ -458,9 +459,10 @@ error is thrown.
 
 <br />
 
-> [!NOTE] Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
-> implemented, you need to manually cast `JSX.Element` into strings if you are sure there
-> is no inner async components in your component tree.
+> [!NOTE]  
+> Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets implemented,
+> you need to manually cast `JSX.Element` into strings if you are sure there is no inner
+> async components in your component tree.
 
 <br />
 
@@ -612,8 +614,9 @@ does not support unclean components / props processing.
 
 <br />
 
-> [!WARNING] This feature is a special use case for rendering **entire page templates**
-> like what you would do with handlebars or nunjucks.
+> [!WARNING]  
+> This feature is a special use case for rendering **entire page templates** like what you
+> would do with handlebars or nunjucks.
 >
 > It does not works with mostly JSX components and, for small components,
 > [it will be slower than the normal](benchmark.md) JSX syntax.

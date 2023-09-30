@@ -129,10 +129,14 @@ To use the `@kitajs/html` package, follow these steps:
    }
    ```
 
+<br />
+
 > [!WARNING]  
->  Make sure to verify that your setup is correct by writing `console.log(<div>{'<' + '/div>'}</div>);`
-> in your editor. If it **PRODUCE ERRORS**, your setup is correct. Refer to the [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin)
-> repository for more details on setting up editor intellisense.
+> Make sure to verify that your setup is correct by writing
+> `console.log(<div>{'<' + '/div>'}</div>);` in your editor. If it **PRODUCE ERRORS**,
+> your setup is correct. Refer to the
+> [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
+> details on setting up editor intellisense.
 
 <br />
 
@@ -173,10 +177,14 @@ issues in your code editor and enhance your code's security.
 
 ## Sanitization
 
+<br />
+
 > [!IMPORTANT]  
 > Please utilize our `@kitajs/ts-html-plugin` to emit TypeScript errors wherever you are
 > exposed to XSS. Refer to [Getting Started](#getting-started) for installation
 > instructions.
+
+<br />
 
 This package sanitizes every attribute by default. However, since the resulting element is
 always a string, it's impossible to differentiate an HTML element created by a `<tag>` or
@@ -304,9 +312,9 @@ entire upper tree will also be async.
 
 ### Suspense component
 
-The only problem when rendering templates is that you must wait for the whole template to be
-rendered before sending it to the client. This is not a problem for small templates, but
-it can be a problem for large templates.
+The only problem when rendering templates is that you must wait for the whole template to
+be rendered before sending it to the client. This is not a problem for small templates,
+but it can be a problem for large templates.
 
 To solve this problem, we provide a `Suspense` component that combined with
 `renderToStream()` rendering method, will stream a fallback component while it waits for
@@ -337,10 +345,13 @@ function renderUserPage(rid: number) {
 const html = renderToStream(renderUserPage);
 ```
 
-> [!NOTE]  
-> The `renderToStream()` is returns a native node/bun stream, head over to our
+<br />
+
+> [!NOTE] The `renderToStream()` is returns a native node/bun stream, head over to our
 > [suspense-server](examples/suspense-server.tsx) example to see how to use it with
 > node:http, Express or Fastify servers.
+
+<br />
 
 The above example would render `<div>Loading username...</div>` while waiting for the
 `MyAsyncComponent` to be rendered.
@@ -445,9 +456,13 @@ error is thrown.
 
 ### Why JSX.Element is a Promise?
 
-> ℹ️ Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
+<br />
+
+> [!NOTE] Until [#14729](https://github.com/microsoft/TypeScript/issues/14729) gets
 > implemented, you need to manually cast `JSX.Element` into strings if you are sure there
 > is no inner async components in your component tree.
+
+<br />
 
 JSX elements are mostly strings everywhere. However, as the nature of this package, once a
 children element is a async component, the entire upper tree will also be async. Unless
@@ -550,24 +565,29 @@ const html = (
 ### Base HTML templates
 
 Often you will have a "template" html with doctype, things on the head, body and so on...
-The layout is also a very good component to be compiled. Here is a effective example on
-how to do it:.
+Most users try to use them as a raw string and only use JSX for other components, but this
+is a not a good idea as
+[you will have problems with it](https://github.com/nicojs/typed-html/issues/46).
+
+But you can always concatenate strings, like in this required use-case for `<doctype>`
 
 ```tsx
-export const Layout = html.compile((p: Html.PropsWithChildren<{ head: string }>) => (
-  <>
-    {'<!doctype html>'}
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        {p.head}
-      </head>
-      <body>{p.children}</body>
-    </html>
-  </>
-));
+export function Layout(props: Html.PropsWithChildren<{ head: string; title?: string }>) {
+  return (
+    <>
+      {'<!doctype html>'}
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>{props.title || 'Hello World!'}</title>
+          {props.head}
+        </head>
+        <body>{props.children}</body>
+      </html>
+    </>
+  );
+}
 
 const html = (
   <Layout
@@ -587,8 +607,18 @@ const html = (
 
 ## Compiling HTML
 
-Compiles a **clean component** into a super fast component. This does not support unclean
-components / props processing.
+`Html.compile` interface compiles a **clean component** into a super fast component. This
+does not support unclean components / props processing.
+
+<br />
+
+> [!WARNING] This feature is a special use case for rendering **entire page templates**
+> like what you would do with handlebars or nunjucks.
+>
+> It does not works with mostly JSX components and, for small components,
+> [it will be slower than the normal](benchmark.md) JSX syntax.
+
+<br />
 
 This mode works just like prepared statements in SQL. Compiled components can give up to
 [**2000**](#performance) times faster html generation. This is a opt-in feature that you

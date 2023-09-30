@@ -141,6 +141,10 @@ export interface SuspenseProps {
   catch?: JSX.Element | ((error: unknown) => JSX.Element);
 }
 
+/**
+ * A HtmlStream is a readable string stream that also contains the resource id used to
+ * identify the request.
+ */
 export interface HtmlStream extends Readable {
   /** The final resource id used for this render */
   rid: number;

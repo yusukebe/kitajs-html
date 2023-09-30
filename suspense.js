@@ -47,6 +47,8 @@ const SuspenseScript = /* html */ `
   // Removes line breaks added for readability
   .replace(/\n\s*/g, '');
 
+function noop() {}
+
 /** @type {import('./suspense').Suspense} */
 function Suspense(props) {
   if (!SUSPENSE_ROOT.enabled) {
@@ -209,7 +211,7 @@ function renderToStream(factory, customRid) {
 
   /** @type {import('./suspense').HtmlStream} */
   //@ts-expect-error - we manually set the rid
-  const stream = new Readable({ read: function noop() {} });
+  const stream = new Readable({ read: noop });
   stream.rid = resourceId;
 
   SUSPENSE_ROOT.resources.set(resourceId, {

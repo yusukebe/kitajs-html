@@ -257,6 +257,7 @@ declare namespace JSX {
     href?: undefined | string;
     crossorigin?: undefined | string;
     rel?: undefined | string;
+    as?: undefined | string;
     media?: undefined | string;
     hreflang?: undefined | string;
     type?: undefined | string;

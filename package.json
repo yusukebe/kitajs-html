@@ -23,17 +23,17 @@
     "csstype": "^3.1.2"
   },
   "devDependencies": {
-    "@arthurfiorette/prettier-config": "^1.0.9",
-    "@types/node": "^20.4.2",
+    "@arthurfiorette/prettier-config": "^1.0.11",
+    "@types/node": "^20.8.3",
     "benny": "^3.7.1",
     "c8": "^8.0.1",
-    "prettier": "^3.0.0",
-    "tslib": "^2.6.1",
+    "prettier": "^3.0.3",
+    "tslib": "^2.6.2",
     "typed-html": "^3.0.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@kitajs/ts-html-plugin": ">=1.1"
+    "@kitajs/ts-html-plugin": ">=1.2.0"
   },
   "packageManager": "pnpm@8.7.5",
   "engines": {

@@ -6,19 +6,19 @@ settings:
 
 dependencies:
   '@kitajs/ts-html-plugin':
-    specifier: '>=1.1'
-    version: 1.1.1(@kitajs/html@2.2.2)(typescript@5.2.2)
+    specifier: '>=1.2.0'
+    version: 1.2.0(@kitajs/html@3.0.2)(typescript@5.2.2)
   csstype:
     specifier: ^3.1.2
     version: 3.1.2
 
 devDependencies:
   '@arthurfiorette/prettier-config':
-    specifier: ^1.0.9
+    specifier: ^1.0.11
     version: 1.0.11(prettier@3.0.3)(typescript@5.2.2)
   '@types/node':
-    specifier: ^20.4.2
-    version: 20.8.2
+    specifier: ^20.8.3
+    version: 20.8.3
   benny:
     specifier: ^3.7.1
     version: 3.7.1
@@ -26,16 +26,16 @@ devDependencies:
     specifier: ^8.0.1
     version: 8.0.1
   prettier:
-    specifier: ^3.0.0
+    specifier: ^3.0.3
     version: 3.0.3
   tslib:
-    specifier: ^2.6.1
+    specifier: ^2.6.2
     version: 2.6.2
   typed-html:
     specifier: ^3.0.1
     version: 3.0.1
   typescript:
-    specifier: ^5.1.6
+    specifier: ^5.2.2
     version: 5.2.2
 
 packages:
@@ -111,21 +111,24 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@kitajs/html@2.2.2:
-    resolution: {integrity: sha512-NSTExqcjRUZ1kfnw487hTR+6OxQ53qvXNxVCk7W06+SKMALFptDxPMF5Ga5q0+jt/evUiBRpG7usCSU5lrFHiw==}
+  /@kitajs/html@3.0.2(@kitajs/ts-html-plugin@1.2.0):
+    resolution: {integrity: sha512-KyIEUK9OKEviLO0YGBTIeGywb7L4qNyrOnn9AhZ6ARKiBVXlg7/dTup/G5fQOD0hSNT5au5ah3Ss7zma0QHbjw==}
     engines: {node: '>=12'}
+    peerDependencies:
+      '@kitajs/ts-html-plugin': '>=1.1'
     dependencies:
+      '@kitajs/ts-html-plugin': 1.2.0(@kitajs/html@3.0.2)(typescript@5.2.2)
       csstype: 3.1.2
     dev: false
 
-  /@kitajs/ts-html-plugin@1.1.1(@kitajs/html@2.2.2)(typescript@5.2.2):
-    resolution: {integrity: sha512-LV/6b23stMYoIg3lJBMgEhn10bvU75kdwTrE0pnLjfn64CJdvCNmpiDtnGWd9TIzoBaRAPCh5nPFxXJg6pm4Eg==}
+  /@kitajs/ts-html-plugin@1.2.0(@kitajs/html@3.0.2)(typescript@5.2.2):
+    resolution: {integrity: sha512-Bi+rcFRZ7eHrQIf38fShQ2/KzQ72si+w21FbkcJmPIyO4UXZQeN6F6EmwDW1UNUHOj9itP1XqvAnFEWT+qIT0w==}
     hasBin: true
     peerDependencies:
-      '@kitajs/html': '>=2'
+      '@kitajs/html': '>=3'
       typescript: '>=5'
     dependencies:
-      '@kitajs/html': 2.2.2
+      '@kitajs/html': 3.0.2(@kitajs/ts-html-plugin@1.2.0)
       chalk: 4.1.2
       tslib: 2.6.2
       typescript: 5.2.2
@@ -185,8 +188,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node@20.8.2:
-    resolution: {integrity: sha512-Vvycsc9FQdwhxE3y3DzeIxuEJbWGDsnrxvMADzTDF/lcdR9/K+AQIeAghTQsHtotg/q0j3WEOYS/jQgSdWue3w==}
+  /@types/node@20.8.3:
+    resolution: {integrity: sha512-jxiZQFpb+NlH5kjW49vXxvxTjeeqlbsnTAdBTKpzEdPs9itay7MscYXz3Fo9VYFEsfQ6LJFitHad3faerLAjCw==}
     dev: true
 
   /@types/unist@2.0.8:

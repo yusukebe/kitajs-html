@@ -308,7 +308,7 @@ declare namespace JSX {
   interface HtmlOptionTag extends HtmlTag {
     disabled?: undefined | boolean;
     label?: undefined | string;
-    selected?: undefined | string;
+    selected?: undefined | boolean | string;
     value?: undefined | string;
   }
 

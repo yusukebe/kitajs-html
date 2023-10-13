@@ -3,6 +3,9 @@
 // Missing something? Please submit a issue report or a PR:
 // https://github.com/kitajs/html
 
+/** Same as a string type but allows autocompletion of literal values */
+type AnyString = string & {};
+
 declare namespace JSX {
   /**
    * A {@linkcode JSX.Element} will always be a string, unless one of its children is a
@@ -196,6 +199,9 @@ declare namespace JSX {
     ismap?: undefined | string;
     width?: undefined | number | string;
     height?: undefined | number | string;
+    decoding?: 'sync' | 'async' | 'auto' | AnyString;
+    loading?: 'eager' | 'lazy' | AnyString;
+    srcset?: string;
   }
 
   interface HtmlInputTag extends HtmlTag {

@@ -211,7 +211,8 @@ declare namespace JSX {
     height?: undefined | string;
     list?: undefined | string;
     max?: undefined | string;
-    maxlength?: undefined | string;
+    minlength?: undefined | number | string;
+    maxlength?: undefined | number | string;
     method?: undefined | string;
     min?: undefined | string;
     multiple?: undefined | string;
@@ -401,8 +402,8 @@ declare namespace JSX {
     dirname?: undefined | string;
     disabled?: undefined | boolean;
     form?: undefined | string;
-    maxlength?: undefined | string;
-    minlength?: undefined | string;
+    maxlength?: undefined | number | string;
+    minlength?: undefined | number | string;
     name?: undefined | string;
     placeholder?: undefined | string;
     readonly?: undefined | string;

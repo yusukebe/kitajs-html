@@ -278,6 +278,7 @@ declare namespace JSX {
 
   interface HtmlMetaTag extends HtmlTag {
     name?: undefined | string;
+    property?: undefined | string;
     ['http-equiv']?: undefined | string;
     content?: undefined | string;
     charset?: undefined | string;

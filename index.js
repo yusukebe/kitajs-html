@@ -372,46 +372,43 @@ function contentsToString(contents, escape) {
  * @returns {any}
  */
 function createElement(name, attrs, ...children) {
-  // Adds the children to the attributes if it is not present.
-  if (attrs === null) {
-    attrs = { children };
-  }
+  const hasAttrs = attrs !== null;
 
   // Calls the element creator function if the name is a function
   if (typeof name === 'function') {
-    // In case the children attributes is not present, add it as a property.
-    if (attrs.children === undefined) {
-      // When only a single child is present, unwrap it.
-      if (children.length > 1) {
-        attrs.children = children;
-      } else {
-        attrs.children = children[0];
-      }
+    // We at least need to pass the children to the function component. We may receive null if this 
+    // component was called without any children.
+    if (!hasAttrs) {
+      attrs = { children: children.length > 1 ? children : children[0] };
+    } else if (attrs.children === undefined) {
+      attrs.children = children.length > 1 ? children : children[0];
     }
 
     return name(attrs);
   }
 
   // Switches the tag name when this custom `tag` is present.
-  if (name === 'tag') {
+  if (hasAttrs && name === 'tag') {
     name = String(attrs.of);
     delete attrs.of;
   }
 
+  const attributes = hasAttrs ? attributesToString(attrs) : '';
+
   if (children.length === 0 && isVoidElement(name)) {
-    return '<' + name + attributesToString(attrs) + '/>';
+    return '<' + name + attributes + '/>';
   }
 
-  let contents = contentsToString(children, attrs.safe);
+  const contents = contentsToString(children, hasAttrs && attrs.safe);
 
   // Faster than checking if `children instanceof Promise`
   // https://jsperf.app/zipuvi
   if (typeof contents === 'string') {
-    return '<' + name + attributesToString(attrs) + '>' + contents + '</' + name + '>';
+    return '<' + name + attributes + '>' + contents + '</' + name + '>';
   }
 
   return contents.then(function asyncChildren(child) {
-    return '<' + name + attributesToString(attrs) + '>' + child + '</' + name + '>';
+    return '<' + name + attributes + '>' + child + '</' + name + '>';
   });
 }
 

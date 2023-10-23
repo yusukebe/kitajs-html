@@ -1,56 +1,76 @@
-import { createWriteStream } from 'fs';
-import { HelloWorld } from './renderers/hello-world';
-import { ManyComponents } from './renderers/many-components';
-import { ManyProps } from './renderers/many-props';
-import { MdnHomepage } from './renderers/mdn-homepage';
-import { bench } from './suite';
+//@ts-nocheck - disable messing with source types
 
-function toMdRow(values: string[]) {
-  return '| ' + values.join(' | ') + ' |';
-}
+/// <reference path="../jsx.d.ts" />
+/// <reference path="../index.d.ts" />
+/// <reference path="../all-types.d.ts" />
 
-(async () => {
-  const out = createWriteStream('benchmark.md', {
-    mode: 0o644,
-    flags: 'w'
-  });
+import assert from 'assert';
+import { bench, group, run } from 'mitata';
+import { ManyComponents, TemplateManyComponents } from './renderers/many-components.js';
+import { ManyProps, TemplateManyProps } from './renderers/many-props.js';
+import { MdnHomepage, TemplateMdnHomepage } from './renderers/mdn-homepage.js';
 
-  out.write('# Benchmark\n\n');
+process.env.NODE_ENV = 'production';
 
-  out.write('- ' + new Date().toISOString() + '\n');
-  out.write('- Node: ' + process.version + '\n');
-  out.write('- V8: ' + process.versions.v8 + '\n');
-  out.write('- OS: ' + process.platform + '\n');
-  out.write('- Arch: ' + process.arch + '\n');
-  out.write('\n');
+//@ts-expect-error - dynamic import from cjs js file.
+const KitaHtml = (await import('../../index.js')).default;
+const TypedHtml = await import('typed-html');
+const React = await import('react');
+const ReactDOMServer = await import('react-dom/server');
+const CommonTags = await import('common-tags');
 
-  for (const [name, fn] of [
-    ['Hello World', HelloWorld],
-    ['Mdn Homepage', MdnHomepage],
-    ['Many Props', ManyProps],
-    ['Many Components', ManyComponents]
-  ] as const) {
-    out.write('## ' + name + '\n\n');
+// Ensures that Kitajs/html and react produce the same output
+assert.equal(
+  ReactDOMServer.renderToStaticMarkup(ManyComponents(React, 'Hello World!') as any),
+  // Simply removes spaces and newlines
+  ManyComponents(KitaHtml, 'Hello World!')
+);
 
-    let start = true;
+// Ensures that Kitajs/html and common-tags produce the same output
+assert.equal(
+  ManyComponents(KitaHtml, 'Hello World!'),
+  // Simply removes spaces and newlines
+  TemplateManyComponents(CommonTags.html, 'Hello World!')
+    .split('\n')
+    .map((l: string) => l.trim())
+    .join('')
+);
 
-    for (const runs of [10, 10_000, 100_000]) {
-      console.log(name, runs);
+// Kitajs/html and typed html does produces the same output, however typed-html appends spaces between tags
+assert.equal(
+  ManyComponents(KitaHtml, 'Hello World!'),
+  // Simply removes spaces and newlines
+  ManyComponents(TypedHtml, 'Hello World!')
+    .toString()
+    .replace(/< \//g, '</')
+    .replace(/\n/g, '')
+);
 
-      const res = bench(name, runs, fn);
+group('Many Components (31.4kb)', () => {
+  bench('Typed Html', () => ManyComponents(TypedHtml, 'Hello World!'));
+  bench('KitaJS/Html', () => ManyComponents(KitaHtml, 'Hello World!'));
+  bench('Common Tags', () => TemplateManyComponents(CommonTags.html, 'Hello World!'));
+  bench('React', () =>
+    ReactDOMServer.renderToStaticMarkup(ManyComponents(React, 'Hello World!') as any)
+  );
+});
 
-      if (start) {
-        out.write(toMdRow(Object.keys(res)) + '\n');
-        out.write(toMdRow(Object.keys(res).fill('-')) + '\n');
-        start = false;
-      }
+group('MdnHomepage (66.7Kb)', () => {
+  bench('Typed Html', () => MdnHomepage(TypedHtml, 'Hello World!'));
+  bench('KitaJS/Html', () => MdnHomepage(KitaHtml, 'Hello World!'));
+  bench('Common Tags', () => TemplateMdnHomepage(CommonTags.html, 'Hello World!'));
+  bench('React', () =>
+    ReactDOMServer.renderToStaticMarkup(MdnHomepage(React, 'Hello World!') as any)
+  );
+});
 
-      out.write(toMdRow(Object.values(bench(name, runs, fn))) + '\n');
+group('Many Props (7.4kb)', () => {
+  bench('Typed Html', () => ManyProps(TypedHtml, 'Hello World!'));
+  bench('KitaJS/Html', () => ManyProps(KitaHtml, 'Hello World!'));
+  bench('Common Tags', () => TemplateManyProps(CommonTags.html, 'Hello World!'));
+  bench('React', () =>
+    ReactDOMServer.renderToStaticMarkup(ManyProps(React, 'Hello World!') as any)
+  );
+});
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      gc!();
-    }
-
-    out.write('\n');
-  }
-})().catch(console.error);
+run().catch(console.error);

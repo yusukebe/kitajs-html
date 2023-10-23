@@ -14,7 +14,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "bench": "tsc && node --expose-gc dist/benchmark",
+    "bench": "tsc -p tsconfig.benchmark.json && cp benchmark/package.json dist/benchmark/package.json && cd dist/benchmark && node index.js",
     "format": "prettier --write .",
     "test": "tsc && c8 --reporter lcov --reporter text node --trace-warnings --test dist/test",
     "test:only": "tsc; node --trace-warnings --test-only --test dist/test"
@@ -27,7 +27,11 @@
     "@types/node": "^20.8.3",
     "benny": "^3.7.1",
     "c8": "^8.0.1",
+    "common-tags": "^1.8.2",
+    "mitata": "^0.1.6",
     "prettier": "^3.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tslib": "^2.6.2",
     "typed-html": "^3.0.1",
     "typescript": "^5.2.2"

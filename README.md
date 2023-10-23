@@ -801,49 +801,55 @@ This package is just a string builder on steroids, as you can see
 [how this works](#how-it-works). This means that most way to isolate performance
 differences is to micro benchmark.
 
-You can run this yourself by running `pnpm bench`. The benchmark below ran with a 13600k
-@5.1GHz machine.
+The below benchmark compares this package with other popular HTML builders, like React,
+Typed Html and Common Tags.
 
-```markdown
-# Benchmark
+You can run this yourself by running `pnpm bench`.
 
-- 2023-10-07T16:32:38.524Z
-- Node: v20.8.0
-- V8: 11.3.244.8-node.16
-- OS: linux
-- Arch: x64
+```java
+cpu: 13th Gen Intel(R) Core(TM) i5-13600K
+runtime: node v20.8.1 (x64-linux)
 
-## Hello World
+benchmark        time (avg)             (min … max)       p75       p99      p995
+--------------------------------------------------- -----------------------------
+• Many Components (31.4kb)
+--------------------------------------------------- -----------------------------
+Typed Html     37.9 µs/iter     (31.23 µs … 1.9 ms)  34.27 µs 140.45 µs 176.84 µs
+KitaJS/Html   10.52 µs/iter   (8.31 µs … 804.52 µs)   9.79 µs  23.53 µs  59.89 µs
+Common Tags    78.2 µs/iter  (67.58 µs … 458.58 µs)  74.71 µs 232.46 µs 268.12 µs
+React         23.05 µs/iter    (17.38 µs … 1.29 ms)  22.12 µs 112.88 µs 151.97 µs
 
-| Runs   | @kitajs/html | typed-html | +     | .compile() | + / @kitajs/html | + / typed-html |
-| ------ | ------------ | ---------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.0051ms     | 0.0115ms   | 2.25x | 0.037ms    | 0.14x            | 0.31x          |
-| 10000  | 0.5453ms     | 1.8617ms   | 3.41x | 0.2964ms   | 1.84x            | 6.28x          |
-| 100000 | 4.2937ms     | 12.4456ms  | 2.9x  | 1.3948ms   | 3.08x            | 8.92x          |
+summary for Many Components (31.4kb)
+  KitaJS/Html
+   2.19x faster than React
+   3.6x faster than Typed Html
+   7.44x faster than Common Tags
 
-## Mdn Homepage
+• MdnHomepage (66.7Kb)
+--------------------------------------------------- -----------------------------
+Typed Html   314.38 µs/iter   (266.98 µs … 4.48 ms) 306.37 µs 526.09 µs 585.44 µs
+KitaJS/Html   62.27 µs/iter  (49.86 µs … 445.16 µs)  58.49 µs 261.97 µs  285.1 µs
+Common Tags  138.61 µs/iter    (107.26 µs … 3.8 ms) 119.71 µs 309.04 µs   2.33 ms
+React        156.75 µs/iter  (134.97 µs … 485.2 µs) 150.73 µs 361.63 µs 388.53 µs
 
-| Runs   | @kitajs/html | typed-html   | +     | .compile() | + / @kitajs/html | + / typed-html |
-| ------ | ------------ | ------------ | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.6555ms     | 3.8335ms     | 5.85x | 0.0216ms   | 30.37x           | 177.62x        |
-| 10000  | 564.8611ms   | 2972.7084ms  | 5.26x | 0.2644ms   | 2136.01x         | 11241.23x      |
-| 100000 | 5682.3627ms  | 30272.9508ms | 5.33x | 1.4159ms   | 4013.37x         | 21381.35x      |
+summary for MdnHomepage (66.7Kb)
+  KitaJS/Html
+   2.23x faster than Common Tags
+   2.52x faster than React
+   5.05x faster than Typed Html
 
-## Many Props
+• Many Props (7.4kb)
+--------------------------------------------------- -----------------------------
+Typed Html    74.08 µs/iter    (66.31 µs … 1.46 ms)  70.92 µs 206.54 µs 246.31 µs
+KitaJS/Html   16.98 µs/iter  (15.12 µs … 385.35 µs)  16.41 µs  30.86 µs  62.49 µs
+Common Tags   31.12 µs/iter  (27.68 µs … 469.77 µs)  29.92 µs   72.3 µs 106.25 µs
+React         45.02 µs/iter  (39.38 µs … 425.16 µs)  43.02 µs 139.04 µs 218.36 µs
 
-| Runs   | @kitajs/html | typed-html | +     | .compile() | + / @kitajs/html | + / typed-html |
-| ------ | ------------ | ---------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.1863ms     | 0.9531ms   | 5.12x | 0.0107ms   | 17.38x           | 88.93x         |
-| 10000  | 165.5015ms   | 705.8572ms | 4.26x | 0.6545ms   | 252.85x          | 1078.41x       |
-| 100000 | 1669.4264ms  | 7092.11ms  | 4.25x | 3.0786ms   | 542.27x          | 2303.68x       |
-
-## Many Components
-
-| Runs   | @kitajs/html | typed-html  | +     | .compile() | + / @kitajs/html | + / typed-html |
-| ------ | ------------ | ----------- | ----- | ---------- | ---------------- | -------------- |
-| 10     | 0.1567ms     | 0.3688ms    | 2.35x | 0.0027ms   | 57.43x           | 135.17x        |
-| 10000  | 145.0478ms   | 362.2195ms  | 2.5x  | 1.2776ms   | 113.53x          | 283.52x        |
-| 100000 | 1400.2911ms  | 3676.7311ms | 2.63x | 5.7281ms   | 244.46x          | 641.88x        |
+summary for Many Props (7.4kb)
+  KitaJS/Html
+   1.83x faster than Common Tags
+   2.65x faster than React
+   4.36x faster than Typed Html
 ```
 
 <br />

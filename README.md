@@ -789,7 +789,7 @@ recommend using it**.
 
 Just add this triple slash directive to the top of your file:
 
-```tsx
+```html
 /// <reference types="@kitajs/html/all-types.d.ts" />
 ```
 

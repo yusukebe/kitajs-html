@@ -79,7 +79,18 @@ declare namespace JSX {
     hreflang?: undefined | string;
     target?: undefined | string;
     download?: undefined | string;
-    referrerpolicy?: undefined | string;
+    referrerpolicy?:
+      | undefined
+      | ''
+      | 'no-referrer'
+      | 'no-referrer-when-downgrade'
+      | 'origin'
+      | 'origin-when-cross-origin'
+      | 'same-origin'
+      | 'strict-origin'
+      | 'strict-origin-when-cross-origin'
+      | 'unsafe-url'
+      | AnyString;
     ping?: undefined | string;
     rel?: undefined | string;
     media?: undefined | string;
@@ -182,13 +193,30 @@ declare namespace JSX {
   }
 
   interface HtmlIFrameTag extends HtmlTag {
+    allow?: undefined | string;
+    allowfullscreen?: undefined | boolean | string;
+    allowpaymentrequest?: undefined | boolean | string;
+    credentialless?: undefined | boolean | string;
+    height?: undefined | string;
+    loading?: undefined | string;
+    name?: undefined | string;
+    referrerpolicy?:
+      | undefined
+      | ''
+      | 'no-referrer'
+      | 'no-referrer-when-downgrade'
+      | 'origin'
+      | 'origin-when-cross-origin'
+      | 'same-origin'
+      | 'strict-origin'
+      | 'strict-origin-when-cross-origin'
+      | 'unsafe-url'
+      | AnyString;
+    sandbox?: undefined | boolean | string;
     src?: undefined | string;
     srcdoc?: undefined | string;
-    name?: undefined | string;
-    sandbox?: undefined | string;
     seamless?: undefined | string;
     width?: undefined | string;
-    height?: undefined | string;
   }
 
   interface HtmlImageTag extends HtmlTag {

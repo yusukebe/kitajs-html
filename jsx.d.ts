@@ -626,6 +626,7 @@ declare namespace JSX {
     desc: HtmlSvgTag;
     details: HtmlDetailsTag;
     dfn: HtmlTag;
+    dialog: HtmlDetailsTag;
     div: HtmlTag;
     dl: HtmlTag;
     dt: HtmlTag;

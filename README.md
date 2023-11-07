@@ -33,7 +33,7 @@
 <p align="center">
   <code>@kitajs/html</code> is a super fast JSX runtime to generate HTML strings that works everywhere. 
    <br /><i><a href="https://expressjs.com">Express</a>? <a href="https://fastify.dev">Fastify</a>? <a href="https://hono.dev">Hono</a>? <a href="https://bun.sh">Bun</a>? <a href="https://htmx.org/">Htmx</a>?</i>
-   <br /><b>If it supports <code>strings</code> we got you covered.</b>
+   <br /><b>If it supports <code>string</code> we got you covered.</b>
   <br />
   <br />
 </p>

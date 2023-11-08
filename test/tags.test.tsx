@@ -12,10 +12,10 @@ describe('Tags', () => {
 
     assert.equal('<meta charset="utf8"/>', <meta charset="utf8"></meta>);
 
-    //@ts-expect-error - invalid html
     assert.equal('<video autoplay></video>', <video autoplay></video>);
+    //@ts-expect-error - invalid type
     assert.equal('<video autoplay=""></video>', <video autoplay=""></video>);
-
+    //@ts-expect-error - invalid type
     assert.equal('<video autoplay="test"></video>', <video autoplay="test"></video>);
   });
 

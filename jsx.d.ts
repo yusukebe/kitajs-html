@@ -113,10 +113,10 @@ declare namespace JSX {
   interface HtmlAudioTag extends HtmlTag {
     src?: undefined | string;
     autobuffer?: undefined | string;
-    autoplay?: undefined | string | boolean;
+    autoplay?: undefined | boolean;
     preload?: undefined | string;
-    muted?: undefined | string | boolean;
-    loop?: undefined | string | boolean;
+    muted?: undefined | boolean;
+    loop?: undefined | boolean;
     controls?: undefined | string;
   }
 
@@ -194,9 +194,9 @@ declare namespace JSX {
 
   interface HtmlIFrameTag extends HtmlTag {
     allow?: undefined | string;
-    allowfullscreen?: undefined | boolean | string;
-    allowpaymentrequest?: undefined | boolean | string;
-    credentialless?: undefined | boolean | string;
+    allowfullscreen?: undefined | boolean;
+    allowpaymentrequest?: undefined | boolean;
+    credentialless?: undefined | boolean;
     height?: undefined | string;
     loading?: undefined | string;
     name?: undefined | string;
@@ -212,7 +212,7 @@ declare namespace JSX {
       | 'strict-origin-when-cross-origin'
       | 'unsafe-url'
       | AnyString;
-    sandbox?: undefined | boolean | string;
+    sandbox?: undefined | boolean;
     src?: undefined | string;
     srcdoc?: undefined | string;
     seamless?: undefined | string;
@@ -238,7 +238,7 @@ declare namespace JSX {
     alt?: undefined | string;
     autocomplete?: undefined | string;
     autofocus?: undefined | string;
-    checked?: undefined | string | boolean;
+    checked?: undefined | boolean;
     disabled?: undefined | boolean;
     enctype?: undefined | string;
     form?: undefined | string;
@@ -249,13 +249,13 @@ declare namespace JSX {
     maxlength?: undefined | number | string;
     method?: undefined | string;
     min?: undefined | string;
-    multiple?: undefined | string;
+    multiple?: undefined | boolean;
     name?: undefined | string;
-    novalidate?: undefined | string | boolean;
+    novalidate?: undefined | boolean;
     pattern?: undefined | string;
     placeholder?: undefined | string;
-    readonly?: undefined | string;
-    required?: undefined | string;
+    readonly?: undefined | boolean;
+    required?: undefined | boolean;
     size?: undefined | string;
     src?: undefined | string;
     step?: undefined | string;
@@ -344,7 +344,7 @@ declare namespace JSX {
   interface HtmlOptionTag extends HtmlTag {
     disabled?: undefined | boolean;
     label?: undefined | string;
-    selected?: undefined | boolean | string;
+    selected?: undefined | boolean;
     value?: undefined | string;
   }
 
@@ -389,24 +389,24 @@ declare namespace JSX {
     src?: undefined | string;
     type?: undefined | string;
     charset?: undefined | string;
-    async?: undefined | string | boolean;
-    defer?: undefined | string | boolean;
+    async?: undefined | boolean;
+    defer?: undefined | boolean;
     crossorigin?: undefined | string;
     integrity?: undefined | string;
     text?: undefined | string;
   }
 
   interface HtmlDetailsTag extends HtmlTag {
-    open?: undefined | string;
+    open?: undefined | boolean;
   }
 
   interface HtmlSelectTag extends HtmlTag {
-    autofocus?: undefined | string;
+    autofocus?: undefined | boolean;
     disabled?: undefined | boolean;
     form?: undefined | string;
     multiple?: undefined | string;
     name?: undefined | string;
-    required?: undefined | string;
+    required?: undefined | boolean;
     size?: undefined | string;
   }
 
@@ -441,8 +441,8 @@ declare namespace JSX {
     minlength?: undefined | number | string;
     name?: undefined | string;
     placeholder?: undefined | string;
-    readonly?: undefined | string;
-    required?: undefined | string;
+    readonly?: undefined | boolean;
+    required?: undefined | boolean;
     rows?: undefined | string;
     wrap?: undefined | string;
   }
@@ -470,9 +470,9 @@ declare namespace JSX {
     src?: undefined | string;
     poster?: undefined | string;
     autobuffer?: undefined | string;
-    autoplay?: undefined | string;
-    loop?: undefined | string;
-    controls?: undefined | string;
+    autoplay?: undefined | boolean;
+    loop?: undefined | boolean;
+    controls?: undefined | boolean;
     width?: undefined | string;
     height?: undefined | string;
   }

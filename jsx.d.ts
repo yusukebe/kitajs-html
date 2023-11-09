@@ -34,7 +34,7 @@ declare namespace JSX {
     contenteditable?: undefined | string;
     dir?: undefined | string;
     hidden?: undefined | string | boolean;
-    id?: undefined | string;
+    id?: undefined | number | string;
     role?: undefined | string;
     lang?: undefined | string;
     draggable?: undefined | string | boolean;
@@ -244,11 +244,11 @@ declare namespace JSX {
     form?: undefined | string;
     height?: undefined | string;
     list?: undefined | string;
-    max?: undefined | string;
+    max?: undefined | number | string;
     minlength?: undefined | number | string;
     maxlength?: undefined | number | string;
     method?: undefined | string;
-    min?: undefined | string;
+    min?: undefined | number | string;
     multiple?: undefined | boolean;
     name?: undefined | string;
     novalidate?: undefined | boolean;

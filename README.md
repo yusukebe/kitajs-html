@@ -106,8 +106,9 @@ To use the `@kitajs/html` package, follow these steps:
 3. Append the
    [`xss-scan`](https://github.com/kitajs/ts-html-plugin/tree/main#running-as-cli) command
    into your test script. This CLI comes from @kitajs/ts-html-plugin, which catches XSS
-   vulnerabilities that may be introduced into your codebase. Open your `package.json`
-   file and add the following script:
+   vulnerabilities that may be introduced into your codebase, automating the xss scanning
+   process to run everytime you test your code, like inside your CI/CD environment. Open
+   your `package.json` file and add the following script:
 
    ```jsonc
    // package.json
@@ -133,10 +134,12 @@ To use the `@kitajs/html` package, follow these steps:
 
 <br />
 
-> [!WARNING]  
-> Make sure to verify that your setup is correct by writing
-> `console.log(<div>{'<' + '/div>'}</div>);` in your editor. If it **PRODUCE ERRORS**,
-> your setup is correct. Refer to the
+> [!WARNING]
+>
+> # Make sure your setup is right!
+>
+> Try writing `console.log(<div>{'<' + '/div>'}</div>);` in your editor. If it **PRODUCE
+> ERRORS**, your setup is correct. Refer to the
 > [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
 > details on setting up editor intellisense.
 

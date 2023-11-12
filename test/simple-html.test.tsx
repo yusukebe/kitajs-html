@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import test, { describe } from 'node:test';
-import { Html } from '../index';
+import Html from '../index';
 
 describe('Html structures', () => {
   test('simple html structures', () => {

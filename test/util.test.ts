@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { describe, test } from 'node:test';
-import { Html } from '../index';
+import Html from '../index';
 
 describe('Util', () => {
   test('Undefined contents', async () => {

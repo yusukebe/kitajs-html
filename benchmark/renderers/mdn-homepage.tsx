@@ -434,7 +434,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                       class="search-input-field"
                       name="q"
                       placeholder="   "
-                      required=""
+                      required
                       default-value=""
                     />
                     <button
@@ -532,7 +532,7 @@ export function MdnHomepage(Html: { createElement: Function }, mdn: string) {
                         class="search-input-field"
                         name="q"
                         placeholder="   "
-                        required=""
+                        required
                         default-value=""
                       />
                       <button
@@ -1804,7 +1804,7 @@ export function TemplateMdnHomepage(html: Function, mdn: string) {
                       class="search-input-field"
                       name="q"
                       placeholder="   "
-                      required=""
+                      required
                       default-value=""
                     />
                     <button
@@ -1902,7 +1902,7 @@ export function TemplateMdnHomepage(html: Function, mdn: string) {
                         class="search-input-field"
                         name="q"
                         placeholder="   "
-                        required=""
+                        required
                         default-value=""
                       />
                       <button

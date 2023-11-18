@@ -21,6 +21,8 @@ declare global {
         running: number;
         /** The stream we should write */
         stream: WeakRef<HtmlStream>;
+        /** All suspense's runner id being rendered inside a parent suspense */
+        children?: { run: number; html: string }[];
       }
     >;
 
@@ -63,7 +65,10 @@ export function Suspense(props: SuspenseProps): JSX.Element;
  * Transforms a component tree who may contain `Suspense` components into a stream of
  * HTML.
  *
- * @example ;```tsx // Simple nodejs webserver to render html http.createServer((req, res)
+ * @example
+ *
+ * ```tsx
+ * // Simple nodejs webserver to render html http.createServer((req, res)
  * => { res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
  *
  *     const stream = renderToStream(r => <AppWithSuspense rid={r} />)
@@ -77,8 +82,12 @@ export function Suspense(props: SuspenseProps): JSX.Element;
  *
  * For await (const html of stream) { console.log(html.toString()) }
  *
- * @param factory The component tree to render. @param rid The resource id to identify the
- * request, if not provided, a new incrementing id will be used. @see {@linkcode Suspense}
+ * ```
+ *
+ * @param factory The component tree to render.
+ * @param rid The resource id to identify the request, if not provided, a new incrementing
+ *   id will be used.
+ * @see {@linkcode Suspense}
  */
 export function renderToStream(
   factory: (this: void, rid: number) => JSX.Element,
@@ -95,13 +104,18 @@ export function renderToStream(
  * **Rendering to string will not give any benefits over streaming, it will only be
  * slower.**
  *
- * @example ;```tsx // Does not uses suspense benefits! Useful for testing. Prefer to //
- * use renderToStream instead. const html = await renderToString(r => <AppWithSuspense
- * rid={r} />) console.log(html)
+ * @example
  *
- * @param factory The component tree to render. @param rid The resource id to identify the
- * request, if not provided, a new incrementing id will be used. @see
- * {@linkcode renderToStream}
+ * ```tsx
+ * // Does not uses suspense benefits! Useful for testing. Prefer to
+ * // use renderToStream instead.
+ * const html = await renderToString(r => <AppWithSuspense rid={r} />) console.log(html)
+ *
+ * ```
+ *
+ * @param factory The component tree to render
+ * @param rid The resource id to identify the request, if not provided, a new incrementing
+ *   id will be used. @see {@linkcode renderToStream}
  */
 export function renderToString(
   factory: (this: void, rid: number) => JSX.Element,

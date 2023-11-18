@@ -21,29 +21,73 @@ if (!globalThis.SUSPENSE_ROOT) {
  * it's important to keep it as small as possible and also include the license to avoid
  * legal issues.
  */
+//
+// Variable names:
+//  * - i: run number
+//  * - l: if this call is being made by the DOMContentLoaded event
+//  * - d: document
+//  * - q: querySelector
+//  * - v: the `B:${i}` fallback <div/>
+//  * - t: the `N:${i}` <template/> content
+//  * - s: the `S:${i}` <script/> with $KITA_RC call
+//  * - f: a document fragment to hold the template children
+//  * - c: a child node of each template iteration
+//  * - r: all the remainder fragments waiting for a fallback to substitute
+//  * - j: if at least one remainder was
+//
+// Pending data-sr elements are kept pending if their fallback has not yet been
+// rendered, on each render a try to switch all pending data-sr is attempted until
+// no elements are substituted.
 const SuspenseScript = /* html */ `
-      <script>
-        /* Apache-2.0 https://kita.js.org */
-        function $RC(s){
-          var d=document,
-            q=d.querySelector.bind(d),
-            n=q('template[id="N:'+s+'"][data-sr]'),
-            o=q('div[id="B:'+s+'"][data-sf]'),
+      <script id="kita-html-suspense">
+        /*! Apache-2.0 https://kita.js.org */
+        function $KITA_RC(i){
+          //# simple aliases
+          var d=document,q=d.querySelector.bind(d),
+            //# div sent as the fallback wrapper
+            v=q('div[id="B:'+i+'"][data-sf]'),
+            // template and script sent after promise finishes
+            t=q('template[id="N:'+i+'"][data-sr]'),s=q('script[id="S:'+i+'"][data-ss]'),
+            // fragment created to avoid inserting element one by one
             f=d.createDocumentFragment(),
-            g=q('script[id="S:'+s+'"][data-ss]'),
-            c;
+            // used by iterators
+            c,j,
+            // all pending hydrations
+            r;
 
-          if(n&&o){
-            while(c=n.content.firstChild)
+          // if div or template is not found, let this hydration as pending
+          if(t&&v&&s){
+            // appends into the fragment
+            while(c=t.content.firstChild)
               f.appendChild(c);
-            o.parentNode.replaceChild(f,o);
-            n.remove()
-          }
 
-          g&&g.remove()
+            // replaces the div and removes the script and template
+            v.parentNode.replaceChild(f,v);
+            t.remove();
+            s.remove();
+
+            // looks for pending templates
+            r=d.querySelectorAll('template[id][data-sr]');
+
+            do{
+              // resets j from previous loop
+              j=0;
+
+              // loops over every found pending template and 
+              for(c=0;c<r.length;c++)
+                if(r[c]!=t)
+                  // let j as true while at least on $KITA_RC call returns true
+                  j=$KITA_RC(r[c].id.slice(2))?!0:j;
+            }while(j)
+
+            // we know at least the original template was substituted
+            return!0;
+          }
         }
       </script>
     `
+  // Removes comment lines
+  .replace(/^\s*\/\/.*/gm, '')
   // Removes line breaks added for readability
   .replace(/\n\s*/g, '');
 
@@ -188,7 +232,7 @@ function Suspense(props) {
     // Writes the chunk
     stream.push(
       // prettier-ignore
-      '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$RC(' + run + ')</script>'
+      '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$KITA_RC(' + run + ')</script>'
     );
   }
 }

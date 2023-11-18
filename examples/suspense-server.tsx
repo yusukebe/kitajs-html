@@ -1,63 +1,31 @@
 import http from 'http';
 import { setTimeout } from 'timers/promises';
-import Html from '../index';
+import Html, { PropsWithChildren } from '../index';
 import { Suspense, renderToStream } from '../suspense';
 
-async function WaitFor({ s }: { s: number }) {
-  await setTimeout(Number(s) * 1000);
-  return <div>Loaded after: {s}s</div>;
+async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {
+  await setTimeout(ms * 2);
+  return Html.contentsToString([children || String(ms)]);
 }
 
 function renderLayout(rid: number) {
   return (
     <html>
-      <body>
-        <div>Hello</div>
+      <div>
+        {Array.from({ length: 5 }, (_, i) => (
+          <Suspense rid={rid} fallback={<div>{i} FIuter</div>}>
+            <div>Outer {i}!</div>
 
-        <Suspense rid={rid} fallback={<div>loading 2s</div>}>
-          <div style="color: red">
-            <WaitFor s={1} />
-          </div>
-          <div style="color: red">
-            <WaitFor s={1} />
-          </div>
-        </Suspense>
-
-        <div>World</div>
-
-        <Suspense rid={rid} fallback={<div>loading 3s</div>}>
-          <div style="color: green">
-            <WaitFor s={3} />
-          </div>
-          <div style="color: green">
-            <WaitFor s={3} />
-          </div>
-        </Suspense>
-
-        <div>World</div>
-
-        <Suspense rid={rid} fallback={<div>loading 2s</div>}>
-          <div style="color: blue">
-            <WaitFor s={2} />
-          </div>
-          <div style="color: blue">
-            <WaitFor s={2} />
-          </div>
-        </Suspense>
-
-        <div>World</div>
-
-        <Suspense rid={rid} fallback={<div>loading random</div>}>
-          <div style="color: green">
-            <WaitFor s={3} />
-          </div>
-          <div style="color: green">
-            <WaitFor s={4.5} />
-          </div>
-        </Suspense>
-
-        <div>World</div>
-      </body>
+            <SleepForMs ms={i % 2 === 0 ? i * 2500 : i * 5000}>
+              <Suspense rid={rid} fallback={<div>{i} FInner!</div>}>
+                <SleepForMs ms={i * 5000}>
+                  <div>Inner {i}!</div>
+                </SleepForMs>
+              </Suspense>
+            </SleepForMs>
+          </Suspense>
+        ))}
+      </div>
     </html>
   );
 }

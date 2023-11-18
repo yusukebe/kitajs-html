@@ -53,12 +53,20 @@ declare namespace JSX {
      * **Warning: This will escape even inner jsx tags. You should only use this in the
      * most inner tag of the html tree.**
      *
-     * @example ;```tsx <div>{'<script />'}</div> '<div><script /></div>' <div
-     * safe>{'<script />'}</div> '<div><script /></div>' <div><div>{'<script
-     * />'}</div></div> '<div><div><script /></div></div>'
+     * @example
      *
-     * // Escapes even inner jsx tags <div safe><div>{'<script />'}</div></div>
+     * ```tsx
+     * <div>{'<script />'}</div>
+     * '<div><script /></div>'
+     * <div safe>{'<script />'}</div>
+     * '<div><script /></div>'
+     * <div><div>{'<script />'}</div></div>
      * '<div><div><script /></div></div>'
+     *
+     * // Escapes even inner jsx tags
+     * <div safe><div>{'<script />'}</div></div>
+     * '<div><div><script /></div></div>'
+     * ```
      *
      * @default false
      *

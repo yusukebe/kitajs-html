@@ -317,8 +317,7 @@ function attributesToString(attributes) {
  * @returns {any}
  */
 function contentsToString(contents, escape) {
-  const length = contents.length;
-
+  let length = contents.length;
   let result = '';
   let content;
   let index = 0;
@@ -332,23 +331,22 @@ function contentsToString(contents, escape) {
         continue;
       }
 
-      if (Array.isArray(content)) {
-        content = contentsToString(content);
-      }
-
       // @ts-expect-error - Also accepts thenable objects, not only promises
       // https://jsperf.app/zipuvi
       if (content.then) {
         // @ts-expect-error - this is a promise
-        return content.then(function resolveAsyncContent(resolved) {
-          return contentsToString(
-            [result, resolved]
-              // if we also pass escape here, it would double escape this result
-              // with the above call.
-              .concat(contents.slice(index + 1)),
-            escape
-          );
-        });
+        return Promise.all(contents.slice(index)).then(
+          function resolveAsyncContent(resolved) {
+            resolved.unshift(result);
+            return contentsToString(resolved, escape);
+          }
+        );
+      }
+
+      if (Array.isArray(content)) {
+        contents.splice(index--, 1, ...content);
+        length += content.length - 1;
+        continue;
       }
     }
 
@@ -376,7 +374,7 @@ function createElement(name, attrs, ...children) {
 
   // Calls the element creator function if the name is a function
   if (typeof name === 'function') {
-    // We at least need to pass the children to the function component. We may receive null if this 
+    // We at least need to pass the children to the function component. We may receive null if this
     // component was called without any children.
     if (!hasAttrs) {
       attrs = { children: children.length > 1 ? children : children[0] };

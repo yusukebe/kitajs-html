@@ -811,50 +811,50 @@ Typed Html and Common Tags.
 
 You can run this yourself by running `pnpm bench`.
 
-```java
+```cpp
 cpu: 13th Gen Intel(R) Core(TM) i5-13600K
-runtime: node v20.8.1 (x64-linux)
+runtime: node v20.9.0 (x64-linux)
 
 benchmark        time (avg)             (min … max)       p75       p99      p995
 --------------------------------------------------- -----------------------------
 • Many Components (31.4kb)
 --------------------------------------------------- -----------------------------
-Typed Html     37.9 µs/iter     (31.23 µs … 1.9 ms)  34.27 µs 140.45 µs 176.84 µs
-KitaJS/Html   10.52 µs/iter   (8.31 µs … 804.52 µs)   9.79 µs  23.53 µs  59.89 µs
-Common Tags    78.2 µs/iter  (67.58 µs … 458.58 µs)  74.71 µs 232.46 µs 268.12 µs
-React         23.05 µs/iter    (17.38 µs … 1.29 ms)  22.12 µs 112.88 µs 151.97 µs
+Typed Html    38.99 µs/iter    (31.47 µs … 1.02 ms)  34.37 µs 153.08 µs 189.99 µs
+KitaJS/Html    10.4 µs/iter     (8.27 µs … 1.07 ms)   9.97 µs  25.68 µs  52.97 µs
+Common Tags   76.58 µs/iter  (67.94 µs … 530.33 µs)  74.63 µs 198.38 µs 226.31 µs
+React         21.92 µs/iter  (16.69 µs … 885.23 µs)  21.22 µs   86.4 µs 121.09 µs
 
 summary for Many Components (31.4kb)
   KitaJS/Html
-   2.19x faster than React
-   3.6x faster than Typed Html
-   7.44x faster than Common Tags
+   2.11x faster than React
+   3.75x faster than Typed Html
+   7.36x faster than Common Tags
 
 • MdnHomepage (66.7Kb)
 --------------------------------------------------- -----------------------------
-Typed Html   314.38 µs/iter   (266.98 µs … 4.48 ms) 306.37 µs 526.09 µs 585.44 µs
-KitaJS/Html   62.27 µs/iter  (49.86 µs … 445.16 µs)  58.49 µs 261.97 µs  285.1 µs
-Common Tags  138.61 µs/iter    (107.26 µs … 3.8 ms) 119.71 µs 309.04 µs   2.33 ms
-React        156.75 µs/iter  (134.97 µs … 485.2 µs) 150.73 µs 361.63 µs 388.53 µs
+Typed Html   309.78 µs/iter   (268.22 µs … 2.29 ms) 309.38 µs 524.41 µs 562.44 µs
+KitaJS/Html   61.91 µs/iter  (50.11 µs … 478.76 µs)  57.85 µs 251.38 µs 261.57 µs
+Common Tags  126.39 µs/iter   (103.65 µs … 2.44 ms) 112.93 µs 304.24 µs   1.51 ms
+React        153.72 µs/iter   (132.09 µs … 1.07 ms) 148.95 µs    347 µs 388.22 µs
 
 summary for MdnHomepage (66.7Kb)
   KitaJS/Html
-   2.23x faster than Common Tags
-   2.52x faster than React
-   5.05x faster than Typed Html
+   2.04x faster than Common Tags
+   2.48x faster than React
+   5x faster than Typed Html
 
 • Many Props (7.4kb)
 --------------------------------------------------- -----------------------------
-Typed Html    74.08 µs/iter    (66.31 µs … 1.46 ms)  70.92 µs 206.54 µs 246.31 µs
-KitaJS/Html   16.98 µs/iter  (15.12 µs … 385.35 µs)  16.41 µs  30.86 µs  62.49 µs
-Common Tags   31.12 µs/iter  (27.68 µs … 469.77 µs)  29.92 µs   72.3 µs 106.25 µs
-React         45.02 µs/iter  (39.38 µs … 425.16 µs)  43.02 µs 139.04 µs 218.36 µs
+Typed Html    75.06 µs/iter    (66.99 µs … 1.81 ms)  71.65 µs    200 µs 233.81 µs
+KitaJS/Html   16.91 µs/iter  (15.08 µs … 352.64 µs)  16.23 µs  34.42 µs  62.86 µs
+Common Tags   30.38 µs/iter  (27.55 µs … 366.44 µs)  29.55 µs  61.33 µs   88.6 µs
+React         44.28 µs/iter  (39.19 µs … 494.35 µs)  42.41 µs 127.99 µs 158.46 µs
 
 summary for Many Props (7.4kb)
   KitaJS/Html
-   1.83x faster than Common Tags
-   2.65x faster than React
-   4.36x faster than Typed Html
+   1.8x faster than Common Tags
+   2.62x faster than React
+   4.44x faster than Typed Html
 ```
 
 <br />

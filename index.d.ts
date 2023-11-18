@@ -49,7 +49,7 @@ export function styleToString(this: void, style: object | string): string;
  *
  * **This function does not support Date objects.**
  *
- * @example ;`a b="c" d="1"`
+ * @example `a b="c" d="1"`
  *
  * @param {object} attributes A record of literal values to use as attributes.
  * @returns {string} The generated html attributes string.
@@ -113,22 +113,27 @@ export function contentsToString<C extends Children[]>(
  * to the element. This means that the props are applied to the element as is, and you
  * need to process them before passing them to the component.
  *
- * @example ;```tsx // Clean component, render as is function Clean(props:
- * PropsWithChildren<{ repeated: string }>) { return <div>{props.repeated}</div> }
+ * @example
  *
- * // Calculation is done before passing to the component html = <Clean
- * name={'a'.repeat(5)} />
+ * ```tsx
+ * // Clean component, render as is
+ * function Clean(props: PropsWithChildren<{ repeated: string }>) { return <div>{props.repeated}</div> }
  *
- * // Unclean component, process before render function Unclean(props: { repeat: string;
- * n: number }) { return <div>{props.repeat.repeat(props.n)}</div> }
+ * // Calculation is done before passing to the component
+ * html = <Clean name={'a'.repeat(5)} />
+ *
+ * // Unclean component, process before render
+ * function Unclean(props: { repeat: string; n: number }) { return <div>{props.repeat.repeat(props.n)}</div> }
  *
  * // Calculation is done inside the component, thus cannot be used with .compile() html =
  * <Unclean repeat="a" n={5} />
+ * ```
  *
  * @param {Function} htmlComponent The _clean_ component to compile. @param {boolean}
- * [strict=true] If we should throw an error when a property is not found. Default is
- * `true` @param {string | undefined} [separator] The string used to interpolate and
- * separate parameters @returns {Function} The compiled template function @this {void}
+ *   [strict=true] If we should throw an error when a property is not found. Default is
+ *   `true`
+ * @param {string | undefined} [separator] The string used to interpolate and separate
+ *   parameters @returns {Function} The compiled template function @this {void}
  */
 export function compile<
   P extends { [K in keyof P]: K extends 'children' ? Children : string }
@@ -145,11 +150,15 @@ export const h: typeof createElement;
 /**
  * A JSX Fragment is used to return multiple elements from a component.
  *
- * @example ;```tsx // renders <div>1</div> and <div>2</div> without needing a wrapper
- * element const html = <><div>1</div><div>2</div></>
+ * @example
  *
- * // Html.Fragment is the same as <>...</> const html =
- * <Html.Fragment><div>1</div><div>2</div></Html.Fragment>
+ * ```tsx
+ * // renders <div>1</div> and <div>2</div> without needing a wrapper element
+ * const html = <><div>1</div><div>2</div></>
+ *
+ * // Html.Fragment is the same as <>...</>
+ * const html = <Html.Fragment><div>1</div><div>2</div></Html.Fragment>
+ * ```
  */
 export function Fragment(props: PropsWithChildren): JSX.Element;
 

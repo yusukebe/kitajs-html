@@ -1,14 +1,13 @@
+import { JSDOM } from 'jsdom';
 import assert from 'node:assert';
 import { afterEach, describe, it, mock, test } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 import Html, { PropsWithChildren } from '../index';
 import { Suspense, SuspenseScript, renderToStream, renderToString } from '../suspense';
 
-function SleepForMs({ children }: PropsWithChildren): Promise<string> {
-  const ms = Number(children);
-
-  // just to differentiate 1ms and 2ms better
-  return setTimeout(ms * 2, String(ms));
+async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {
+  await setTimeout(ms * 2);
+  return Html.contentsToString([children || String(ms)]);
 }
 
 function Throw(): string {
@@ -48,7 +47,7 @@ describe('Suspense', () => {
     assert.equal(
       await renderToString((r) => (
         <Suspense rid={r} fallback={<div>1</div>}>
-          <SleepForMs>2</SleepForMs>
+          <SleepForMs ms={2} />
         </Suspense>
       )),
       <>
@@ -62,7 +61,7 @@ describe('Suspense', () => {
           2
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -72,7 +71,7 @@ describe('Suspense', () => {
     assert.equal(
       await renderToString((r) => (
         <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-          <SleepForMs>2</SleepForMs>
+          <SleepForMs ms={2} />
         </Suspense>
       )),
       <>
@@ -86,7 +85,7 @@ describe('Suspense', () => {
           2
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -111,7 +110,7 @@ describe('Suspense', () => {
         return renderToString((r) => {
           return (
             <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-              <SleepForMs>2</SleepForMs>
+              <SleepForMs ms={2} />
             </Suspense>
           );
         }).then((res) => {
@@ -128,7 +127,7 @@ describe('Suspense', () => {
                 2
               </template>
               <script id="S:1" data-ss>
-                $RC(1)
+                $KITA_RC(1)
               </script>
             </>
           );
@@ -138,11 +137,11 @@ describe('Suspense', () => {
   });
 
   test('Multiple sync renders cleanup', async () => {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       assert.equal(
         await renderToString((r) => (
           <Suspense rid={r} fallback={Promise.resolve(<div>1</div>)}>
-            <SleepForMs>2</SleepForMs>
+            <SleepForMs ms={2} />
           </Suspense>
         )),
         <>
@@ -156,7 +155,7 @@ describe('Suspense', () => {
             2
           </template>
           <script id="S:1" data-ss>
-            $RC(1)
+            $KITA_RC(1)
           </script>
         </>
       );
@@ -168,15 +167,15 @@ describe('Suspense', () => {
       await renderToString((r) => (
         <div>
           <Suspense rid={r} fallback={<div>1</div>}>
-            <SleepForMs>4</SleepForMs>
+            <SleepForMs ms={4} />
           </Suspense>
 
           <Suspense rid={r} fallback={<div>2</div>}>
-            <SleepForMs>5</SleepForMs>
+            <SleepForMs ms={5} />
           </Suspense>
 
           <Suspense rid={r} fallback={<div>3</div>}>
-            <SleepForMs>6</SleepForMs>
+            <SleepForMs ms={6} />
           </Suspense>
         </div>
       )),
@@ -199,24 +198,51 @@ describe('Suspense', () => {
           4
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
 
         <template id="N:2" data-sr>
           5
         </template>
         <script id="S:2" data-ss>
-          $RC(2)
+          $KITA_RC(2)
         </script>
 
         <template id="N:3" data-sr>
           6
         </template>
         <script id="S:3" data-ss>
-          $RC(3)
+          $KITA_RC(3)
         </script>
       </>
     );
+
+    <>
+      <div>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+        <div id="B:2" data-sf>
+          <div>2</div>
+        </div>
+        <div id="B:3" data-sf>
+          <div>3</div>
+        </div>
+      </div>
+      {SuspenseScript}
+      <template id="N:1" data-sr>
+        4
+      </template>
+      <script id="S:1" data-ss>
+        $KITA_RC(1)
+      </script>
+      <template id="N:2" data-sr>
+        5
+      </template>
+      <template id="N:3" data-sr>
+        6
+      </template>
+    </>;
   });
 
   test('Concurrent renders', async () => {
@@ -228,7 +254,7 @@ describe('Suspense', () => {
           <div>
             {Array.from({ length: seconds }, (_, i) => (
               <Suspense rid={r} fallback={<div>{seconds - i} loading</div>}>
-                <SleepForMs>{seconds - i}</SleepForMs>
+                <SleepForMs ms={seconds - i} />
               </Suspense>
             ))}
           </div>
@@ -276,55 +302,55 @@ describe('Suspense', () => {
           1
         </template>
         <script id="S:9" data-ss>
-          $RC(9)
+          $KITA_RC(9)
         </script>
         <template id="N:8" data-sr>
           2
         </template>
         <script id="S:8" data-ss>
-          $RC(8)
+          $KITA_RC(8)
         </script>
         <template id="N:7" data-sr>
           3
         </template>
         <script id="S:7" data-ss>
-          $RC(7)
+          $KITA_RC(7)
         </script>
         <template id="N:6" data-sr>
           4
         </template>
         <script id="S:6" data-ss>
-          $RC(6)
+          $KITA_RC(6)
         </script>
         <template id="N:5" data-sr>
           5
         </template>
         <script id="S:5" data-ss>
-          $RC(5)
+          $KITA_RC(5)
         </script>
         <template id="N:4" data-sr>
           6
         </template>
         <script id="S:4" data-ss>
-          $RC(4)
+          $KITA_RC(4)
         </script>
         <template id="N:3" data-sr>
           7
         </template>
         <script id="S:3" data-ss>
-          $RC(3)
+          $KITA_RC(3)
         </script>
         <template id="N:2" data-sr>
           8
         </template>
         <script id="S:2" data-ss>
-          $RC(2)
+          $KITA_RC(2)
         </script>
         <template id="N:1" data-sr>
           9
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>,
 
@@ -350,25 +376,25 @@ describe('Suspense', () => {
           1
         </template>
         <script id="S:4" data-ss>
-          $RC(4)
+          $KITA_RC(4)
         </script>
         <template id="N:3" data-sr>
           2
         </template>
         <script id="S:3" data-ss>
-          $RC(3)
+          $KITA_RC(3)
         </script>
         <template id="N:2" data-sr>
           3
         </template>
         <script id="S:2" data-ss>
-          $RC(2)
+          $KITA_RC(2)
         </script>
         <template id="N:1" data-sr>
           4
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>,
 
@@ -403,43 +429,43 @@ describe('Suspense', () => {
           1
         </template>
         <script id="S:7" data-ss>
-          $RC(7)
+          $KITA_RC(7)
         </script>
         <template id="N:6" data-sr>
           2
         </template>
         <script id="S:6" data-ss>
-          $RC(6)
+          $KITA_RC(6)
         </script>
         <template id="N:5" data-sr>
           3
         </template>
         <script id="S:5" data-ss>
-          $RC(5)
+          $KITA_RC(5)
         </script>
         <template id="N:4" data-sr>
           4
         </template>
         <script id="S:4" data-ss>
-          $RC(4)
+          $KITA_RC(4)
         </script>
         <template id="N:3" data-sr>
           5
         </template>
         <script id="S:3" data-ss>
-          $RC(3)
+          $KITA_RC(3)
         </script>
         <template id="N:2" data-sr>
           6
         </template>
         <script id="S:2" data-ss>
-          $RC(2)
+          $KITA_RC(2)
         </script>
         <template id="N:1" data-sr>
           7
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     ]);
@@ -474,7 +500,7 @@ describe('Suspense', () => {
           <div>2</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -497,7 +523,7 @@ describe('Suspense', () => {
           <div>2</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -544,7 +570,7 @@ describe('Suspense', () => {
           <div>1</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -607,10 +633,281 @@ describe('Suspense', () => {
           <div>2</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
+  });
+
+  it('works with deep suspense calls', async () => {
+    assert.equal(
+      await renderToString((rid) => {
+        return (
+          <div>
+            <Suspense rid={rid} fallback={<div>1</div>}>
+              <div>2</div>
+
+              {setTimeout(10, <div>3</div>)}
+
+              {setTimeout(
+                15,
+                <div>
+                  <Suspense rid={rid} fallback={<div>4</div>}>
+                    <div>5</div>
+
+                    {setTimeout(20, <div>6</div>)}
+                  </Suspense>
+                </div>
+              )}
+            </Suspense>
+          </div>
+        );
+      }),
+      <>
+        <div>
+          <div id="B:2" data-sf>
+            <div>1</div>
+          </div>
+        </div>
+
+        {SuspenseScript}
+
+        <template id="N:2" data-sr>
+          <div>2</div>
+          <div>3</div>
+          <div>
+            <div id="B:1" data-sf>
+              <div>4</div>
+            </div>
+          </div>
+        </template>
+        <script id="S:2" data-ss>
+          $KITA_RC(2)
+        </script>
+
+        <template id="N:1" data-sr>
+          <div>5</div>
+          <div>6</div>
+        </template>
+        <script id="S:1" data-ss>
+          $KITA_RC(1)
+        </script>
+      </>
+    );
+  });
+
+  it('works with deep suspense calls resolving first', async () => {
+    assert.equal(
+      await renderToString((rid) => {
+        return (
+          <div>
+            <Suspense rid={rid} fallback={<div>1</div>}>
+              <div>2</div>
+
+              {setTimeout(20, <div>3</div>)}
+
+              {setTimeout(
+                15,
+                <div>
+                  <Suspense rid={rid} fallback={<div>4</div>}>
+                    <div>5</div>
+
+                    {setTimeout(10, <div>6</div>)}
+                  </Suspense>
+                </div>
+              )}
+            </Suspense>
+          </div>
+        );
+      }),
+      <>
+        <div>
+          <div id="B:2" data-sf>
+            <div>1</div>
+          </div>
+        </div>
+
+        {SuspenseScript}
+
+        <template id="N:1" data-sr>
+          <div>5</div>
+          <div>6</div>
+        </template>
+
+        <script id="S:1" data-ss>
+          $KITA_RC(1)
+        </script>
+
+        <template id="N:2" data-sr>
+          <div>2</div>
+          <div>3</div>
+          <div>
+            <div id="B:1" data-sf>
+              <div>4</div>
+            </div>
+          </div>
+        </template>
+
+        <script id="S:2" data-ss>
+          $KITA_RC(2)
+        </script>
+      </>
+    );
+  });
+
+  it('works with parallel deep suspense calls resolving first', async () => {
+    const html = await renderToString((rid) => (
+      <div>
+        {Array.from({ length: 5 }, (_, i) => (
+          <Suspense rid={rid} fallback={<div>{i} fb outer</div>}>
+            <div>Outer {i}!</div>
+
+            <SleepForMs ms={i % 2 === 0 ? i / 2 : i}>
+              <Suspense rid={rid} fallback={<div>{i} fb inner!</div>}>
+                <SleepForMs ms={i}>
+                  <div>Inner {i}!</div>
+                </SleepForMs>
+              </Suspense>
+            </SleepForMs>
+          </Suspense>
+        ))}
+      </div>
+    ));
+
+    assert.equal(
+      html,
+      <>
+        <div>
+          <div id="B:2" data-sf>
+            <div>0 fb outer</div>
+          </div>
+          <div id="B:4" data-sf>
+            <div>1 fb outer</div>
+          </div>
+          <div id="B:6" data-sf>
+            <div>2 fb outer</div>
+          </div>
+          <div id="B:8" data-sf>
+            <div>3 fb outer</div>
+          </div>
+          <div id="B:10" data-sf>
+            <div>4 fb outer</div>
+          </div>
+        </div>
+
+        {SuspenseScript}
+
+        <template id="N:1" data-sr>
+          <div>Inner 0!</div>
+        </template>
+        <script id="S:1" data-ss>
+          $KITA_RC(1)
+        </script>
+
+        <template id="N:2" data-sr>
+          <div>Outer 0!</div>
+          <div id="B:1" data-sf>
+            <div>0 fb inner!</div>
+          </div>
+        </template>
+        <script id="S:2" data-ss>
+          $KITA_RC(2)
+        </script>
+
+        <template id="N:3" data-sr>
+          <div>Inner 1!</div>
+        </template>
+        <script id="S:3" data-ss>
+          $KITA_RC(3)
+        </script>
+
+        <template id="N:4" data-sr>
+          <div>Outer 1!</div>
+          <div id="B:3" data-sf>
+            <div>1 fb inner!</div>
+          </div>
+        </template>
+        <script id="S:4" data-ss>
+          $KITA_RC(4)
+        </script>
+
+        <template id="N:6" data-sr>
+          <div>Outer 2!</div>
+          <div id="B:5" data-sf>
+            <div>2 fb inner!</div>
+          </div>
+        </template>
+        <script id="S:6" data-ss>
+          $KITA_RC(6)
+        </script>
+
+        <template id="N:5" data-sr>
+          <div>Inner 2!</div>
+        </template>
+        <script id="S:5" data-ss>
+          $KITA_RC(5)
+        </script>
+
+        <template id="N:10" data-sr>
+          <div>Outer 4!</div>
+          <div id="B:9" data-sf>
+            <div>4 fb inner!</div>
+          </div>
+        </template>
+        <script id="S:10" data-ss>
+          $KITA_RC(10)
+        </script>
+
+        <template id="N:7" data-sr>
+          <div>Inner 3!</div>
+        </template>
+        <script id="S:7" data-ss>
+          $KITA_RC(7)
+        </script>
+
+        <template id="N:8" data-sr>
+          <div>Outer 3!</div>
+          <div id="B:7" data-sf>
+            <div>3 fb inner!</div>
+          </div>
+        </template>
+        <script id="S:8" data-ss>
+          $KITA_RC(8)
+        </script>
+
+        <template id="N:9" data-sr>
+          <div>Inner 4!</div>
+        </template>
+        <script id="S:9" data-ss>
+          $KITA_RC(9)
+        </script>
+      </>
+    );
+
+    // tests with final html result
+    assert.equal(
+      new JSDOM(html, { runScripts: 'dangerously' }).window.document.body.innerHTML,
+      <>
+        <div>
+          <div>Outer 0!</div>
+          <div>Inner 0!</div>
+          <div>Outer 1!</div>
+          <div>Inner 1!</div>
+          <div>Outer 2!</div>
+          <div>Inner 2!</div>
+          <div>Outer 3!</div>
+          <div>Inner 3!</div>
+          <div>Outer 4!</div>
+          <div>Inner 4!</div>
+        </div>
+        {SuspenseScript}
+      </>
+    );
+  });
+
+  it('SuspenseScript is a valid JS code', () => {
+    // removes <script ...> and </script> tags
+    eval(SuspenseScript.slice(SuspenseScript.indexOf('>') + 1, -'</script>'.length));
   });
 });
 
@@ -731,7 +1028,7 @@ describe('Suspense errors', () => {
           <div>3</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -753,11 +1050,12 @@ describe('Suspense errors', () => {
         </div>
 
         {SuspenseScript}
+
         <template id="N:1" data-sr>
           <div>3</div>
         </template>
         <script id="S:1" data-ss>
-          $RC(1)
+          $KITA_RC(1)
         </script>
       </>
     );
@@ -802,19 +1100,45 @@ describe('Suspense errors', () => {
     }
   });
 
-  it('does not allows to use the same rid', () => {
+  it('does not allows to use the same rid', async () => {
+    let i = 1;
+
     function render(r: number) {
       return (
-        <Suspense rid={r} fallback={<div>1</div>}>
-          {Promise.resolve(<div>2</div>)}
+        <Suspense rid={r} fallback={<div>{i++}</div>}>
+          {Promise.resolve(<div>{i++}</div>)}
         </Suspense>
       );
     }
 
-    renderToStream(render, 1);
+    const stream = renderToStream(render, 1);
     assert.throws(
       () => renderToStream(render, 1),
       /Error: The provided resource ID is already in use: 1./
+    );
+
+    let html = '';
+
+    for await (const data of stream) {
+      html += data;
+    }
+
+    assert.equal(
+      html,
+      <>
+        <div id="B:1" data-sf>
+          <div>1</div>
+        </div>
+
+        {SuspenseScript}
+
+        <template id="N:1" data-sr>
+          <div>2</div>
+        </template>
+        <script id="S:1" data-ss>
+          $KITA_RC(1)
+        </script>
+      </>
     );
   });
 

@@ -59,6 +59,7 @@
 - [Fragments](#fragments)
 - [Supported HTML](#supported-html)
   - [The `tag` tag](#the-tag-tag)
+  - [Conditional classes](#conditional-classes)
 - [Extending types](#extending-types)
   - [Allow everything!](#allow-everything)
 - [Performance](#performance)
@@ -753,6 +754,24 @@ intellisense and type checking.
 
 <br />
 
+### Conditional classes
+
+Kita supports constructing `class` attributes conditionally, which is a common use case
+for many applications.
+
+```tsx
+<div class={['a', true && 'b', false && 'c', 'd']} />
+'<div class="a b d"></div>'
+
+<div class={['class-a class-b', true && 'class-c']} />
+'<div class="class-a class-b class-c"></div>'
+```
+
+This behavior is pretty similar and inspired from [clsx](https://github.com/lukeed/clsx),
+but we do not support objects as input.
+
+<br />
+
 ## Extending types
 
 Just as exemplified above, you may also want to add custom properties to your elements.
@@ -819,42 +838,42 @@ benchmark        time (avg)             (min … max)       p75       p99      p
 --------------------------------------------------- -----------------------------
 • Many Components (31.4kb)
 --------------------------------------------------- -----------------------------
-Typed Html    38.99 µs/iter    (31.47 µs … 1.02 ms)  34.37 µs 153.08 µs 189.99 µs
-KitaJS/Html    10.4 µs/iter     (8.27 µs … 1.07 ms)   9.97 µs  25.68 µs  52.97 µs
-Common Tags   76.58 µs/iter  (67.94 µs … 530.33 µs)  74.63 µs 198.38 µs 226.31 µs
-React         21.92 µs/iter  (16.69 µs … 885.23 µs)  21.22 µs   86.4 µs 121.09 µs
+Typed Html    39.32 µs/iter   (31.5 µs … 460.86 µs)  34.97 µs 165.08 µs 216.67 µs
+KitaJS/Html   11.68 µs/iter   (8.31 µs … 610.87 µs)  10.29 µs  50.48 µs 132.37 µs
+Common Tags   85.33 µs/iter     (67.4 µs … 1.09 ms)  77.32 µs 316.12 µs 396.12 µs
+React         27.93 µs/iter  (17.81 µs … 878.52 µs)  24.98 µs 190.39 µs 252.25 µs
 
 summary for Many Components (31.4kb)
   KitaJS/Html
-   2.11x faster than React
-   3.75x faster than Typed Html
-   7.36x faster than Common Tags
+   2.39x faster than React
+   3.37x faster than Typed Html
+   7.31x faster than Common Tags
 
 • MdnHomepage (66.7Kb)
 --------------------------------------------------- -----------------------------
-Typed Html   309.78 µs/iter   (268.22 µs … 2.29 ms) 309.38 µs 524.41 µs 562.44 µs
-KitaJS/Html   61.91 µs/iter  (50.11 µs … 478.76 µs)  57.85 µs 251.38 µs 261.57 µs
-Common Tags  126.39 µs/iter   (103.65 µs … 2.44 ms) 112.93 µs 304.24 µs   1.51 ms
-React        153.72 µs/iter   (132.09 µs … 1.07 ms) 148.95 µs    347 µs 388.22 µs
+Typed Html    367.8 µs/iter   (282.65 µs … 5.63 ms) 361.54 µs 877.96 µs   1.11 ms
+KitaJS/Html   71.61 µs/iter    (50.04 µs … 1.39 ms)  63.63 µs 345.35 µs 429.49 µs
+Common Tags  147.11 µs/iter    (104.8 µs … 3.21 ms) 124.49 µs 819.16 µs   2.07 ms
+React        178.66 µs/iter   (138.89 µs … 1.84 ms) 173.31 µs 501.74 µs 584.45 µs
 
 summary for MdnHomepage (66.7Kb)
   KitaJS/Html
-   2.04x faster than Common Tags
-   2.48x faster than React
-   5x faster than Typed Html
+   2.05x faster than Common Tags
+   2.49x faster than React
+   5.14x faster than Typed Html
 
 • Many Props (7.4kb)
 --------------------------------------------------- -----------------------------
-Typed Html    75.06 µs/iter    (66.99 µs … 1.81 ms)  71.65 µs    200 µs 233.81 µs
-KitaJS/Html   16.91 µs/iter  (15.08 µs … 352.64 µs)  16.23 µs  34.42 µs  62.86 µs
-Common Tags   30.38 µs/iter  (27.55 µs … 366.44 µs)  29.55 µs  61.33 µs   88.6 µs
-React         44.28 µs/iter  (39.19 µs … 494.35 µs)  42.41 µs 127.99 µs 158.46 µs
+Typed Html    79.78 µs/iter  (66.44 µs … 750.62 µs)  71.83 µs 285.45 µs 343.03 µs
+KitaJS/Html   18.14 µs/iter    (15.14 µs … 2.52 ms)  16.66 µs  60.15 µs 105.96 µs
+Common Tags    33.3 µs/iter  (27.43 µs … 693.42 µs)  30.48 µs  104.2 µs 155.66 µs
+React         48.27 µs/iter    (38.89 µs … 1.24 ms)  43.81 µs 221.03 µs 268.48 µs
 
 summary for Many Props (7.4kb)
   KitaJS/Html
-   1.8x faster than Common Tags
-   2.62x faster than React
-   4.44x faster than Typed Html
+   1.84x faster than Common Tags
+   2.66x faster than React
+   4.4x faster than Typed Html
 ```
 
 <br />

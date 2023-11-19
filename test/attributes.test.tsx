@@ -55,4 +55,25 @@ describe('Attributes', () => {
 
     assert.equal(<div test={{}}></div>, '<div test="[object Object]"></div>');
   });
+
+  test('class arrays', () => {
+    assert.equal(<div class="name" />, '<div class="name"></div>');
+    assert.equal(<div class={['name']} />, '<div class="name"></div>');
+    assert.equal(<div class={['' && 'name']} />, '<div></div>');
+
+    assert.equal(
+      <div class={[false && 'a', 'name', null && 'b', 0 && 'c']} />,
+      '<div class="name"></div>'
+    );
+
+    assert.equal(
+      <div class={['a b c d', false && 'e', true && 'f', 'g h i j']} />,
+      '<div class="a b c d f g h i j"></div>'
+    );
+
+    assert.equal(
+      <div class={['a', 'b', 'c', 'd', false && 'e', true && 'f', 'g', 'h', 'i', 'j']} />,
+      '<div class="a b c d f g h i j"></div>'
+    );
+  });
 });

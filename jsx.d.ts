@@ -30,7 +30,6 @@ declare namespace JSX {
 
   interface HtmlTag extends ElementChildrenAttribute, IntrinsicAttributes {
     accesskey?: undefined | string;
-    class?: undefined | string;
     contenteditable?: undefined | string;
     dir?: undefined | string;
     hidden?: undefined | string | boolean;
@@ -80,6 +79,22 @@ declare namespace JSX {
      * @deprecated Please use `class`.
      */
     className?: undefined | string;
+
+    /**
+     * The html class property. You can use an array to represent conditional class names.
+     * Similar to the `clsx` package behavior.
+     *
+     * @example
+     *
+     * ```tsx
+     * <div class={['a', true && 'b', false && 'c', 'd']} />
+     * '<div class="a b d"></div>'
+     *
+     * <div class={['class-a class-b', true && 'class-c']} />
+     * '<div class="class-a class-b class-c"></div>'
+     * ```
+     */
+    class?: undefined | string | (string | number | null | boolean | undefined)[];
   }
 
   interface HtmlAnchorTag extends HtmlTag {

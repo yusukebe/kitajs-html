@@ -217,7 +217,7 @@ function attributesToString(attributes) {
   const keys = Object.keys(attributes);
   const length = keys.length;
 
-  let key, value, type, end, start;
+  let key, value, type, end, start, classItems, valueLength;
   let result = '';
   let index = 0;
 
@@ -240,9 +240,28 @@ function attributesToString(attributes) {
       }
 
       key = 'class';
-    }
+    } else if (key === 'class' && Array.isArray(value)) {
+      classItems = value;
+      valueLength = value.length;
 
-    if (key === 'style') {
+      // Reuses the value variable
+      value = '';
+
+      for (let i = 0; i < valueLength; i++) {
+        if (classItems[i] && classItems[i].length > 0) {
+          if (value) {
+            value += ' ' + classItems[i].trim();
+          } else {
+            value += classItems[i].trim();
+          }
+        }
+      }
+
+      // All attributes may have been disabled.
+      if (value.length === 0) {
+        continue;
+      }
+    } else if (key === 'style') {
       result += ' style="' + styleToString(value) + '"';
       continue;
     }
@@ -269,9 +288,10 @@ function attributesToString(attributes) {
       if (type !== 'object') {
         result += '="' + value.toString() + '"';
         continue;
+      }
 
-        // Dates are always safe
-      } else if (value instanceof Date) {
+      // Dates are always safe
+      if (value instanceof Date) {
         result += '="' + value.toISOString() + '"';
         continue;
       }
@@ -292,13 +312,13 @@ function attributesToString(attributes) {
 
     result += '="';
 
-    const length = value.length;
+    valueLength = value.length;
     start = 0;
 
     // Escapes double quotes to be used inside attributes
     // Faster than using regex
     // https://jsperf.app/kakihu
-    for (; end < length; end++) {
+    for (; end < valueLength; end++) {
       if (value[end] === '"') {
         result += value.slice(start, end) + '&#34;';
         start = end + 1;

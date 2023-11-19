@@ -761,10 +761,10 @@ for many applications.
 
 ```tsx
 <div class={['a', true && 'b', false && 'c', 'd']} />
-'<div class="a b d"></div>'
+// <div class="a b d"></div>
 
 <div class={['class-a class-b', true && 'class-c']} />
-'<div class="class-a class-b class-c"></div>'
+// <div class="class-a class-b class-c"></div>
 ```
 
 This behavior is pretty similar and inspired from [clsx](https://github.com/lukeed/clsx),

@@ -149,6 +149,8 @@ export interface SuspenseProps {
    * This error boundary is used to catch any error thrown by an async component and
    * streams its fallback instead.
    *
+   * ### Undefined behaviors happens on each browser kind when the html stream is unexpected closed by the server if an error is thrown. You should always define an error boundary to catch errors.
+   *
    * This does not catches for errors thrown by the suspense itself or async fallback
    * components. Please use {@linkcode ErrorBoundary} to catch them instead.
    */

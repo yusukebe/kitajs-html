@@ -134,16 +134,20 @@ To use the `@kitajs/html` package, follow these steps:
    ```
 
 <br />
+<br />
+<br />
 
 > [!WARNING]
 >
-> # Make sure your setup is right!
+> # Be sure your setup is working correclty!
 >
 > Try writing `console.log(<div>{'<' + '/div>'}</div>);` in your editor. If it **PRODUCE
-> ERRORS**, your setup is correct. Refer to the
+> ERRORS**, then your setup is correct. Refer to the
 > [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
 > details on setting up editor intellisense.
 
+<br />
+<br />
 <br />
 
 ## Getting Started

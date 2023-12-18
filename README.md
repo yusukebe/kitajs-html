@@ -31,9 +31,9 @@
 <h1>🏛️ KitaJS Html</h1>
 
 <p align="center">
-  <code>@kitajs/html</code> is a super fast JSX runtime to generate HTML strings that works everywhere. 
+  <code>@kitajs/html</code> is a <a href="#performance">super fast</a> JSX runtime to generate HTML strings that works everywhere. 
    <br /><i><a href="https://expressjs.com">Express</a>? <a href="https://fastify.dev">Fastify</a>? <a href="https://hono.dev">Hono</a>? <a href="https://bun.sh">Bun</a>? <a href="https://htmx.org/">Htmx</a>?</i>
-   <br /><b>If it supports <code>string</code> we got you covered.</b>
+   <br /><br /><b>If your code works with strings, we got you covered.</b>
   <br />
   <br />
 </p>
@@ -533,8 +533,6 @@ You just need to add this triple slash directive to the top of your file:
 ```tsx
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
-import '@kitajs/html/register';
-
 const html = (
   // Type checking and intellisense for all HTMX attributes
   <div hx-get="/api" hx-trigger="click" hx-target="#target">
@@ -555,8 +553,6 @@ You just need to add this triple slash directive to the top of your file:
 
 ```tsx
 /// <reference types="@kitajs/html/hotwire-turbo.d.ts" />
-
-import '@kitajs/html/register';
 
 const html = (
   // Type checking and intellisense for all HTMX attributes

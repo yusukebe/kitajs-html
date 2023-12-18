@@ -826,7 +826,7 @@ Typed Html and Common Tags.
 
 You can run this yourself by running `pnpm bench`.
 
-```cpp
+```md
 cpu: 13th Gen Intel(R) Core(TM) i5-13600K
 runtime: node v20.9.0 (x64-linux)
 

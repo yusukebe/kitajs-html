@@ -137,14 +137,14 @@ To use the `@kitajs/html` package, follow these steps:
 <br />
 <br />
 
-> [!WARNING]
+> [!CAUTION]
 >
 > # Be sure your setup is working correclty!
 >
-> Try writing `console.log(<div>{'<' + '/div>'}</div>);` in your editor. If it **PRODUCE
-> ERRORS**, then your setup is correct. Refer to the
+> Try writing `console.log(<div>{String.name}</div>);` in your editor. If it **THROWS**
+> a `XSS` error, then your setup is correct. Refer to the
 > [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
-> details on setting up editor intellisense.
+> details on setting up editor intellisense. _(It should throw, as `String.name` has a type of `string`, type which may or may not have special caracters)_
 
 <br />
 <br />

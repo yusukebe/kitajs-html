@@ -9,7 +9,9 @@ declare namespace JSX {
 declare namespace Htmx {
   /** Either `true`, `false`, `"true"` or `"false"`. */
   type BoolStr = boolean | 'true' | 'false';
+
   type AnyStr = string & {};
+
   type HxSwap =
     | 'innerHTML'
     | 'outerHTML'
@@ -20,13 +22,14 @@ declare namespace Htmx {
     | 'delete'
     | 'none'
     | 'morph'
-    | 'morphdom';
+    | 'morphdom'
+    | AnyStr;
 
   /**
    * Either `this` which refers to the element itself, or a modifier followed by a CSS
    * selector, e.g. `closest form`.
    */
-  type HxTarget = 'this' | 'closest ' | 'find ' | 'next ' | 'previous ';
+  type HxTarget = 'this' | 'closest ' | 'find ' | 'next ' | 'previous ' | AnyStr;
 
   /** A CSS selector, followed by one of these sync strategies, e.g. `form:abort`. */
   type HxSync =
@@ -36,7 +39,8 @@ declare namespace Htmx {
     | ':queue'
     | ':queue first'
     | ':queue last'
-    | ':queue all';
+    | ':queue all'
+    | AnyStr;
 
   /** Evaluate the values given, you can prefix the values with javascript: or js:. */
   type HxHeaders = AnyStr | 'javascript:' | 'js:';
@@ -53,7 +57,8 @@ declare namespace Htmx {
     | ' queue:first'
     | ' queue:last'
     | ' queue:all'
-    | ' queue:none';
+    | ' queue:none'
+    | AnyStr;
 
   /**
    * An extensible directory of htmx extensions.

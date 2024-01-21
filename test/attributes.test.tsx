@@ -76,4 +76,39 @@ describe('Attributes', () => {
       '<div class="a b c d f g h i j"></div>'
     );
   });
+
+  test('attrs attribute', () => {
+    assert.equal(
+      <div attrs={{ 'data-test': 'test', 'data-test2': 'test2' }} />,
+      '<div data-test="test" data-test2="test2"></div>'
+    );
+
+    assert.equal(
+      <div attrs={{ 'data-test': 'test', 'data-test2': 'test2' }} data-test3="test3" />,
+      '<div data-test="test" data-test2="test2" data-test3="test3"></div>'
+    );
+
+    assert.equal(
+      <div attrs='data-test="test" data-test2="test2"'></div>,
+      '<div data-test="test" data-test2="test2"></div>'
+    );
+
+    // duplicates
+    assert.equal(
+      <div attrs='data-test="test" data-test2="test2"' data-test="test3"></div>,
+      '<div data-test="test" data-test2="test2" data-test="test3"></div>'
+    );
+
+    // escapes object
+    assert.equal(
+      <div attrs={{ 'data-test': 'te"st', 'data-test2': 'test2' }} data-test="test3" />,
+      '<div data-test="te&#34;st" data-test2="test2" data-test="test3"></div>'
+    );
+
+    // does not escape string
+    assert.equal(
+      <div attrs='data-test="te"st" data-test2="test2"' data-test="test3" />,
+      `<div data-test="te"st" data-test2="test2" data-test="test3"></div>`
+    );
+  });
 });

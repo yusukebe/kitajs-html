@@ -95,6 +95,28 @@ declare namespace JSX {
      * ```
      */
     class?: undefined | string | (string | number | null | boolean | undefined)[];
+
+    /**
+     * A custom property that can be used to avoid attributes escaping and allow custom
+     * attributes syntax, such as `:` and `.` in their names.
+     *
+     * Objects are escaped normally, **strings ARE NOT escaped**.
+     *
+     * You can use a string or an object. When using a string, it will be used as the
+     * attribute value. When using an object, it will be used as a key-value map of
+     * attributes.
+     *
+     * @example
+     *
+     * ```tsx
+     * <div attrs={{ 'data-attr': 'value"' }} />
+     * '<div data-attr="value&#34;"></div>' // escapes
+     *
+     * <div attrs='a=1 b c=3 "' />
+     * '<div a=1 b c=3 "></div>' // does NOT escape
+     * ```
+     */
+    attrs?: undefined | object | string;
   }
 
   interface HtmlAnchorTag extends HtmlTag {

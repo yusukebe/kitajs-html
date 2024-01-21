@@ -264,6 +264,14 @@ function attributesToString(attributes) {
     } else if (key === 'style') {
       result += ' style="' + styleToString(value) + '"';
       continue;
+    } else if (key === 'attrs') {
+      if (typeof value === 'string') {
+        result += ' ' + value;
+      } else {
+        result += attributesToString(value);
+      }
+
+      continue;
     }
 
     type = typeof value;

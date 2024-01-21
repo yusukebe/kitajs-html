@@ -84,8 +84,8 @@ export function createElement<C extends Children[], N extends string | Function>
 ): Promise<string> extends C[number]
   ? Promise<string>
   : N extends () => Promise<string>
-  ? Promise<string>
-  : string;
+    ? Promise<string>
+    : string;
 
 /**
  * Joins raw string html elements into a single html string.

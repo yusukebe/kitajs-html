@@ -16,13 +16,13 @@ function Throw(): string {
 
 // Detect leaks of pending promises
 afterEach(() => {
-  assert.equal(SUSPENSE_ROOT.resources.size, 0, 'Suspense root left pending resources');
+  assert.equal(SUSPENSE_ROOT.requests.size, 0, 'Suspense root left pending requests');
 
   // Reset suspense root
   SUSPENSE_ROOT.enabled = false;
   SUSPENSE_ROOT.autoScript = true;
   SUSPENSE_ROOT.requestCounter = 1;
-  SUSPENSE_ROOT.resources.clear();
+  SUSPENSE_ROOT.requests.clear();
 });
 
 describe('Suspense', () => {
@@ -216,33 +216,6 @@ describe('Suspense', () => {
         </script>
       </>
     );
-
-    <>
-      <div>
-        <div id="B:1" data-sf>
-          <div>1</div>
-        </div>
-        <div id="B:2" data-sf>
-          <div>2</div>
-        </div>
-        <div id="B:3" data-sf>
-          <div>3</div>
-        </div>
-      </div>
-      {SuspenseScript}
-      <template id="N:1" data-sr>
-        4
-      </template>
-      <script id="S:1" data-ss>
-        $KITA_RC(1)
-      </script>
-      <template id="N:2" data-sr>
-        5
-      </template>
-      <template id="N:3" data-sr>
-        6
-      </template>
-    </>;
   });
 
   test('Concurrent renders', async () => {
@@ -579,7 +552,6 @@ describe('Suspense', () => {
   test('renderToStream without suspense', async () => {
     const stream = renderToStream(() => '<div>not suspense</div>', 1227);
 
-    assert.equal(stream.rid, 1227);
     assert.ok(stream.readable);
 
     const data = stream.read();
@@ -612,7 +584,7 @@ describe('Suspense', () => {
           {Promise.resolve(2)}
         </Suspense>
       ),
-      /Suspense resource closed before all suspense components were resolved./
+      /Request data was deleted before all suspense components were resolved./
     );
   });
 
@@ -1064,13 +1036,13 @@ describe('Suspense errors', () => {
   it('does not write anything if stream is closed', async () => {
     const stream = renderToStream(async (r) => {
       // Closes the stream rightly after
-      const resource = SUSPENSE_ROOT.resources.get(r)!;
-      const stream = resource.stream.deref()!;
+      const rd = SUSPENSE_ROOT.requests.get(r)!;
+      const stream = rd.stream.deref()!;
 
       return (
         <Suspense rid={r} fallback={<div>1</div>} catch={<div>2</div>}>
           {setTimeout(5).then(async () => {
-            stream.push(null);
+            stream.end();
             await new Promise((res) => stream.once('close', res));
             return <div>3</div>;
           })}
@@ -1103,7 +1075,7 @@ describe('Suspense errors', () => {
   it('does not allows to use the same rid', async () => {
     let i = 1;
 
-    function render(r: number) {
+    function render(r: number | string) {
       return (
         <Suspense rid={r} fallback={<div>{i++}</div>}>
           {Promise.resolve(<div>{i++}</div>)}
@@ -1114,7 +1086,7 @@ describe('Suspense errors', () => {
     const stream = renderToStream(render, 1);
     assert.throws(
       () => renderToStream(render, 1),
-      /Error: The provided resource ID is already in use: 1./
+      /Error: The provided Request Id is already in use: 1./
     );
 
     let html = '';

@@ -8,7 +8,7 @@ async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {
   return Html.contentsToString([children || String(ms)]);
 }
 
-function renderLayout(rid: number) {
+function renderLayout(rid: number | string) {
   return (
     <html>
       <div>

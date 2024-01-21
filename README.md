@@ -141,10 +141,11 @@ To use the `@kitajs/html` package, follow these steps:
 >
 > # Be sure your setup is working correclty!
 >
-> Try writing `console.log(<div>{String.name}</div>);` in your editor. If it **THROWS**
-> a `XSS` error, then your setup is correct. Refer to the
+> Try writing `console.log(<div>{String.name}</div>);` in your editor. If it **THROWS** a
+> `XSS` error, then your setup is correct. Refer to the
 > [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
-> details on setting up editor intellisense. _(It should throw, as `String.name` has a type of `string`, type which may or may not have special caracters)_
+> details on setting up editor intellisense. _(It should throw, as `String.name` has a
+> type of `string`, type which may or may not have special caracters)_
 
 <br />
 <br />
@@ -830,7 +831,7 @@ Typed Html and Common Tags.
 
 You can run this yourself by running `pnpm bench`.
 
-```md
+```
 cpu: 13th Gen Intel(R) Core(TM) i5-13600K
 runtime: node v20.9.0 (x64-linux)
 

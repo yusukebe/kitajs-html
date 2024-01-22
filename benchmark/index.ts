@@ -18,6 +18,7 @@ const TypedHtml = await import('typed-html');
 const React = await import('react');
 const ReactDOMServer = await import('react-dom/server');
 const CommonTags = await import('common-tags');
+const gHtml = await import('ghtml');
 
 // Ensures that Kitajs/html and react produce the same output
 assert.equal(
@@ -31,6 +32,18 @@ assert.equal(
   ManyComponents(KitaHtml, 'Hello World!'),
   // Simply removes spaces and newlines
   TemplateManyComponents(CommonTags.html, 'Hello World!')
+    .split('\n')
+    .map((l: string) => l.trim())
+    .join('')
+);
+
+
+
+// Ensures that Kitajs/html and ghtml produce the same output
+assert.equal(
+  ManyComponents(KitaHtml, 'Hello World!'),
+  // Simply removes spaces and newlines
+  TemplateManyComponents(gHtml.html, 'Hello World!')
     .split('\n')
     .map((l: string) => l.trim())
     .join('')
@@ -50,6 +63,7 @@ group('Many Components (31.4kb)', () => {
   bench('Typed Html', () => ManyComponents(TypedHtml, 'Hello World!'));
   bench('KitaJS/Html', () => ManyComponents(KitaHtml, 'Hello World!'));
   bench('Common Tags', () => TemplateManyComponents(CommonTags.html, 'Hello World!'));
+  bench('Ghtml', () => TemplateManyComponents(gHtml.html, 'Hello World!'));
   bench('React', () =>
     ReactDOMServer.renderToStaticMarkup(ManyComponents(React, 'Hello World!') as any)
   );
@@ -59,6 +73,7 @@ group('MdnHomepage (66.7Kb)', () => {
   bench('Typed Html', () => MdnHomepage(TypedHtml, 'Hello World!'));
   bench('KitaJS/Html', () => MdnHomepage(KitaHtml, 'Hello World!'));
   bench('Common Tags', () => TemplateMdnHomepage(CommonTags.html, 'Hello World!'));
+  bench('Ghtml', () => TemplateMdnHomepage(gHtml.html, 'Hello World!'));
   bench('React', () =>
     ReactDOMServer.renderToStaticMarkup(MdnHomepage(React, 'Hello World!') as any)
   );
@@ -68,6 +83,7 @@ group('Many Props (7.4kb)', () => {
   bench('Typed Html', () => ManyProps(TypedHtml, 'Hello World!'));
   bench('KitaJS/Html', () => ManyProps(KitaHtml, 'Hello World!'));
   bench('Common Tags', () => TemplateManyProps(CommonTags.html, 'Hello World!'));
+  bench('Ghtml', () => TemplateManyProps(gHtml.html, 'Hello World!'));
   bench('React', () =>
     ReactDOMServer.renderToStaticMarkup(ManyProps(React, 'Hello World!') as any)
   );

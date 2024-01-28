@@ -46,6 +46,27 @@ function toKebabCase(camel) {
   return kebab;
 }
 
+/** @type {import('.').escape} */
+function escape(strings, ...values) {
+  const stringsLength = strings.length;
+  const valuesLength = values.length;
+
+  let index = 0;
+  let result = '';
+
+  for (; index < stringsLength; index++) {
+    result += strings[index];
+
+    if (index < valuesLength) {
+      result += values[index];
+    }
+  }
+
+  // Escape the entire string at once.
+  // This is faster than escaping each piece individually.
+  return escapeHtml(result);
+}
+
 /** @type {import('.').escapeHtml} */
 let escapeHtml = function (value) {
   if (typeof value !== 'string') {
@@ -534,6 +555,8 @@ function compile(htmlFn, strict = true, separator = '/*\x00*/') {
 }
 
 const Html = {
+  escape,
+  e: escape,
   escapeHtml,
   isVoidElement,
   attributesToString,

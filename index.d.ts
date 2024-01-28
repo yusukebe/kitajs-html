@@ -13,6 +13,21 @@
 export function isUpper(this: void, input: string, index: number): boolean;
 
 /**
+ * Tag function that escapes the given string pieces and interpolates the given values.
+ * Internally it uses {@linkcode escapeHtml} to escape the values.
+ *
+ * @param {TemplateStringsArray} strings Template string.
+ * @param {...any} values Values to interpolate.
+ * @returns {string} The escaped string.
+ * @this {void}
+ */
+export function escape(
+  this: void,
+  strings: TemplateStringsArray,
+  ...values: any[]
+): string;
+
+/**
  * Escapes a string for safe use as HTML text content. If the value is not a string, it is
  * coerced to one with its own `toString()` method.
  *
@@ -146,6 +161,19 @@ export function compile<
 
 /** Here for interop with `preact` and many build systems. */
 export const h: typeof createElement;
+
+/**
+ * Alias of {@linkcode escape} to reduce verbosity.
+ *
+ * @example
+ *
+ * ```tsx
+ * import { e } from '@kitajs/html'
+ *
+ * <div>{e`My name is ${user.name}!`}</div>;
+ * ```
+ */
+export const e: typeof escape;
 
 /**
  * A JSX Fragment is used to return multiple elements from a component.

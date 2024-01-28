@@ -3,9 +3,13 @@ import test, { describe } from 'node:test';
 import Html from '../index';
 
 const unsafeTag = '<script tag="1">alert(1)</script>';
-const safeTag = Html.escapeHtml(unsafeTag);
+const safeTag = Html.escape`${unsafeTag}`;
 
 describe('HTML Escaping', () => {
+  test('e is the same as escape', () => {
+    assert.equal(Html.e, Html.escape);
+  });
+
   test('escapes content', () => {
     assert.equal(<>{unsafeTag}</>, <>{unsafeTag}</>);
   });
@@ -40,7 +44,7 @@ describe('HTML Escaping', () => {
         </div>
       </>,
       <>
-        <div>{Html.escapeHtml(<div>{unsafeTag}</div>)}</div>
+        <div>{Html.escape`${(<div>{unsafeTag}</div>)}`}</div>
       </>
     );
   });
@@ -72,8 +76,8 @@ describe('HTML Escaping', () => {
   });
 
   test('handles unknown values', () => {
-    assert.equal(Html.escapeHtml(''), '');
-    assert.equal(Html.escapeHtml({ a: 1 }), '[object Object]');
+    assert.equal(Html.escape``, '');
+    assert.equal(Html.escape`${{ a: 1 }}`, '[object Object]');
   });
 
   // The matrix of cases we need to test for:
@@ -85,119 +89,112 @@ describe('HTML Escaping', () => {
   // 6. Works when the text to escape is in the beginning
   // 7. Works when the text to escape is in the end
   // 8. Returns the same string when there's no need to escape
-  test('always escapeHtml', () => {
+  test('always escape', () => {
     assert.equal(
-      Html.escapeHtml('absolutely nothing to do here'),
+      Html.escape`absolutely nothing to do here`,
       'absolutely nothing to do here'
     );
     assert.equal(
-      Html.escapeHtml('<script>alert(1)</script>'),
+      Html.escape`<script>alert(1)</script>`,
       '&lt;script>alert(1)&lt;/script>'
     );
-    assert.equal(Html.escapeHtml('<'), '&lt;');
-    assert.equal(Html.escapeHtml('>'), '>');
-    assert.equal(Html.escapeHtml('&'), '&amp;');
-    assert.equal(Html.escapeHtml("'"), '&#39;');
-    assert.equal(Html.escapeHtml('"'), '&#34;');
-    assert.equal(Html.escapeHtml('\n'), '\n');
-    assert.equal(Html.escapeHtml('\r'), '\r');
-    assert.equal(Html.escapeHtml('\t'), '\t');
-    assert.equal(Html.escapeHtml('\f'), '\f');
-    assert.equal(Html.escapeHtml('\v'), '\v');
-    assert.equal(Html.escapeHtml('\b'), '\b');
-    assert.equal(Html.escapeHtml('\u00A0'), '\u00A0');
-    assert.equal(Html.escapeHtml('<script>ab'), '&lt;script>ab');
-    assert.equal(Html.escapeHtml('<script>'), '&lt;script>');
-    assert.equal(Html.escapeHtml('<script><script>'), '&lt;script>&lt;script>');
+    assert.equal(Html.escape`<`, '&lt;');
+    assert.equal(Html.escape`>`, '>');
+    assert.equal(Html.escape`&`, '&amp;');
+    assert.equal(Html.escape`'`, '&#39;');
+    assert.equal(Html.escape`"`, '&#34;');
+    assert.equal(Html.escape`\u00A0`, '\u00A0');
+    assert.equal(Html.escape`<script>ab`, '&lt;script>ab');
+    assert.equal(Html.escape`<script>`, '&lt;script>');
+    assert.equal(Html.escape`<script><script>`, '&lt;script>&lt;script>');
 
     assert.equal(
-      Html.escapeHtml('lalala' + '<script>alert(1)</script>' + 'lalala'),
+      Html.escape`lalala<script>alert(1)</script>lalala`,
       'lalala&lt;script>alert(1)&lt;/script>lalala'
     );
 
     assert.equal(
-      Html.escapeHtml('<script>alert(1)</script>' + 'lalala'),
+      Html.escape`<script>alert(1)</script>lalala`,
       '&lt;script>alert(1)&lt;/script>lalala'
     );
     assert.equal(
-      Html.escapeHtml('lalala' + '<script>alert(1)</script>'),
+      Html.escape`lalala<script>alert(1)</script>`,
       'lalala' + '&lt;script>alert(1)&lt;/script>'
     );
 
-    assert.equal(Html.escapeHtml('What does 😊 mean?'), 'What does 😊 mean?');
-
-    assert.equal(Html.escapeHtml('<What does 😊'), '&lt;What does 😊');
+    assert.equal(Html.escape`What does 😊 mean?`, 'What does 😊 mean?');
+    assert.equal(Html.escape`<What does 😊`, '&lt;What does 😊');
     assert.equal(
-      Html.escapeHtml('<div>What does 😊 mean in text?'),
+      Html.escape`<div>What does 😊 mean in text?`,
       '&lt;div>What does 😊 mean in text?'
     );
 
     assert.equal(
-      Html.escapeHtml(('lalala' + '<script>alert(1)</script>' + 'lalala').repeat(900)),
+      Html.escape`${('lalala' + '<script>alert(1)</script>' + 'lalala').repeat(900)}`,
       'lalala&lt;script>alert(1)&lt;/script>lalala'.repeat(900)
     );
     assert.equal(
-      Html.escapeHtml(('<script>alert(1)</script>' + 'lalala').repeat(900)),
+      Html.escape`${('<script>alert(1)</script>' + 'lalala').repeat(900)}`,
       '&lt;script>alert(1)&lt;/script>lalala'.repeat(900)
     );
     assert.equal(
-      Html.escapeHtml(('lalala' + '<script>alert(1)</script>').repeat(900)),
+      Html.escape`${('lalala' + '<script>alert(1)</script>').repeat(900)}`,
       ('lalala' + '&lt;script>alert(1)&lt;/script>').repeat(900)
     );
 
     // the positions of the unicode codepoint are important
     // our simd code for U16 is at 8 bytes, so we need to especially check the boundaries
     assert.equal(
-      Html.escapeHtml('😊lalala' + '<script>alert(1)</script>' + 'lalala'),
+      Html.escape`😊lalala<script>alert(1)</script>lalala`,
       '😊lalala&lt;script>alert(1)&lt;/script>lalala'
     );
     assert.equal(
-      Html.escapeHtml('<script>😊alert(1)</script>' + 'lalala'),
+      Html.escape`${'<script>😊alert(1)</script>' + 'lalala'}`,
       '&lt;script>😊alert(1)&lt;/script>lalala'
     );
     assert.equal(
-      Html.escapeHtml('<script>alert(1)😊</script>' + 'lalala'),
+      Html.escape`<script>alert(1)😊</script>lalala`,
       '&lt;script>alert(1)😊&lt;/script>lalala'
     );
     assert.equal(
-      Html.escapeHtml('<script>alert(1)</script>' + '😊lalala'),
+      Html.escape`<script>alert(1)</script>😊lalala`,
       '&lt;script>alert(1)&lt;/script>😊lalala'
     );
     assert.equal(
-      Html.escapeHtml('<script>alert(1)</script>' + 'lal😊ala'),
+      Html.escape`<script>alert(1)</script>lal😊ala`,
       '&lt;script>alert(1)&lt;/script>lal😊ala'
     );
     assert.equal(
-      Html.escapeHtml('<script>alert(1)</script>' + 'lal😊ala'.repeat(10)),
+      Html.escape`${'<script>alert(1)</script>' + 'lal😊ala'.repeat(10)}`,
       '&lt;script>alert(1)&lt;/script>' + 'lal😊ala'.repeat(10)
     );
 
     for (let i = 1; i < 10; i++)
       assert.equal(
-        Html.escapeHtml('<script>alert(1)</script>' + 'la😊'.repeat(i)),
+        Html.escape`${'<script>alert(1)</script>' + 'la😊'.repeat(i)}`,
         '&lt;script>alert(1)&lt;/script>' + 'la😊'.repeat(i)
       );
 
     assert.equal(
-      Html.escapeHtml('la😊' + '<script>alert(1)</script>'),
+      Html.escape`${'la😊' + '<script>alert(1)</script>'}`,
       'la😊' + '&lt;script>alert(1)&lt;/script>'
     );
     assert.equal(
-      Html.escapeHtml(('lalala' + '<script>alert(1)</script>😊').repeat(1)),
+      Html.escape`${('lalala' + '<script>alert(1)</script>😊').repeat(1)}`,
       ('lalala' + '&lt;script>alert(1)&lt;/script>😊').repeat(1)
     );
 
-    assert.equal(Html.escapeHtml('😊'.repeat(100)), '😊'.repeat(100));
-    assert.equal(Html.escapeHtml('😊<'.repeat(100)), '😊&lt;'.repeat(100));
-    assert.equal(Html.escapeHtml('<😊>'.repeat(100)), '&lt;😊>'.repeat(100));
-    assert.equal(Html.escapeHtml('😊'), '😊');
-    assert.equal(Html.escapeHtml('😊😊'), '😊😊');
-    assert.equal(Html.escapeHtml('😊lo'), '😊lo');
-    assert.equal(Html.escapeHtml('lo😊'), 'lo😊');
+    assert.equal(Html.escape`${'😊'.repeat(100)}`, '😊'.repeat(100));
+    assert.equal(Html.escape`${'😊<'.repeat(100)}`, '😊&lt;'.repeat(100));
+    assert.equal(Html.escape`${'<😊>'.repeat(100)}`, '&lt;😊>'.repeat(100));
+    assert.equal(Html.escape`😊`, '😊');
+    assert.equal(Html.escape`😊😊`, '😊😊');
+    assert.equal(Html.escape`😊lo`, '😊lo');
+    assert.equal(Html.escape`lo😊`, 'lo😊');
 
-    assert.equal(Html.escapeHtml(' '.repeat(32) + '😊'), ' '.repeat(32) + '😊');
-    assert.equal(Html.escapeHtml(' '.repeat(32) + '😊😊'), ' '.repeat(32) + '😊😊');
-    assert.equal(Html.escapeHtml(' '.repeat(32) + '😊lo'), ' '.repeat(32) + '😊lo');
-    assert.equal(Html.escapeHtml(' '.repeat(32) + 'lo😊'), ' '.repeat(32) + 'lo😊');
+    assert.equal(Html.escape`${' '.repeat(32) + '😊'}`, ' '.repeat(32) + '😊');
+    assert.equal(Html.escape`${' '.repeat(32) + '😊😊'}`, ' '.repeat(32) + '😊😊');
+    assert.equal(Html.escape`${' '.repeat(32) + '😊lo'}`, ' '.repeat(32) + '😊lo');
+    assert.equal(Html.escape`${' '.repeat(32) + 'lo😊'}`, ' '.repeat(32) + 'lo😊');
   });
 });

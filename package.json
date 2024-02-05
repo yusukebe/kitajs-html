@@ -1,6 +1,6 @@
 {
   "name": "@kitajs/html",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Fast and type safe HTML templates using TypeScript.",
   "bugs": "https://github.com/kitajs/html/issues",
   "repository": {

@@ -17,7 +17,8 @@ declare namespace Alpine {
     'x-data'?: string;
 
     /**
-     * Initializes Alpine.js and defines the scope for reactive properties and methods within an element or its children.
+     * Initializes Alpine.js and defines the scope for reactive properties and methods
+     * within an element or its children.
      *
      * @see https://alpinejs.dev/directives/init
      */
@@ -87,7 +88,8 @@ declare namespace Alpine {
     'x-html'?: string;
 
     /**
-     * Adds transition effects to elements when they are inserted, updated, or removed from the DOM.
+     * Adds transition effects to elements when they are inserted, updated, or removed
+     * from the DOM.
      *
      * @see https://alpinejs.dev/directives/transition
      */
@@ -108,7 +110,8 @@ declare namespace Alpine {
     'x-ignore'?: string;
 
     /**
-     * Hides an element until Alpine.js is initialized to prevent the unstyled content from being displayed.
+     * Hides an element until Alpine.js is initialized to prevent the unstyled content
+     * from being displayed.
      *
      * @see https://alpinejs.dev/directives/cloak
      */

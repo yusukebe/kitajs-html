@@ -10,7 +10,9 @@
   "funding": "https://github.com/kitajs/html?sponsor=1",
   "license": "Apache-2.0",
   "author": "arthurfiorette <npm@arthur.place>",
-  "sideEffects": ["register.js"],
+  "sideEffects": [
+    "register.js"
+  ],
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {

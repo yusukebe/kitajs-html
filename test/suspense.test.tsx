@@ -1006,6 +1006,16 @@ describe('Suspense errors', () => {
     );
   });
 
+  it('throws when rid is not provided', () => {
+    assert.rejects(
+      renderToString(() => (
+        //@ts-expect-error
+        <Suspense fallback={<div>1</div>}>{Promise.resolve('123')}</Suspense>
+      )),
+      /Error: Suspense requires a `rid` to be specified./
+    );
+  });
+
   it('tests suspense with error boundary', async () => {
     const err = new Error('component failed');
 
@@ -1034,16 +1044,15 @@ describe('Suspense errors', () => {
   });
 
   it('does not write anything if stream is closed', async () => {
-    const stream = renderToStream(async (r) => {
+    const rendered = renderToStream(async (r) => {
       // Closes the stream rightly after
       const rd = SUSPENSE_ROOT.requests.get(r)!;
-      const stream = rd.stream.deref()!;
 
       return (
         <Suspense rid={r} fallback={<div>1</div>} catch={<div>2</div>}>
           {setTimeout(5).then(async () => {
-            stream.end();
-            await new Promise((res) => stream.once('close', res));
+            rd.stream.push(null);
+            await new Promise((res) => rd.stream.once('close', res));
             return <div>3</div>;
           })}
         </Suspense>
@@ -1051,10 +1060,10 @@ describe('Suspense errors', () => {
     });
 
     const firstChunk = await new Promise<string>((resolve) => {
-      stream.once('data', resolve);
+      rendered.once('data', resolve);
     });
 
-    await new Promise((res) => stream.once('close', res));
+    await new Promise((res) => rendered.once('close', res));
 
     assert.equal(
       firstChunk.toString(),
@@ -1066,7 +1075,7 @@ describe('Suspense errors', () => {
     // In case any .push() is called after the stream is closed,
     // The error below would be thrown:
     // Error [ERR_STREAM_PUSH_AFTER_EOF]: stream.push() after EOF
-    for await (const _ of stream) {
+    for await (const _ of rendered) {
       console.log(1, _.toString());
       assert.fail('should not stream anything');
     }

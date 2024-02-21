@@ -1,5 +1,5 @@
 const { contentsToString } = require('./index');
-const { PassThrough, Writable } = require('stream');
+const { Readable } = require('stream');
 
 // Avoids double initialization in case this file is not cached by
 // module bundlers.
@@ -88,10 +88,6 @@ function Suspense(props) {
     throw new Error('Cannot use Suspense outside of a `renderToStream` call.');
   }
 
-  if (!props.rid) {
-    throw new Error('Suspense requires a `rid` to be specified.');
-  }
-
   // fallback may be async.
   const fallback = contentsToString([props.fallback]);
 
@@ -106,7 +102,11 @@ function Suspense(props) {
     return children;
   }
 
-  let data = SUSPENSE_ROOT.requests.get(props.rid);
+  if (!props.rid) {
+    throw new Error('Suspense requires a `rid` to be specified.');
+  }
+
+  const data = SUSPENSE_ROOT.requests.get(props.rid);
 
   if (!data) {
     throw new Error(
@@ -146,37 +146,22 @@ function Suspense(props) {
       return html.then(writeStreamTemplate);
     })
     .catch(function writeFatalError(error) {
-      if (data) {
-        const stream = data.stream.deref();
-
-        // stream.emit returns true if there's a listener
-        // so we can safely ignore the error
-        if (stream && stream.emit('error', error)) {
-          return;
-        }
-      }
-      /* c8 ignore next 2 */
+      // stream.emit returns true if there's a listener
       // Nothing else to do if no catch or listener was found
-      console.error(error);
+      /* c8 ignore next 3 */
+      if (data?.stream.emit('error', error) === false) {
+        console.error(error);
+      }
     })
     .finally(function clearRequestData() {
-      // Reloads the request data as it may have been closed
-      data = SUSPENSE_ROOT.requests.get(props.rid);
-
-      if (!data) {
-        return;
-      }
-
       // reduces current suspense id
-      if (data.running > 1) {
+      if (data && data.running > 1) {
         data.running -= 1;
 
         // Last suspense component, runs cleanup
       } else {
-        const stream = data.stream.deref();
-
-        if (stream && !stream.closed) {
-          stream.end();
+        if (data && !data.stream.closed) {
+          data.stream.push(null);
         }
 
         // Removes the current state
@@ -199,18 +184,14 @@ function Suspense(props) {
    * @param {string} result
    */
   function writeStreamTemplate(result) {
-    // Reloads the request data as it may have been closed
-    data = SUSPENSE_ROOT.requests.get(props.rid);
-
-    if (!data) {
-      return;
-    }
-
-    const stream = data.stream.deref();
-
-    // Stream was probably already closed/cleared out.
-    // We can safely ignore this.
-    if (!stream || stream.closed) {
+    if (
+      // Ensures the stream is still open (.closed may not be already defined at this point)
+      !SUSPENSE_ROOT.requests.has(props.rid) ||
+      // just to typecheck
+      !data ||
+      // Stream was probably already closed/cleared out.
+      data.stream.closed
+    ) {
       return;
     }
 
@@ -218,12 +199,12 @@ function Suspense(props) {
     // suspense component in this request data. This way following
     // templates+scripts can be executed
     if (SUSPENSE_ROOT.autoScript && data.sent === false) {
-      stream.write(SuspenseScript);
+      data.stream.push(SuspenseScript);
       data.sent = true;
     }
 
     // Writes the chunk
-    stream.write(
+    data.stream.push(
       // prettier-ignore
       '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$KITA_RC(' + run + ')</script>'
     );
@@ -234,47 +215,35 @@ function Suspense(props) {
 // future plugins may want to reuse streams and this function avoids forcing
 // them to reimplement the suspense logic.
 /** @type {import('./suspense').pipeHtml} */
-function pipeHtml(html, stream, rid) {
-  // When the HTML is a string, it means there were no other async components
-  // or async Suspense's fallbacks. We can just pipe the HTML to the stream
-  // and try to close it.
-  if (typeof html === 'string') {
-    stream.write(html);
-
-    const requestData = SUSPENSE_ROOT.requests.get(rid);
-
-    // This request data was already resolved or no suspenses were used.
-    if (!requestData || requestData.running === 0) {
-      stream.end();
-      SUSPENSE_ROOT.requests.delete(rid);
+async function pipeHtml(html, stream, rid) {
+  try {
+    // When the HTML is a string, it means there were no other async components
+    // or async Suspense's fallbacks. We can just pipe the HTML to the stream
+    // and try to close it.
+    if (typeof html === 'string') {
+      stream.push(html);
+      return;
     }
 
-    return;
+    stream.push(await html);
+  } catch (error) {
+    // Emits the error down the stream or
+    // prints it to the console if there's no
+    // listener (default node impl always has a listener)
+
+    /* c8 ignore next 4 */
+    if (stream.emit('error', error) === false) {
+      console.error(error);
+    }
+  } finally {
+    const request = SUSPENSE_ROOT.requests.get(rid);
+
+    // This request data already resolved or no suspenses were used.
+    if (!request || request.running === 0) {
+      stream.push(null);
+      SUSPENSE_ROOT.requests.delete(rid);
+    }
   }
-
-  html
-    .then(function writeStreamHtml(html) {
-      stream.write(html);
-    })
-    .catch(function catchError(error) {
-      // Emits the error down the stream or
-      // prints it to the console if there's no
-      // listener (default node impl always has a listener)
-
-      /* c8 ignore next 4 */
-      if (stream.emit('error', error) === false) {
-        console.error(error);
-      }
-    })
-    .finally(function endStream() {
-      const requestData = SUSPENSE_ROOT.requests.get(rid);
-
-      // This request data already resolved or no suspenses were used.
-      if (!requestData || requestData.running === 0) {
-        stream.end();
-        SUSPENSE_ROOT.requests.delete(rid);
-      }
-    });
 }
 
 /** @type {import('./suspense').renderToStream} */
@@ -284,20 +253,15 @@ function renderToStream(factory, rid) {
     SUSPENSE_ROOT.enabled = true;
   }
 
-  // Ensures the request id is unique
   if (!rid) {
     rid = SUSPENSE_ROOT.requestCounter++;
   } else if (SUSPENSE_ROOT.requests.has(rid)) {
+    // Ensures the request id is unique
     throw new Error(`The provided Request Id is already in use: ${rid}.`);
   }
 
-  const stream = new PassThrough();
-
-  SUSPENSE_ROOT.requests.set(rid, {
-    stream: new WeakRef(stream),
-    running: 0,
-    sent: false
-  });
+  const stream = new Readable({ read() {} });
+  SUSPENSE_ROOT.requests.set(rid, { stream, running: 0, sent: false });
 
   try {
     // Loads the template
@@ -312,7 +276,7 @@ function renderToStream(factory, rid) {
     // This means a sync error was thrown and there's
     // nothing we can do unless closing the stream
     // and re-throwing the error.
-    stream.end();
+    stream.push(null);
     SUSPENSE_ROOT.requests.delete(rid);
 
     throw renderError;
@@ -321,54 +285,13 @@ function renderToStream(factory, rid) {
 
 /** @type {import('./suspense').renderToString} */
 async function renderToString(factory, rid) {
-  // Enables suspense if it's not enabled yet
-  if (SUSPENSE_ROOT.enabled === false) {
-    SUSPENSE_ROOT.enabled = true;
+  const chunks = [];
+
+  for await (const chunk of renderToStream(factory, rid)) {
+    chunks.push(chunk);
   }
 
-  // Ensures the request id is unique
-  if (!rid) {
-    rid = SUSPENSE_ROOT.requestCounter++;
-  } else if (SUSPENSE_ROOT.requests.has(rid)) {
-    throw new Error(`The provided Request Id is already in use: ${rid}.`);
-  }
-
-  let finalHtml = '';
-
-  const stream = new Writable({
-    write(chunk, _, callback) {
-      finalHtml += chunk.toString();
-      callback();
-    }
-  });
-
-  SUSPENSE_ROOT.requests.set(rid, {
-    stream: new WeakRef(stream),
-    running: 0,
-    sent: false
-  });
-
-  try {
-    // Loads the template
-    const html = factory(rid);
-
-    // Pipes the HTML to the stream
-    pipeHtml(html, stream, rid);
-
-    return new Promise((res, rej) => {
-      stream.once('finish', () => res(finalHtml));
-      stream.once('error', rej);
-    });
-  } catch (renderError) {
-    // Could not generate even the loading template.
-    // This means a sync error was thrown and there's
-    // nothing we can do unless closing the stream
-    // and re-throwing the error.
-    stream.end();
-    SUSPENSE_ROOT.requests.delete(rid);
-
-    throw renderError;
-  }
+  return chunks.join('');
 }
 
 module.exports.Suspense = Suspense;

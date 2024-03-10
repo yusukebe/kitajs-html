@@ -7,5 +7,11 @@
   "access": "restricted",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "@kitajs/bench-html-typed-html",
+    "@kitajs/bench-html-templates",
+    "@kitajs/bench-html-runner",
+    "@kitajs/bench-html-reactjsx",
+    "@kitajs/bench-html-kitajs"
+  ]
 }

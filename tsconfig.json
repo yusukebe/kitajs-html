@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "jsx": "react",
-    "jsxFactory": "Html.createElement",
-    "jsxFragmentFactory": "Html.Fragment",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "plugins": [{ "name": "@kitajs/ts-html-plugin" }],
     "module": "CommonJS",
     "moduleResolution": "node",
@@ -35,5 +34,5 @@
     "skipDefaultLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts", "node_modules/csstype"],
-  "exclude": ["node_modules", "dist", "coverage", "benchmark"]
+  "exclude": ["node_modules", "dist", "coverage", "benchmarks"]
 }

@@ -1,4 +1,8 @@
+
 node_modules
+
 index.tsbuildinfo
 dist
 coverage
+
+*.log

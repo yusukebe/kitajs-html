@@ -109,11 +109,11 @@ To use the `@kitajs/html` package, follow these steps:
    ```
 
 3. Append the
-   [`xss-scan`](https://github.com/kitajs/ts-html-plugin/tree/main#running-as-cli) command
-   into your test script. This CLI comes from @kitajs/ts-html-plugin, which catches XSS
-   vulnerabilities that may be introduced into your codebase, automating the xss scanning
-   process to run everytime you test your code, like inside your CI/CD environment. Open
-   your `package.json` file and add the following script:
+   [`xss-scan`](https://github.com/kitajs/html/tree/master/packages/ts-html-plugin/tree/main#running-as-cli)
+   command into your test script. This CLI comes from @kitajs/ts-html-plugin, which
+   catches XSS vulnerabilities that may be introduced into your codebase, automating the
+   xss scanning process to run everytime you test your code, like inside your CI/CD
+   environment. Open your `package.json` file and add the following script:
 
    ```jsonc
    // package.json
@@ -147,9 +147,9 @@ To use the `@kitajs/html` package, follow these steps:
 >
 > Try writing `console.log(<div>{String.name}</div>);` in your editor. If it **THROWS** a
 > `XSS` error, then your setup is correct. Refer to the
-> [@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository for more
-> details on setting up editor intellisense. _(It should throw, as `String.name` has a
-> type of `string`, type which may or may not have special caracters)_
+> [@kitajs/ts-html-plugin](https://github.com/kitajs/html/tree/master/packages/ts-html-plugin)
+> repository for more details on setting up editor intellisense. _(It should throw, as
+> `String.name` has a type of `string`, type which may or may not have special caracters)_
 
 <br />
 <br />
@@ -173,8 +173,9 @@ Always use the `safe` attribute or manually call `Html.escapeHtml` to protect ag
 vulnerabilities when rendering user input.
 
 Ensuring XSS prevention is vital to guarantee your application's security. You can employ
-the [`@kitajs/ts-html-plugin`](https://github.com/kitajs/ts-html-plugin) to catch XSS
-issues in your code editor and enhance your code's security.
+the
+[`@kitajs/ts-html-plugin`](https://github.com/kitajs/html/tree/master/packages/ts-html-plugin)
+to catch XSS issues in your code editor and enhance your code's security.
 
 <br />
 
@@ -267,17 +268,18 @@ where it's needed.
 ## Editor Intellisense and CLI tool
 
 <p align="center">
-  <img align="center" src="https://github.com/kitajs/ts-html-plugin/blob/main/assets/preview.png?raw=true" alt="Example of an error thrown by @kitajs/ts-html-plugin." width="75%" />
+  <img align="center" src="https://github.com/kitajs/html/tree/master/packages/ts-html-plugin/blob/main/assets/preview.png?raw=true" alt="Example of an error thrown by @kitajs/ts-html-plugin." width="75%" />
 </p>
 
 <h2>⚠️</h2>
 
 **Note:** This section has been relocated to the
-[@kitajs/ts-html-plugin](https://github.com/kitajs/ts-html-plugin) repository.
+[@kitajs/ts-html-plugin](https://github.com/kitajs/html/tree/master/packages/ts-html-plugin)
+repository.
 
 Please consult their
-"[Getting Started](https://github.com/kitajs/ts-html-plugin#getting-started)" section for
-instructions on enabling editor IntelliSense and using the CLI tool.
+"[Getting Started](https://github.com/kitajs/html/tree/master/packages/ts-html-plugin#getting-started)"
+section for instructions on enabling editor IntelliSense and using the CLI tool.
 
 <br />
 <br />

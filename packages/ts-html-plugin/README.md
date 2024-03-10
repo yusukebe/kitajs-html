@@ -17,11 +17,11 @@
 <br />
 
 <div align="center">
-  <a title="MIT license" target="_blank" href="https://github.com/kitajs/ts-html-plugin/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/kitajs/ts-html-plugin"></a>
+  <a title="MIT license" target="_blank" href="https://github.com/kitajs/html/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/kitajs/html"></a>
   <a title="NPM Package" target="_blank" href="https://www.npmjs.com/package/@kitajs/ts-html-plugin"><img alt="Downloads" src="https://img.shields.io/npm/dw/@kitajs/ts-html-plugin?style=flat"></a>
   <a title="Bundle size" target="_blank" href="https://bundlephobia.com/package/@kitajs/ts-html-plugin@latest"><img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/@kitajs/ts-html-plugin/latest?style=flat"></a>
-  <a title="Last Commit" target="_blank" href="https://github.com/kitajs/ts-html-plugin/commits/master"><img alt="Last commit" src="https://img.shields.io/github/last-commit/kitajs/ts-html-plugin"></a>
-  <a href="https://github.com/kitajs/ts-html-plugin/stargazers"><img src="https://img.shields.io/github/stars/kitajs/ts-html-plugin?logo=github&label=Stars" alt="Stars"></a>
+  <a title="Last Commit" target="_blank" href="https://github.com/kitajs/html/commits/master"><img alt="Last commit" src="https://img.shields.io/github/last-commit/kitajs/html"></a>
+  <a href="https://github.com/kitajs/html/stargazers"><img src="https://img.shields.io/github/stars/kitajs/html?logo=github&label=Stars" alt="Stars"></a>
 </div>
 
 <br />

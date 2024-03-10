@@ -19,7 +19,6 @@ afterEach(() => {
   assert.equal(SUSPENSE_ROOT.requests.size, 0, 'Suspense root left pending requests');
 
   // Reset suspense root
-  SUSPENSE_ROOT.enabled = false;
   SUSPENSE_ROOT.autoScript = true;
   SUSPENSE_ROOT.requestCounter = 1;
   SUSPENSE_ROOT.requests.clear();
@@ -569,22 +568,9 @@ describe('Suspense', () => {
     assert.equal(
       await renderToString((r) => (
         //@ts-expect-error - testing invalid children
-        <Suspense rid={r} fallback={<div>1</div>} />
+        <Suspense rid={r} fallback={<div>1</div>}></Suspense>
       )),
       ''
-    );
-  });
-
-  it('throws if no stream is used', () => {
-    SUSPENSE_ROOT.enabled = true;
-
-    assert.throws(
-      () => (
-        <Suspense rid={1} fallback={'1'}>
-          {Promise.resolve(2)}
-        </Suspense>
-      ),
-      /Request data was deleted before all suspense components were resolved./
     );
   });
 
@@ -600,7 +586,9 @@ describe('Suspense', () => {
         <div id="B:1" data-sf>
           <div>1</div>
         </div>
+
         {SuspenseScript}
+
         <template id="N:1" data-sr>
           <div>2</div>
         </template>
@@ -884,17 +872,31 @@ describe('Suspense', () => {
 });
 
 describe('Suspense errors', () => {
-  it('Throws when called outside of renderToStream', () => {
-    assert.throws(
-      () => (
-        <>
-          <Suspense rid={1} fallback={<div>loading</div>}>
-            <div>1</div>
-          </Suspense>
-        </>
-      ),
-      /Cannot use Suspense outside of a `renderToStream` call./
-    );
+  it('Leaks if rendered outside of renderToStream', () => {
+    try {
+      const outside = (
+        <Suspense rid={1} fallback={'1'}>
+          {Promise.resolve(2)}
+        </Suspense>
+      );
+
+      assert.equal(
+        outside,
+        <div id="B:1" data-sf>
+          1
+        </div>
+      );
+
+      const requestData = SUSPENSE_ROOT.requests.get(1);
+
+      assert.equal(requestData?.running, 1);
+      assert.equal(requestData?.sent, false);
+    } finally {
+      assert.ok(SUSPENSE_ROOT.requests.has(1));
+
+      // cleans up
+      SUSPENSE_ROOT.requests.delete(1);
+    }
   });
 
   it('tests sync errors are thrown', async () => {

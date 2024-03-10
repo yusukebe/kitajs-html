@@ -7,12 +7,7 @@ const app = fastify();
 app.register(fastifyKitaHtml);
 
 app.register(fastifyKitaHtml, {
-  autoDetect: true,
-  autoDoctype: true,
-  contentType: 'text/html; charset=utf-8',
-  isHtml(value) {
-    return value.length > 0;
-  }
+  autoDoctype: true
 });
 
 app.get('/', async (_, reply) => {
@@ -24,15 +19,15 @@ app.get('/jsx', async (_, reply) => {
 });
 
 app.get('/stream', async (_, reply) => {
-  reply.streamHtml('<div>hello world</div>');
+  reply.html('<div>hello world</div>');
 });
 
 app.get('/stream/jsx', async (_, reply) => {
-  reply.streamHtml(<div>hello world</div>);
+  reply.html(<div>hello world</div>);
 });
 
 app.get('/stream/suspense', async (request, reply) => {
-  reply.streamHtml(
+  reply.html(
     <Suspense rid={request.id} fallback={<div>fallback</div>}>
       {Promise.resolve(1)}
     </Suspense>

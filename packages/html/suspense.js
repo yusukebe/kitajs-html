@@ -1,4 +1,4 @@
-const { contentsToString } = require('./index');
+const { contentsToString, contentToString } = require('./index');
 const { Readable } = require('stream');
 
 // Avoids double initialization in case this file is not cached by
@@ -8,10 +8,11 @@ if (!globalThis.SUSPENSE_ROOT) {
   globalThis.SUSPENSE_ROOT = {
     requests: new Map(),
     requestCounter: 1,
-    enabled: false,
     autoScript: true
   };
 }
+
+function noop() {}
 
 /**
  * Simple IE11 compatible replace child scripts to replace the template streamed by the
@@ -79,23 +80,13 @@ const SuspenseScript = /* html */ `
 
 /** @type {import('./suspense').Suspense} */
 function Suspense(props) {
-  // There's no actual way of knowing if this component is being
-  // rendered inside a renderToString call, so we have to rely on
-  // this simple check: If the First Suspense render is called without
-  // `enabled` being true, it means no renderToString was called before.
-  // This is not 100% accurate, but it's the best estimation we can do.
-  if (!SUSPENSE_ROOT.enabled) {
-    throw new Error('Cannot use Suspense outside of a `renderToStream` call.');
-  }
+  // Always will be a single children because multiple
+  // root tags aren't a valid JSX syntax
+  const fallback = contentToString(props.fallback);
 
-  // fallback may be async.
-  const fallback = contentsToString([props.fallback]);
-
-  if (!props.children) {
-    return '';
-  }
-
-  const children = contentsToString([props.children]);
+  const children = Array.isArray(props.children)
+    ? contentsToString(props.children)
+    : contentToString(props.children);
 
   // Returns content if it's not a promise
   if (typeof children === 'string') {
@@ -106,12 +97,19 @@ function Suspense(props) {
     throw new Error('Suspense requires a `rid` to be specified.');
   }
 
-  const data = SUSPENSE_ROOT.requests.get(props.rid);
+  let data = SUSPENSE_ROOT.requests.get(props.rid);
 
   if (!data) {
-    throw new Error(
-      'Request data was deleted before all suspense components were resolved.'
-    );
+    // Creating the request data lazily allows
+    // faster render() calls when no suspense
+    // components are used.
+    data = {
+      stream: new Readable({ read: noop, emitClose: true }),
+      running: 0,
+      sent: false
+    };
+
+    SUSPENSE_ROOT.requests.set(props.rid, data);
   }
 
   // Gets the current run number for this request
@@ -130,7 +128,7 @@ function Suspense(props) {
 
       let html;
 
-      // unwraps error handler
+      // Unwraps error handler
       if (typeof props.catch === 'function') {
         html = props.catch(error);
       } else {
@@ -189,7 +187,7 @@ function Suspense(props) {
       !SUSPENSE_ROOT.requests.has(props.rid) ||
       // just to typecheck
       !data ||
-      // Stream was probably already closed/cleared out.
+      // Stream was already closed/cleared out.
       data.stream.closed
     ) {
       return;
@@ -211,48 +209,8 @@ function Suspense(props) {
   }
 }
 
-// the real reason this is a extra function is because fastify-html-plugin and
-// future plugins may want to reuse streams and this function avoids forcing
-// them to reimplement the suspense logic.
-/** @type {import('./suspense').pipeHtml} */
-async function pipeHtml(html, stream, rid) {
-  try {
-    // When the HTML is a string, it means there were no other async components
-    // or async Suspense's fallbacks. We can just pipe the HTML to the stream
-    // and try to close it.
-    if (typeof html === 'string') {
-      stream.push(html);
-      return;
-    }
-
-    stream.push(await html);
-  } catch (error) {
-    // Emits the error down the stream or
-    // rethrows if there's no listener
-    // (default node impl always has a listener)
-
-    /* c8 ignore next 4 */
-    if (stream.emit('error', error) === false) {
-      throw error;
-    }
-  } finally {
-    const request = SUSPENSE_ROOT.requests.get(rid);
-
-    // This request data already resolved or no suspenses were used.
-    if (!request || request.running === 0) {
-      stream.push(null);
-      SUSPENSE_ROOT.requests.delete(rid);
-    }
-  }
-}
-
 /** @type {import('./suspense').renderToStream} */
-function renderToStream(factory, rid) {
-  // Enables suspense if it's not enabled yet
-  if (SUSPENSE_ROOT.enabled === false) {
-    SUSPENSE_ROOT.enabled = true;
-  }
-
+function renderToStream(html, rid) {
   if (!rid) {
     rid = SUSPENSE_ROOT.requestCounter++;
   } else if (SUSPENSE_ROOT.requests.has(rid)) {
@@ -260,27 +218,62 @@ function renderToStream(factory, rid) {
     throw new Error(`The provided Request Id is already in use: ${rid}.`);
   }
 
-  const stream = new Readable({ read() {} });
-  SUSPENSE_ROOT.requests.set(rid, { stream, running: 0, sent: false });
-
-  try {
-    // Loads the template
-    const html = factory(rid);
-
-    // Pipes the HTML to the stream
-    pipeHtml(html, stream, rid);
-
-    return stream;
-  } catch (renderError) {
-    // Could not generate even the loading template.
-    // This means a sync error was thrown and there's
-    // nothing we can do unless closing the stream
-    // and re-throwing the error.
-    stream.push(null);
-    SUSPENSE_ROOT.requests.delete(rid);
-
-    throw renderError;
+  if (typeof html === 'function') {
+    try {
+      html = html(rid);
+    } catch (error) {
+      // Avoids memory leaks by removing the request data
+      SUSPENSE_ROOT.requests.delete(rid);
+      throw error;
+    }
   }
+
+  // If no suspense component was used, this will not be defined.
+  const requestData = SUSPENSE_ROOT.requests.get(rid);
+
+  // No suspense was used, just return the HTML as a stream
+  if (!requestData) {
+    if (typeof html === 'string') {
+      return Readable.from([html]);
+    }
+
+    const readable = new Readable({ read: noop });
+
+    html.then(
+      (result) => {
+        readable.push(result);
+        readable.push(null); // self closes
+      },
+      (error) => {
+        // stream.emit returns true if there's a listener
+        // Nothing else to do if no catch or listener was found
+        /* c8 ignore next 3 */
+        if (readable.emit('error', error) === false) {
+          console.error(error);
+        }
+      }
+    );
+
+    return readable;
+  }
+
+  if (typeof html === 'string') {
+    requestData.stream.push(html);
+  } else {
+    html.then(
+      (html) => requestData.stream.push(html),
+      (error) => {
+        /* c8 ignore next 6 */
+        // stream.emit returns true if there's a listener
+        // Nothing else to do if no catch or listener was found
+        if (requestData.stream.emit('error', error) === false) {
+          console.error(error);
+        }
+      }
+    );
+  }
+
+  return requestData.stream;
 }
 
 /** @type {import('./suspense').renderToString} */
@@ -295,7 +288,6 @@ async function renderToString(factory, rid) {
 }
 
 module.exports.Suspense = Suspense;
-module.exports.pipeHtml = pipeHtml;
 module.exports.renderToStream = renderToStream;
 module.exports.renderToString = renderToString;
 module.exports.SuspenseScript = SuspenseScript;

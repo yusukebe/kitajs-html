@@ -1,4 +1,6 @@
 /// <reference path="./jsx.d.ts" />
+/// <reference types="./suspense.d.ts" />
+/// <reference types="./error-boundary.d.ts" />
 
 const ESCAPED_REGEX = /[<"'&]/;
 const CAMEL_REGEX = /[a-z][A-Z]/;

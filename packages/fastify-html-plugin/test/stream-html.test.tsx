@@ -12,7 +12,6 @@ import assert from 'node:assert';
 import { afterEach, describe, test } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 import { fastifyKitaHtml } from '..';
-import { CONTENT_TYPE_VALUE } from '../lib/constants';
 
 async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {
   await setTimeout(ms * 2);
@@ -25,7 +24,6 @@ describe('Suspense', () => {
     assert.equal(SUSPENSE_ROOT.requests.size, 0, 'Suspense root left pending resources');
 
     // Reset suspense root
-    SUSPENSE_ROOT.enabled = false;
     SUSPENSE_ROOT.autoScript = true;
     SUSPENSE_ROOT.requestCounter = 1;
     SUSPENSE_ROOT.requests.clear();
@@ -35,13 +33,13 @@ describe('Suspense', () => {
     await using app = fastify();
     app.register(fastifyKitaHtml);
 
-    app.get('/', (_, res) => res.streamHtml(<div />));
+    app.get('/', (_, res) => res.html(<div />));
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
     assert.strictEqual(res.body, '<div></div>');
+    assert.strictEqual(res.statusCode, 200);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
   });
 
   test('Suspense sync children', async () => {
@@ -49,7 +47,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={<div>1</div>}>
           <div>2</div>
         </Suspense>
@@ -58,9 +56,9 @@ describe('Suspense', () => {
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
     assert.strictEqual(res.body, '<div>2</div>');
+    assert.strictEqual(res.statusCode, 200);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
   });
 
   test('Suspense async children', async () => {
@@ -68,7 +66,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={<div>1</div>}>
           <SleepForMs ms={2} />
         </Suspense>
@@ -78,7 +76,7 @@ describe('Suspense', () => {
     const res = await app.inject({ method: 'GET', url: '/' });
 
     assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
     assert.strictEqual(
       res.body,
       <>
@@ -103,7 +101,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={<div>1</div>}>
           <SleepForMs ms={2} />
         </Suspense>
@@ -113,7 +111,7 @@ describe('Suspense', () => {
     const res = await app.inject({ method: 'GET', url: '/' });
 
     assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
     assert.strictEqual(
       res.body,
       <>
@@ -138,7 +136,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={Promise.resolve(<div>1</div>)}>
           <div>2</div>
         </Suspense>
@@ -147,9 +145,9 @@ describe('Suspense', () => {
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
     assert.strictEqual(res.body, '<div>2</div>');
+    assert.strictEqual(res.statusCode, 200);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
   });
 
   test('Multiple async renders cleanup', async () => {
@@ -157,7 +155,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={Promise.resolve(<div>1</div>)}>
           <SleepForMs ms={2} />
         </Suspense>
@@ -170,7 +168,7 @@ describe('Suspense', () => {
       promises.push(
         app.inject({ method: 'GET', url: '/' }).then((res) => {
           assert.strictEqual(res.statusCode, 200);
-          assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+          assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
           assert.strictEqual(
             res.body,
             <>
@@ -200,7 +198,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={Promise.resolve(<div>1</div>)}>
           <SleepForMs ms={2} />
         </Suspense>
@@ -210,7 +208,7 @@ describe('Suspense', () => {
     for (let i = 0; i < 10; i++) {
       const res = await app.inject({ method: 'GET', url: '/' });
       assert.strictEqual(res.statusCode, 200);
-      assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+      assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
       assert.strictEqual(
         res.body,
         <>
@@ -236,7 +234,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <div>
           <Suspense rid={req.id} fallback={<div>1</div>}>
             <SleepForMs ms={4} />
@@ -256,7 +254,7 @@ describe('Suspense', () => {
     const res = await app.inject({ method: 'GET', url: '/' });
 
     assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
 
     assert.strictEqual(
       res.body,
@@ -307,7 +305,7 @@ describe('Suspense', () => {
       const seconds = (req.query as { seconds: number }).seconds;
       res.header('seconds', seconds);
 
-      return res.streamHtml(
+      return res.html(
         <div>
           {Array.from({ length: seconds }, (_, i) => (
             <Suspense rid={req.id} fallback={<div>{seconds - i} loading</div>}>
@@ -334,7 +332,7 @@ describe('Suspense', () => {
       const seconds = +result.headers.seconds!;
 
       assert.strictEqual(result.statusCode, 200);
-      assert.strictEqual(result.headers['content-type'], CONTENT_TYPE_VALUE);
+      assert.strictEqual(result.headers['content-type'], 'text/html; charset=utf-8');
       assert.strictEqual(
         result.body,
         <>
@@ -363,35 +361,12 @@ describe('Suspense', () => {
     }
   });
 
-  test('throws if used outside of streamHtml', async () => {
-    await using app = fastify();
-    app.register(fastifyKitaHtml);
-
-    app.get('/', (_, res) =>
-      res.html(
-        <Suspense rid={1} fallback={'1'}>
-          {Promise.resolve(2)}
-        </Suspense>
-      )
-    );
-
-    const res = await app.inject({ method: 'GET', url: '/' });
-
-    assert.strictEqual(res.statusCode, 500);
-    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
-    assert.deepStrictEqual(res.json(), {
-      statusCode: 500,
-      error: 'Internal Server Error',
-      message: 'Request data was deleted before all suspense components were resolved.'
-    });
-  });
-
   test('works with parallel deep suspense calls resolving first', async (t) => {
     await using app = fastify();
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <div>
           {Array.from({ length: 5 }, (_, i) => (
             <Suspense rid={req.id} fallback={<div>{i} fb outer</div>}>
@@ -413,7 +388,7 @@ describe('Suspense', () => {
     const res = await app.inject({ method: 'GET', url: '/' });
 
     assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
 
     await t.test('Html stream', () => {
       assert.strictEqual(
@@ -555,7 +530,7 @@ describe('Suspense', () => {
     app.register(fastifyKitaHtml);
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense rid={req.id} fallback={<div>1</div>}>
           {Promise.reject(new Error('component failed'))}
         </Suspense>
@@ -578,7 +553,7 @@ describe('Suspense', () => {
     const err = new Error('component failed');
 
     app.get('/', (req, res) =>
-      res.streamHtml(
+      res.html(
         <Suspense
           rid={req.id}
           fallback={<div>1</div>}
@@ -595,7 +570,7 @@ describe('Suspense', () => {
     const res = await app.inject({ method: 'GET', url: '/' });
 
     assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
     assert.strictEqual(
       res.body,
       <>

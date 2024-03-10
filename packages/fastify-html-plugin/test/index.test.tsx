@@ -3,7 +3,6 @@ import assert from 'node:assert';
 import test, { describe } from 'node:test';
 import { setImmediate } from 'node:timers/promises';
 import { fastifyKitaHtml } from '..';
-import { CONTENT_TYPE_VALUE } from '../lib/constants';
 
 describe('reply.html()', () => {
   test('renders html', async () => {
@@ -14,9 +13,9 @@ describe('reply.html()', () => {
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
     assert.strictEqual(res.body, '<div>Hello from JSX!</div>');
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
+    assert.strictEqual(res.statusCode, 200);
   });
 
   test('renders async html', async () => {
@@ -29,9 +28,9 @@ describe('reply.html()', () => {
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 200);
-    assert.strictEqual(res.headers['content-type'], CONTENT_TYPE_VALUE);
     assert.strictEqual(res.body, '<div>Hello from async JSX!</div>');
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8');
+    assert.strictEqual(res.statusCode, 200);
   });
 
   test('fails when html is not a string', async () => {
@@ -45,14 +44,12 @@ describe('reply.html()', () => {
 
     const res = await app.inject({ method: 'GET', url: '/' });
 
-    assert.strictEqual(res.statusCode, 500);
     assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
+    assert.strictEqual(res.statusCode, 500);
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
-      code: 'ERR_INVALID_ARG_TYPE',
       error: 'Internal Server Error',
-      message:
-        'The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received type number (12345)'
+      message: 'htmlStr.then is not a function'
     });
   });
 
@@ -71,10 +68,8 @@ describe('reply.html()', () => {
     assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
-      code: 'ERR_INVALID_ARG_TYPE',
       error: 'Internal Server Error',
-      message:
-        'The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received type number (12345)'
+      message: 'htmlStr.then is not a function'
     });
   });
 });

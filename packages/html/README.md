@@ -77,7 +77,7 @@
 
 ## Preview
 
-<img align="center" src="assets/preview.png" alt="Example of an error thrown by this LSP plugin." />
+<img align="center" src="assets/preview.png" alt="Sample of generating html tags with jsx syntax." />
 
 <br />
 
@@ -133,7 +133,8 @@ To use the `@kitajs/html` package, follow these steps:
    // .vscode/settings.json
 
    {
-     "typescript.tsdk": "node_modules/typescript/lib"
+     "typescript.tsdk": "node_modules/typescript/lib",
+     "typescript.enablePromptUseWorkspaceTsdk": true
    }
    ```
 
@@ -268,7 +269,7 @@ where it's needed.
 ## Editor Intellisense and CLI tool
 
 <p align="center">
-  <img align="center" src="https://github.com/kitajs/html/tree/master/packages/ts-html-plugin/blob/main/assets/preview.png?raw=true" alt="Example of an error thrown by @kitajs/ts-html-plugin." width="75%" />
+  <img align="center" src="../ts-html-plugin/assets/preview.png" alt="Example of an error thrown by @kitajs/ts-html-plugin." width="75%" />
 </p>
 
 <h2>⚠️</h2>

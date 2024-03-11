@@ -170,7 +170,8 @@ current project's typescript version.
 // .vscode/settings.json
 
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
 ```
 

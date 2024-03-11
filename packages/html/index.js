@@ -613,10 +613,10 @@ const Html = {
  *
  * - `const Html = require('@kitajs/html')`
  * - `const { Html } = require('@kitajs/html')`
- * - `import * as Fastify from '@kitajs/html'`
- * - `import { Html, TSC_definition } from '@kitajs/html'`
+ * - `import * as Html from '@kitajs/html'`
+ * - `import { Html, type ComponentWithChildren } from '@kitajs/html'`
  * - `import Html from '@kitajs/html'`
- * - `import Html, { TSC_definition } from '@kitajs/html'`
+ * - `import Html, { type ComponentWithChildren } from '@kitajs/html'`
  */
 module.exports = Html;
 module.exports.Html = Html;

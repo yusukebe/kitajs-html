@@ -104,7 +104,7 @@ function Suspense(props) {
     // faster render() calls when no suspense
     // components are used.
     data = {
-      stream: new Readable({ read: noop, emitClose: true }),
+      stream: new Readable({ read: noop }),
       running: 0,
       sent: false
     };

@@ -2,50 +2,54 @@ import KitaHtmlJSXRuntimeRenderers from '@kitajs/bench-html-kitajs';
 import ReactJSXRuntimeRenderers from '@kitajs/bench-html-reactjsx';
 import StringTemplateRenderers from '@kitajs/bench-html-templates';
 import TypedHtmlRenderers from '@kitajs/bench-html-typed-html';
+import VHtmlRenderers from '@kitajs/bench-html-vhtml';
 
 import CommonTags from 'common-tags';
 import * as gHtml from 'ghtml';
 import ReactDOMServer from 'react-dom/server';
 
+import { minify } from 'html-minifier';
 import assert from 'node:assert';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import prettier from 'prettier';
 
-export function assertHtml() {
-  // ENSURE THAT ALL RENDERERS PRODUCE THE SAME OUTPUT AGAINST KITAJS/HTML
-  // Ensures that Kitajs/html and react produce the same output
-  assert.equal(
-    KitaHtmlJSXRuntimeRenderers.ManyComponents('Hello World!'),
-    ReactDOMServer.renderToStaticMarkup(
-      ReactJSXRuntimeRenderers.ManyComponents('Hello World!')
-    )
-  );
+const MINIFY_OPTIONS = {
+  collapseWhitespace: true,
+  removeComments: true,
+  html5: true
+};
 
-  // Ensures that Kitajs/html and common-tags produce the same output
-  assert.equal(
-    KitaHtmlJSXRuntimeRenderers.ManyComponents('Hello World!'),
-    // Simply removes spaces and newlines
-    StringTemplateRenderers.TemplateManyComponents(CommonTags.html, 'Hello World!')
-      .split('\n')
-      .map((l) => l.trim())
-      .join('')
-  );
+const NAME_VAR = 'Arthur Fiorette';
 
-  // Ensures that Kitajs/html and ghtml produce the same output
-  assert.equal(
-    KitaHtmlJSXRuntimeRenderers.ManyComponents('Hello World!'),
-    // Simply removes spaces and newlines
-    StringTemplateRenderers.TemplateManyComponents(gHtml.html, 'Hello World!')
-      .split('\n')
-      .map((l) => l.trim())
-      .join('')
-  );
+mkdirSync('./samples', { recursive: true });
 
-  // Kitajs/html and typed html does produces the same output, however typed-html appends spaces between tags
-  assert.equal(
-    KitaHtmlJSXRuntimeRenderers.ManyComponents('Hello World!'),
-    // Simply removes spaces and newlines
-    TypedHtmlRenderers.ManyComponents('Hello World!')
-      .toString()
-      .replace(/< \//g, '</')
-      .replace(/\n/g, '')
+function saveHtml(name, code) {
+  return (
+    prettier
+      // minifies and format to ensure consistency
+      .format(minify(code, MINIFY_OPTIONS), { parser: 'html' })
+      .then((code) => writeFileSync('./samples/' + name + '.html', code))
+      .then(() => console.log('Saved ' + name + '.html sample file.'))
   );
 }
+
+// Ensures that Kitajs/html and react produce the same output
+assert.equal(
+  KitaHtmlJSXRuntimeRenderers.RealWorldPage(NAME_VAR),
+  ReactDOMServer.renderToStaticMarkup(ReactJSXRuntimeRenderers.RealWorldPage(NAME_VAR))
+);
+
+await Promise.all([
+  saveHtml(
+    'react',
+    ReactDOMServer.renderToStaticMarkup(ReactJSXRuntimeRenderers.RealWorldPage(NAME_VAR))
+  ),
+  saveHtml('kitajs', KitaHtmlJSXRuntimeRenderers.RealWorldPage(NAME_VAR)),
+  saveHtml('typed-html', TypedHtmlRenderers.RealWorldPage(NAME_VAR)),
+  saveHtml('vhtml', VHtmlRenderers.RealWorldPage(NAME_VAR)),
+  saveHtml(
+    'common-tags',
+    StringTemplateRenderers.RealWorldPage(CommonTags.html, NAME_VAR).replace(/!/g, '')
+  ),
+  saveHtml('ghtml', StringTemplateRenderers.RealWorldPage(gHtml.html, NAME_VAR))
+]);

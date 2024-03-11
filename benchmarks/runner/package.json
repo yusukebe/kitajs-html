@@ -7,10 +7,13 @@
   "dependencies": {
     "@kitajs/bench-html-kitajs": "workspace:*",
     "@kitajs/bench-html-reactjsx": "workspace:*",
+    "@kitajs/bench-html-react": "workspace:*",
     "@kitajs/bench-html-templates": "workspace:*",
     "@kitajs/bench-html-typed-html": "workspace:*",
+    "@kitajs/bench-html-vhtml": "workspace:*",
     "common-tags": "^1.8.2",
     "ghtml": "^1.0.1",
+    "html-minifier": "^4.0.0",
     "mitata": "^0.1.11",
     "react-dom": "^18.2.0"
   }

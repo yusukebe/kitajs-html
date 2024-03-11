@@ -1,11 +1,10 @@
-const purchases = Array.from({ length: 10000 }, (_, i) => ({
-  id: i + 1,
+const purchases = Array.from({ length: 1000 }, (_, i) => ({
   name: `Item ${i + 1}`,
-  price: Math.random() * 10,
-  quantity: Math.floor(Math.random() * 10) + 1
+  price: i * 2,
+  quantity: i * 5
 }));
 
-function Purchase({ id, name, price, quantity }) {
+function Purchase({ name, price, quantity }) {
   return (
     <div className="purchase purchase-card">
       <div className="purchase-name">{name}</div>
@@ -147,7 +146,6 @@ export function RealWorldPage(name: string) {
           {purchases.map((purchase, index) => (
             <Purchase
               key={index}
-              id={purchase.id}
               name={purchase.name}
               price={purchase.price}
               quantity={purchase.quantity}

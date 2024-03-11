@@ -1,4 +1,4 @@
-import * as elements from 'typed-html';
+import * as React from 'react'
 
 const purchases = Array.from({ length: 1000 }, (_, i) => ({
   name: `Item ${i + 1}`,
@@ -8,15 +8,15 @@ const purchases = Array.from({ length: 1000 }, (_, i) => ({
 
 function Purchase({ name, price, quantity }) {
   return (
-    <div class="purchase purchase-card">
-      <div class="purchase-name">{name}</div>
-      <div class="purchase-price">{price}</div>
-      <div class="purchase-quantity">{quantity}</div>
+    <div className="purchase purchase-card">
+      <div className="purchase-name">{name}</div>
+      <div className="purchase-price">{price}</div>
+      <div className="purchase-quantity">{quantity}</div>
     </div>
   );
 }
 
-function Layout({ children, head }: any) {
+function Layout({ children, head }) {
   return (
     <html lang="en">
       <head>{head}</head>
@@ -51,11 +51,11 @@ function Head({ title }) {
 
 function Header({ name }) {
   return (
-    <header class="header">
-      <h1 class="header-title">Hello {name}</h1>
-      <nav class="header-nav">
-        <ul class="header-ul">
-          <li class="header-item">
+    <header className="header">
+      <h1 className="header-title">Hello {name}</h1>
+      <nav className="header-nav">
+        <ul className="header-ul">
+          <li className="header-item">
             <a href="/">Home</a>
           </li>
           <li>
@@ -69,12 +69,12 @@ function Header({ name }) {
 
 function Footer({ name }) {
   return (
-    <footer class="footer">
-      <p class="footer-year">
+    <footer className="footer">
+      <p className="footer-year">
         © {new Date().getFullYear()} {name}
       </p>
 
-      <p class="footer">
+      <p className="footer">
         <a href="/terms">Terms</a>
         <a href="/privacy">Privacy</a>
       </p>
@@ -82,11 +82,11 @@ function Footer({ name }) {
   );
 }
 
-function Main({ children, name }: any) {
+function Main({ children, name }) {
   return (
     <div>
       <Header name={name} />
-      <main class="main-content">{children}</main>
+      <main className="main-content">{children}</main>
       <Footer name={name} />
     </div>
   );
@@ -94,23 +94,23 @@ function Main({ children, name }: any) {
 
 function UserProfile({ name }) {
   return (
-    <section class="user-profile">
-      <h2 class="user-profile title">User Profile</h2>
-      <p class="user-profile name">Name: {name}</p>
-      <p class="user-profile info">Email: example@example.com</p>
-      <p class="user-profile info">Address: 123 Main St, City, Country</p>
-      <p class="user-profile info">Phone: 123-456-7890</p>
+    <section className="user-profile">
+      <h2 className="user-profile title">User Profile</h2>
+      <p className="user-profile name">Name: {name}</p>
+      <p className="user-profile info">Email: example@example.com</p>
+      <p className="user-profile info">Address: 123 Main St, City, Country</p>
+      <p className="user-profile info">Phone: 123-456-7890</p>
     </section>
   );
 }
 
 function Sidebar() {
   return (
-    <aside class="sidebar">
-      <h2 class="purchase title">Recent Purchases</h2>
-      <ul class="purchase list">
-        {purchases.slice(0, 3).map((purchase) => (
-          <li class="purchase-preview">
+    <aside className="sidebar">
+      <h2 className="purchase title">Recent Purchases</h2>
+      <ul className="purchase list">
+        {purchases.slice(0, 3).map((purchase, index) => (
+          <li key={index} className="purchase-preview">
             {purchase.name} - ${purchase.price.toFixed(2)}
           </li>
         ))}
@@ -121,15 +121,15 @@ function Sidebar() {
 
 function PageContent() {
   return (
-    <div class="page-content">
-      <h2 class="title mb-4 h2">Welcome to our store</h2>
-      <p class="p text mb-0">
+    <div className="page-content">
+      <h2 className="title mb-4 h2">Welcome to our store</h2>
+      <p className="p text mb-0">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis magna id
         dolor ultricies, eget pretium ligula sodales. Cras sit amet turpis nec lacus
         blandit placerat. Sed vestibulum est sit amet enim ultrices rutrum. Vivamus in
         nulla vel nunc interdum vehicula.
       </p>
-      <p class="p text mb-0">
+      <p className="p text mb-0">
         Pellentesque efficitur tellus id velit vehicula laoreet. Proin et neque ac dolor
         hendrerit elementum. Fusce auctor metus non ligula tincidunt, id gravida odio
         sollicitudin.
@@ -144,9 +144,10 @@ export function RealWorldPage(name: string) {
       <Main name={name}>
         <h2>Purchases</h2>
 
-        <div class="purchases">
-          {purchases.map((purchase) => (
+        <div className="purchases">
+          {purchases.map((purchase, index) => (
             <Purchase
+              key={index}
               name={purchase.name}
               price={purchase.price}
               quantity={purchase.quantity}

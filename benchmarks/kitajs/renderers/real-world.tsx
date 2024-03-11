@@ -1,16 +1,21 @@
-const purchases = Array.from({ length: 10000 }, (_, i) => ({
-  id: i + 1,
+const purchases = Array.from({ length: 1000 }, (_, i) => ({
   name: `Item ${i + 1}`,
-  price: Math.random() * 10,
-  quantity: Math.floor(Math.random() * 10) + 1
+  price: i * 2,
+  quantity: i * 5
 }));
 
-function Purchase({ id, name, price, quantity }) {
+function Purchase({ name, price, quantity }) {
   return (
     <div class="purchase purchase-card">
-      <div class="purchase-name">{name}</div>
-      <div class="purchase-price">{price}</div>
-      <div class="purchase-quantity">{quantity}</div>
+      <div class="purchase-name" safe>
+        {name}
+      </div>
+      <div class="purchase-price" safe>
+        {price}
+      </div>
+      <div class="purchase-quantity" safe>
+        {quantity}
+      </div>
     </div>
   );
 }
@@ -27,7 +32,7 @@ function Layout({ children, head }) {
 function Head({ title }) {
   return (
     <div>
-      <title>{title}</title>
+      <title safe>{title}</title>
       <meta name="description" content="A description" />
       <meta name="keywords" content="some, keywords" />
       <meta name="author" content="Some Author" />
@@ -51,7 +56,9 @@ function Head({ title }) {
 function Header({ name }) {
   return (
     <header class="header">
-      <h1 class="header-title">Hello {name}</h1>
+      <h1 class="header-title" safe>
+        Hello {name}
+      </h1>
       <nav class="header-nav">
         <ul class="header-ul">
           <li class="header-item">
@@ -69,7 +76,7 @@ function Header({ name }) {
 function Footer({ name }) {
   return (
     <footer class="footer">
-      <p class="footer-year">
+      <p class="footer-year" safe>
         © {new Date().getFullYear()} {name}
       </p>
 
@@ -95,7 +102,9 @@ function UserProfile({ name }) {
   return (
     <section class="user-profile">
       <h2 class="user-profile title">User Profile</h2>
-      <p class="user-profile name">Name: {name}</p>
+      <p class="user-profile name" safe>
+        Name: {name}
+      </p>
       <p class="user-profile info">Email: example@example.com</p>
       <p class="user-profile info">Address: 123 Main St, City, Country</p>
       <p class="user-profile info">Phone: 123-456-7890</p>
@@ -109,7 +118,7 @@ function Sidebar() {
       <h2 class="purchase title">Recent Purchases</h2>
       <ul class="purchase list">
         {purchases.slice(0, 3).map((purchase) => (
-          <li class="purchase-preview">
+          <li class="purchase-preview" safe>
             {purchase.name} - ${purchase.price.toFixed(2)}
           </li>
         ))}
@@ -146,7 +155,6 @@ export function RealWorldPage(name: string) {
         <div class="purchases">
           {purchases.map((purchase) => (
             <Purchase
-              id={purchase.id}
               name={purchase.name}
               price={purchase.price}
               quantity={purchase.quantity}

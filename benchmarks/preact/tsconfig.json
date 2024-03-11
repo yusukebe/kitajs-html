@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["renderers", "index.ts"],
+  "exclude": ["node_modules", "dist"]
+}

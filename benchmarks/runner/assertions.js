@@ -1,4 +1,6 @@
 import KitaHtmlJSXRuntimeRenderers from '@kitajs/bench-html-kitajs';
+import PreactRuntimeRenderers from '@kitajs/bench-html-preact';
+//import ReactRuntimeRenderers from '@kitajs/bench-html-react'; same as reactjsx
 import ReactJSXRuntimeRenderers from '@kitajs/bench-html-reactjsx';
 import StringTemplateRenderers from '@kitajs/bench-html-templates';
 import TypedHtmlRenderers from '@kitajs/bench-html-typed-html';
@@ -6,6 +8,7 @@ import VHtmlRenderers from '@kitajs/bench-html-vhtml';
 
 import CommonTags from 'common-tags';
 import * as gHtml from 'ghtml';
+import * as PreactRenderToString from 'preact-render-to-string';
 import ReactDOMServer from 'react-dom/server';
 
 import { minify } from 'html-minifier';
@@ -27,7 +30,26 @@ function saveHtml(name, code) {
   return (
     prettier
       // minifies and format to ensure consistency
-      .format(minify(code, MINIFY_OPTIONS), { parser: 'html' })
+      .format(minify(code, MINIFY_OPTIONS), {
+        parser: 'html',
+        arrowParens: 'always',
+        bracketSpacing: true,
+        endOfLine: 'lf',
+        insertPragma: false,
+        bracketSameLine: false,
+        jsxSingleQuote: false,
+        printWidth: 90,
+        proseWrap: 'always',
+        quoteProps: 'as-needed',
+        requirePragma: false,
+        semi: true,
+        singleQuote: true,
+        tabWidth: 2,
+        trailingComma: 'none',
+        useTabs: false,
+        vueIndentScriptAndStyle: false,
+        tsdoc: true
+      })
       .then((code) => writeFileSync('./samples/' + name + '.html', code))
       .then(() => console.log('Saved ' + name + '.html sample file.'))
   );
@@ -51,5 +73,9 @@ await Promise.all([
     'common-tags',
     StringTemplateRenderers.RealWorldPage(CommonTags.html, NAME_VAR).replace(/!/g, '')
   ),
-  saveHtml('ghtml', StringTemplateRenderers.RealWorldPage(gHtml.html, NAME_VAR))
+  saveHtml('ghtml', StringTemplateRenderers.RealWorldPage(gHtml.html, NAME_VAR)),
+  saveHtml(
+    'preact',
+    PreactRenderToString.render(PreactRuntimeRenderers.RealWorldPage(NAME_VAR))
+  )
 ]);

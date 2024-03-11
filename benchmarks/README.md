@@ -27,56 +27,68 @@ runtime: node v20.11.0 (x64-linux)
 
 benchmark        time (avg)             (min … max)       p75       p99      p999
 --------------------------------------------------- -----------------------------
-• Many Components (31.4kb)
+• Real World Scenario
 --------------------------------------------------- -----------------------------
-KitaJS/Html     120 µs/iter    (71'126 ns … 755 µs)    118 µs    417 µs    685 µs
-Typed Html      714 µs/iter     (620 µs … 1'171 µs)    736 µs  1'070 µs  1'171 µs
-VHtml         2'142 µs/iter   (1'942 µs … 2'705 µs)  2'257 µs  2'647 µs  2'705 µs
-React         4'488 µs/iter   (4'242 µs … 5'025 µs)  4'612 µs  4'999 µs  5'025 µs
-Common Tags   2'747 µs/iter   (2'493 µs … 4'639 µs)  2'832 µs  3'356 µs  4'639 µs
-Ghtml           765 µs/iter     (677 µs … 1'371 µs)    774 µs  1'135 µs  1'371 µs
+KitaJS/Html     408 µs/iter     (281 µs … 2'332 µs)    352 µs  1'508 µs  2'165 µs
+Typed Html    2'415 µs/iter   (1'817 µs … 4'154 µs)  2'744 µs  3'915 µs  4'154 µs
+VHtml         2'369 µs/iter   (1'969 µs … 3'918 µs)  2'561 µs  3'829 µs  3'918 µs
+React JSX     6'839 µs/iter   (6'015 µs … 8'172 µs)  7'356 µs  8'172 µs  8'172 µs
+Preact        1'391 µs/iter     (699 µs … 5'600 µs)  1'808 µs  4'336 µs  5'600 µs
+React         7'451 µs/iter   (6'215 µs … 9'525 µs)  8'522 µs  9'525 µs  9'525 µs
+Common Tags   3'189 µs/iter   (2'489 µs … 6'239 µs)  3'057 µs  5'891 µs  6'239 µs
+Ghtml           479 µs/iter     (331 µs … 4'512 µs)    419 µs  3'825 µs  4'386 µs
 
-summary for Many Components (31.4kb)
+summary for Real World Scenario
   KitaJS/Html
-   5.96x faster than Typed Html
-   6.39x faster than Ghtml
-   17.87x faster than VHtml
-   22.93x faster than Common Tags
-   37.45x faster than React
+   1.17x faster than Ghtml
+   3.41x faster than Preact
+   5.8x faster than VHtml
+   5.92x faster than Typed Html
+   7.81x faster than Common Tags
+   16.75x faster than React JSX
+   18.25x faster than React
 
-• Many Props (7.4kb)
+• Component Creation
 --------------------------------------------------- -----------------------------
-KitaJS/Html  17'856 ns/iter    (15'394 ns … 552 µs) 16'779 ns 40'678 ns    294 µs
-Typed Html   73'914 ns/iter    (64'472 ns … 587 µs) 69'672 ns    265 µs    480 µs
-VHtml        77'348 ns/iter    (69'187 ns … 678 µs) 73'025 ns    207 µs    491 µs
-React        67'160 ns/iter    (56'875 ns … 642 µs) 62'871 ns    231 µs    485 µs
-Common Tags  41'257 ns/iter    (36'495 ns … 620 µs) 39'047 ns 93'601 ns    415 µs
-Ghtml        41'301 ns/iter    (37'672 ns … 689 µs) 39'598 ns 80'722 ns    363 µs
+KitaJS/Html     536 µs/iter     (296 µs … 3'923 µs)    428 µs  2'849 µs  3'823 µs
+Typed Html      995 µs/iter     (698 µs … 3'244 µs)    809 µs  2'941 µs  3'244 µs
+VHtml         1'856 µs/iter   (1'400 µs … 4'045 µs)  1'863 µs  3'686 µs  4'045 µs
+React JSX     9'971 µs/iter  (8'614 µs … 11'613 µs) 10'646 µs 11'613 µs 11'613 µs
+Preact          675 µs/iter     (501 µs … 2'361 µs)    650 µs  1'597 µs  2'361 µs
+React        10'117 µs/iter  (8'876 µs … 12'153 µs) 10'776 µs 12'153 µs 12'153 µs
+Common Tags   1'879 µs/iter   (1'598 µs … 2'788 µs)  2'077 µs  2'682 µs  2'788 µs
+Ghtml           610 µs/iter     (538 µs … 1'571 µs)    606 µs  1'277 µs  1'571 µs
 
-summary for Many Props (7.4kb)
+summary for Component Creation
   KitaJS/Html
-   2.31x faster than Common Tags
-   2.31x faster than Ghtml
-   3.76x faster than React
-   4.14x faster than Typed Html
-   4.33x faster than VHtml
+   1.14x faster than Ghtml
+   1.26x faster than Preact
+   1.86x faster than Typed Html
+   3.47x faster than VHtml
+   3.51x faster than Common Tags
+   18.62x faster than React JSX
+   18.89x faster than React
 
-• MdnHomepage (66.7Kb)
+• Attributes Serialization
 --------------------------------------------------- -----------------------------
-KitaJS/Html     394 µs/iter     (296 µs … 1'720 µs)    367 µs  1'192 µs  1'581 µs
-Typed Html    2'326 µs/iter   (1'807 µs … 4'986 µs)  2'468 µs  4'637 µs  4'986 µs
-VHtml         2'411 µs/iter   (1'965 µs … 5'148 µs)  2'464 µs  5'009 µs  5'148 µs
-React         6'832 µs/iter  (6'031 µs … 10'336 µs)  7'170 µs 10'336 µs 10'336 µs
-Common Tags   2'932 µs/iter   (2'496 µs … 4'542 µs)  2'880 µs  4'452 µs  4'542 µs
-Ghtml           421 µs/iter     (325 µs … 3'123 µs)    384 µs  2'548 µs  2'897 µs
+KitaJS/Html  18'436 ns/iter    (15'586 ns … 771 µs) 17'064 ns 45'337 ns    428 µs
+Typed Html   79'452 ns/iter    (67'563 ns … 798 µs) 72'533 ns    389 µs    676 µs
+VHtml        79'088 ns/iter    (69'430 ns … 932 µs) 73'704 ns    226 µs    591 µs
+React JSX    66'936 ns/iter    (55'916 ns … 718 µs) 61'919 ns    246 µs    594 µs
+Preact       28'302 ns/iter    (22'978 ns … 934 µs) 25'721 ns 79'974 ns    483 µs
+React        66'007 ns/iter    (56'003 ns … 723 µs) 61'095 ns    228 µs    577 µs
+Common Tags  41'666 ns/iter    (36'105 ns … 741 µs) 39'027 ns    110 µs    481 µs
+Ghtml        42'447 ns/iter    (37'887 ns … 702 µs) 40'037 ns    104 µs    441 µs
 
-summary for MdnHomepage (66.7Kb)
+summary for Attributes Serialization
   KitaJS/Html
-   1.07x faster than Ghtml
-   5.91x faster than Typed Html
-   6.12x faster than VHtml
-   7.45x faster than Common Tags
-   17.35x faster than React
+   1.54x faster than Preact
+   2.26x faster than Common Tags
+   2.3x faster than Ghtml
+   3.58x faster than React
+   3.63x faster than React JSX
+   4.29x faster than VHtml
+   4.31x faster than Typed Html
 ```
 
 ## About KitaJS/Html

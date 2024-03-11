@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 const purchases = Array.from({ length: 1000 }, (_, i) => ({
   name: `Item ${i + 1}`,
   price: i * 2,

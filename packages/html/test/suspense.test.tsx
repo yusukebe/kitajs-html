@@ -221,7 +221,7 @@ describe('Suspense', () => {
     const promises = [];
 
     for (const seconds of [9, 4, 7]) {
-      promises.push(
+      const length = promises.push(
         renderToString((r) => (
           <div>
             {Array.from({ length: seconds }, (_, i) => (
@@ -232,215 +232,43 @@ describe('Suspense', () => {
           </div>
         ))
       );
+
+      //@ts-expect-error - testing invalid promises
+      promises[length - 1]!.seconds = seconds;
     }
 
     const results = await Promise.all(promises);
 
-    assert.deepEqual(results, [
-      <>
-        <div>
-          <div id="B:1" data-sf>
-            <div>9 loading</div>
-          </div>
-          <div id="B:2" data-sf>
-            <div>8 loading</div>
-          </div>
-          <div id="B:3" data-sf>
-            <div>7 loading</div>
-          </div>
-          <div id="B:4" data-sf>
-            <div>6 loading</div>
-          </div>
-          <div id="B:5" data-sf>
-            <div>5 loading</div>
-          </div>
-          <div id="B:6" data-sf>
-            <div>4 loading</div>
-          </div>
-          <div id="B:7" data-sf>
-            <div>3 loading</div>
-          </div>
-          <div id="B:8" data-sf>
-            <div>2 loading</div>
-          </div>
-          <div id="B:9" data-sf>
-            <div>1 loading</div>
-          </div>
-        </div>
+    for (const [index, result] of results.entries()) {
+      //@ts-expect-error - testing invalid promises
+      const seconds = +promises[index]!.seconds;
 
-        {SuspenseScript}
+      assert.strictEqual(
+        result,
+        <>
+          <div>
+            {Array.from({ length: seconds }, (_, i) => (
+              <div id={`B:${i + 1}`} data-sf>
+                <div>{seconds - i} loading</div>
+              </div>
+            ))}
+          </div>
 
-        <template id="N:9" data-sr>
-          1
-        </template>
-        <script id="S:9" data-ss>
-          $KITA_RC(9)
-        </script>
-        <template id="N:8" data-sr>
-          2
-        </template>
-        <script id="S:8" data-ss>
-          $KITA_RC(8)
-        </script>
-        <template id="N:7" data-sr>
-          3
-        </template>
-        <script id="S:7" data-ss>
-          $KITA_RC(7)
-        </script>
-        <template id="N:6" data-sr>
-          4
-        </template>
-        <script id="S:6" data-ss>
-          $KITA_RC(6)
-        </script>
-        <template id="N:5" data-sr>
-          5
-        </template>
-        <script id="S:5" data-ss>
-          $KITA_RC(5)
-        </script>
-        <template id="N:4" data-sr>
-          6
-        </template>
-        <script id="S:4" data-ss>
-          $KITA_RC(4)
-        </script>
-        <template id="N:3" data-sr>
-          7
-        </template>
-        <script id="S:3" data-ss>
-          $KITA_RC(3)
-        </script>
-        <template id="N:2" data-sr>
-          8
-        </template>
-        <script id="S:2" data-ss>
-          $KITA_RC(2)
-        </script>
-        <template id="N:1" data-sr>
-          9
-        </template>
-        <script id="S:1" data-ss>
-          $KITA_RC(1)
-        </script>
-      </>,
+          {SuspenseScript}
 
-      <>
-        <div>
-          <div id="B:1" data-sf>
-            <div>4 loading</div>
-          </div>
-          <div id="B:2" data-sf>
-            <div>3 loading</div>
-          </div>
-          <div id="B:3" data-sf>
-            <div>2 loading</div>
-          </div>
-          <div id="B:4" data-sf>
-            <div>1 loading</div>
-          </div>
-        </div>
-
-        {SuspenseScript}
-
-        <template id="N:4" data-sr>
-          1
-        </template>
-        <script id="S:4" data-ss>
-          $KITA_RC(4)
-        </script>
-        <template id="N:3" data-sr>
-          2
-        </template>
-        <script id="S:3" data-ss>
-          $KITA_RC(3)
-        </script>
-        <template id="N:2" data-sr>
-          3
-        </template>
-        <script id="S:2" data-ss>
-          $KITA_RC(2)
-        </script>
-        <template id="N:1" data-sr>
-          4
-        </template>
-        <script id="S:1" data-ss>
-          $KITA_RC(1)
-        </script>
-      </>,
-
-      <>
-        <div>
-          <div id="B:1" data-sf>
-            <div>7 loading</div>
-          </div>
-          <div id="B:2" data-sf>
-            <div>6 loading</div>
-          </div>
-          <div id="B:3" data-sf>
-            <div>5 loading</div>
-          </div>
-          <div id="B:4" data-sf>
-            <div>4 loading</div>
-          </div>
-          <div id="B:5" data-sf>
-            <div>3 loading</div>
-          </div>
-          <div id="B:6" data-sf>
-            <div>2 loading</div>
-          </div>
-          <div id="B:7" data-sf>
-            <div>1 loading</div>
-          </div>
-        </div>
-
-        {SuspenseScript}
-
-        <template id="N:7" data-sr>
-          1
-        </template>
-        <script id="S:7" data-ss>
-          $KITA_RC(7)
-        </script>
-        <template id="N:6" data-sr>
-          2
-        </template>
-        <script id="S:6" data-ss>
-          $KITA_RC(6)
-        </script>
-        <template id="N:5" data-sr>
-          3
-        </template>
-        <script id="S:5" data-ss>
-          $KITA_RC(5)
-        </script>
-        <template id="N:4" data-sr>
-          4
-        </template>
-        <script id="S:4" data-ss>
-          $KITA_RC(4)
-        </script>
-        <template id="N:3" data-sr>
-          5
-        </template>
-        <script id="S:3" data-ss>
-          $KITA_RC(3)
-        </script>
-        <template id="N:2" data-sr>
-          6
-        </template>
-        <script id="S:2" data-ss>
-          $KITA_RC(2)
-        </script>
-        <template id="N:1" data-sr>
-          7
-        </template>
-        <script id="S:1" data-ss>
-          $KITA_RC(1)
-        </script>
-      </>
-    ]);
+          {Array.from({ length: seconds }, (_, i) => (
+            <>
+              <template id={`N:${seconds - i}`} data-sr>
+                {i + 1}
+              </template>
+              <script id={`S:${seconds - i}`} data-ss>
+                $KITA_RC({seconds - i})
+              </script>
+            </>
+          ))}
+        </>
+      );
+    }
   });
 
   it('ensures autoScript works', async () => {
@@ -538,6 +366,7 @@ describe('Suspense', () => {
       chunks[1].toString(),
       <>
         {SuspenseScript}
+
         <template id="N:1" data-sr>
           <div>1</div>
         </template>

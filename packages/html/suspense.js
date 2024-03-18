@@ -80,10 +80,6 @@ const SuspenseScript = /* html */ `
 
 /** @type {import('./suspense').Suspense} */
 function Suspense(props) {
-  // Always will be a single children because multiple
-  // root tags aren't a valid JSX syntax
-  const fallback = contentToString(props.fallback);
-
   const children = Array.isArray(props.children)
     ? contentsToString(props.children)
     : contentToString(props.children);
@@ -166,6 +162,10 @@ function Suspense(props) {
         SUSPENSE_ROOT.requests.delete(props.rid);
       }
     });
+
+  // Always will be a single children because multiple
+  // root tags aren't a valid JSX syntax
+  const fallback = contentToString(props.fallback);
 
   // Keeps string return type
   if (typeof fallback === 'string') {

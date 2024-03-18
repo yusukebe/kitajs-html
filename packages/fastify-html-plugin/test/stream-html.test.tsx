@@ -309,7 +309,7 @@ describe('Suspense', () => {
         <div>
           {Array.from({ length: seconds }, (_, i) => (
             <Suspense rid={req.id} fallback={<div>{seconds - i} loading</div>}>
-              <SleepForMs ms={seconds - i} />
+              <SleepForMs ms={(seconds - i) * 100}>{seconds - i}</SleepForMs>
             </Suspense>
           ))}
         </div>

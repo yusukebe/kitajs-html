@@ -1,5 +1,6 @@
 {
   "name": "@kitajs/bench-html-react",
+  "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +12,7 @@
     "typescript": "^5.4.2"
   },
   "devDependencies": {
-    "@types/node": "^20.11.29",
-    "@types/react": "^18.2.64"
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.67"
   }
 }

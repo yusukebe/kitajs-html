@@ -1,5 +1,7 @@
 {
   "name": "@kitajs/bench-html-runner",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "start": "node index.js"
@@ -16,7 +18,7 @@
     "ghtml": "^1.0.1",
     "html-minifier": "^4.0.0",
     "mitata": "^0.1.11",
-    "preact-render-to-string": "^6.4.0",
+    "preact-render-to-string": "^6.4.1",
     "react-dom": "^18.2.0"
   }
 }

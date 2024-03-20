@@ -8,10 +8,13 @@
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@kitajs/bench-html-typed-html",
-    "@kitajs/bench-html-templates",
-    "@kitajs/bench-html-runner",
+    "@kitajs/bench-html-kitajs",
+    "@kitajs/bench-html-preact",
+    "@kitajs/bench-html-react",
     "@kitajs/bench-html-reactjsx",
-    "@kitajs/bench-html-kitajs"
+    "@kitajs/bench-html-runner",
+    "@kitajs/bench-html-templates",
+    "@kitajs/bench-html-typed-html",
+    "@kitajs/bench-html-vhtml"
   ]
 }

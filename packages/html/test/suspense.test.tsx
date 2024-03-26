@@ -6,7 +6,7 @@ import Html, { PropsWithChildren } from '../index';
 import { Suspense, SuspenseScript, renderToStream, renderToString } from '../suspense';
 
 async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {
-  await setTimeout(ms * 2);
+  await setTimeout(ms * 50);
   return Html.contentsToString([children || String(ms)]);
 }
 
@@ -226,7 +226,7 @@ describe('Suspense', () => {
           <div>
             {Array.from({ length: seconds }, (_, i) => (
               <Suspense rid={r} fallback={<div>{seconds - i} loading</div>}>
-                <SleepForMs ms={(seconds - i) * 100}>{seconds - i}</SleepForMs>
+                <SleepForMs ms={seconds - i}>{seconds - i}</SleepForMs>
               </Suspense>
             ))}
           </div>

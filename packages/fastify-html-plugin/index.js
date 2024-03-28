@@ -32,7 +32,7 @@ function fastifyKitaHtml(fastify, opts, next) {
       htmlStr = '<!doctype html>' + htmlStr;
     }
 
-    this.header('content-type', 'text/html; charset=utf-8');
+    this.type('text/html; charset=utf-8');
 
     // If no suspense component was used, this will not be defined.
     const requestData = SUSPENSE_ROOT.requests.get(this.request.id);

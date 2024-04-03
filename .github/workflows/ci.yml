@@ -9,11 +9,12 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    name: CI flow ${{ matrix.os }}
+    name: CI ${{ matrix.os }} Node ${{ matrix.node }}
 
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
+        node: [20]
 
     steps:
       - name: Checkout
@@ -25,7 +26,7 @@ jobs:
       - name: Setup node and restore cached dependencies
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ matrix.node }}
           cache: 'pnpm'
 
       - name: Install packages
@@ -33,9 +34,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Link build
-        run: pnpm install --frozen-lockfile
 
       - name: Test
         run: pnpm test

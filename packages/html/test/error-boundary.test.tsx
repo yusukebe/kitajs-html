@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { setTimeout } from 'timers/promises';
-import { ErrorBoundary, isTimeoutError } from '../error-boundary';
+import { ErrorBoundary, HtmlTimeout } from '../error-boundary';
 
 describe('Error Boundary', () => {
   it('should render error boundary', async () => {
@@ -68,7 +68,7 @@ describe('Error Boundary', () => {
       <>
         <ErrorBoundary
           catch={(err) => {
-            assert.ok(isTimeoutError(err));
+            assert.ok(err instanceof HtmlTimeout);
             return <div>1</div>;
           }}
           timeout={10}

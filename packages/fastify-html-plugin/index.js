@@ -3,8 +3,10 @@
 const fp = require('fastify-plugin');
 const { isTagHtml } = require('./lib/is-tag-html');
 
-// loads SUSPENSE_ROOT
-require('@kitajs/html/suspense');
+// Loads the suspense component if it wasn't already loaded
+if (!globalThis.SUSPENSE_ROOT) {
+  require('@kitajs/html/suspense');
+}
 
 /**
  * @type {import('fastify').FastifyPluginCallback<

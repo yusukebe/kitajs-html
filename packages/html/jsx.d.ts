@@ -69,7 +69,7 @@ declare namespace JSX {
      *
      * @default false
      *
-     * @see https://github.com/kitajs/html#sanitization
+     * @see https://github.com/kitajs/html/tree/master/packages/html#sanitization
      */
     safe?: undefined | boolean;
 

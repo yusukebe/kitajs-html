@@ -1,7 +1,7 @@
 'use strict';
 
 process.emitWarning(
-  'The `@kitajs/html/register` import has been DEPRECATED and will be removed in the next major version. See https://github.com/kitajs/html#deprecating-global-register',
+  'The `@kitajs/html/register` import has been DEPRECATED and will be removed in the next major version. See https://github.com/kitajs/html/tree/master/packages/html#deprecating-global-register',
   'DeprecationWarning',
   'KTHTML_DEP'
 );

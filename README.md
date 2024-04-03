@@ -32,15 +32,9 @@
 
 <br />
 
-> [!WARNING]  
-> You are browsing the `master` branch of the KitaJS Html Monorepo (`v4.0.0-next`). This
-> branch is used for development and can contain breaking changes. If you are looking for
-> the latest stable version,
-> [please switch to the `v3.1.2` branch](https://github.com/kitajs/html/tree/v3.1.2).
-
-<br />
-
 ## Packages
+
+Please go to each package's README for more information.
 
 - [@kitajs/html](./packages/html#readme)
 

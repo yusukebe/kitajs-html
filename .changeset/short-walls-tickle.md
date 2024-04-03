@@ -1,5 +1,5 @@
 ---
-'@kitajs/html': patch
+'@kitajs/html': minor
 ---
 
-add Picture tag and srcset to Source tag
+Add picture tag and srcset to Source tag

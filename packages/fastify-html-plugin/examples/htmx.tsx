@@ -3,7 +3,7 @@
 import fastifyFormbody from '@fastify/formbody';
 import { Suspense } from '@kitajs/html/suspense';
 import fastify from 'fastify';
-import { setTimeout } from 'timers/promises';
+import { setTimeout } from 'node:timers/promises';
 import { fastifyKitaHtml } from '..';
 
 const app = fastify({ logger: true });

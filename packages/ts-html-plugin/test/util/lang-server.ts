@@ -1,8 +1,8 @@
-import { ChildProcess, fork } from 'child_process';
-import { EventEmitter } from 'events';
-import { Deferred, deferred } from 'fast-defer';
-import { statSync } from 'fs';
-import path from 'path';
+import { deferred, type Deferred } from 'fast-defer';
+import { fork, type ChildProcess } from 'node:child_process';
+import { EventEmitter } from 'node:events';
+import { statSync } from 'node:fs';
+import path from 'node:path';
 import ts from 'typescript/lib/tsserverlibrary';
 
 /** All requests used in tests */
@@ -82,9 +82,9 @@ export class TSLangServer {
     this.server.on('exit', this.exitPromise.resolve);
     this.server.on('error', this.exitPromise.reject);
 
-    this.server.stdout!.setEncoding('utf-8');
+    this.server.stdout?.setEncoding('utf-8');
 
-    this.server.stdout!.on('data', (data) => {
+    this.server.stdout?.on('data', (data) => {
       const obj = JSON.parse(data.split('\n', 3)[2]);
 
       if (this.debug) {
@@ -97,7 +97,7 @@ export class TSLangServer {
         // Error is fatal, close the server
         if (!this.isClosed) {
           this.isClosed = true;
-          this.server.stdin!.end();
+          this.server.stdin?.end();
         }
       } else if (obj.type === 'event') {
         this.responseEventEmitter.emit(obj.event, obj);
@@ -109,7 +109,7 @@ export class TSLangServer {
 
   /** Opens the project, sends diagnostics request and returns the response */
   async openWithDiagnostics(content: TemplateStringsArray, ...args: any[]) {
-    const fileContent = TEST_HELPERS + '\n' + String.raw(content, ...args).trim();
+    const fileContent = `${TEST_HELPERS}\n${String.raw(content, ...args).trim()}`;
 
     if (this.debug) {
       console.log(this.strWithLineNumbers(fileContent));
@@ -147,7 +147,7 @@ export class TSLangServer {
   send(command: Omit<Requests, 'seq' | 'type'>) {
     const response = deferred<void>();
 
-    this.server.stdin!.write(this.formatCommand(command), (err) =>
+    this.server.stdin?.write(this.formatCommand(command), (err) =>
       err ? response.reject(err) : response.resolve()
     );
 
@@ -155,10 +155,9 @@ export class TSLangServer {
   }
 
   private formatCommand(command: Omit<Requests, 'seq' | 'type'>) {
-    return (
-      JSON.stringify(Object.assign({ seq: ++this.sequence, type: 'request' }, command)) +
-      '\n'
-    );
+    return `${JSON.stringify(
+      Object.assign({ seq: ++this.sequence, type: 'request' }, command)
+    )}\n`;
   }
 
   waitEvent(eventName: string) {
@@ -198,7 +197,7 @@ export class TSLangServer {
   [Symbol.asyncDispose]() {
     if (!this.isClosed) {
       this.isClosed = true;
-      this.server.stdin!.end();
+      this.server.stdin?.end();
     }
 
     return this.exitPromise;

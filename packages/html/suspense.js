@@ -1,5 +1,5 @@
 const { contentsToString, contentToString } = require('./index');
-const { Readable } = require('stream');
+const { Readable } = require('node:stream');
 
 // Avoids double initialization in case this file is not cached by
 // module bundlers.
@@ -169,11 +169,11 @@ function Suspense(props) {
 
   // Keeps string return type
   if (typeof fallback === 'string') {
-    return '<div id="B:' + run + '" data-sf>' + fallback + '</div>';
+    return `<div id="B:${run}" data-sf>${fallback}</div>`;
   }
 
   return fallback.then(function resolveCallback(resolved) {
-    return '<div id="B:' + run + '" data-sf>' + resolved + '</div>';
+    return `<div id="B:${run}" data-sf>${resolved}</div>`;
   });
 
   /**
@@ -204,7 +204,7 @@ function Suspense(props) {
     // Writes the chunk
     data.stream.push(
       // prettier-ignore
-      '<template id="N:' + run + '" data-sr>' + result + '</template><script id="S:' + run + '" data-ss>$KITA_RC(' + run + ')</script>'
+      `<template id="N:${run}" data-sr>${result}</template><script id="S:${run}" data-ss>$KITA_RC(${run})</script>`
     );
   }
 }

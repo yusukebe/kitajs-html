@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import fs from 'fs';
-import { EOL } from 'os';
-import path from 'path';
+import fs from 'node:fs';
+import { EOL } from 'node:os';
+import path from 'node:path';
 import ts from 'typescript';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -166,7 +166,7 @@ async function main() {
     files = [];
 
     for (let i = 0; i < args._.length; i++) {
-      let file = String(args._[i]);
+      const file = String(args._[i]);
 
       if (!fileExists(file)) {
         console.error(
@@ -189,7 +189,7 @@ async function main() {
   }
 
   if (!files.length) {
-    console.error((!simplified ? chalk.red : String)(`No files were found to check.`));
+    console.error((!simplified ? chalk.red : String)('No files were found to check.'));
     return process.exit(1);
   }
 

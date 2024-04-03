@@ -1,6 +1,6 @@
-import http from 'http';
-import { setTimeout } from 'timers/promises';
-import Html, { PropsWithChildren } from '../index';
+import http from 'node:http';
+import { setTimeout } from 'node:timers/promises';
+import Html, { type PropsWithChildren } from '../packages/html';
 import { Suspense, renderToStream } from '../packages/html/suspense';
 
 async function SleepForMs({ ms, children }: PropsWithChildren<{ ms: number }>) {

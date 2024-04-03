@@ -9,4 +9,4 @@ declare global {
   var Html: typeof import('./index');
 }
 
-export {};
+export type {};

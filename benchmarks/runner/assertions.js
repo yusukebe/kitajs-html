@@ -1,7 +1,7 @@
-import KitaHtmlJSXRuntimeRenderers from '@kitajs/bench-html-kitajs';
-import PreactRuntimeRenderers from '@kitajs/bench-html-preact';
 //import ReactRuntimeRenderers from '@kitajs/bench-html-react'; same as reactjsx
 import JSXTERuntimeRenderers from '@kitajs/bench-html-jsxte';
+import KitaHtmlJSXRuntimeRenderers from '@kitajs/bench-html-kitajs';
+import PreactRuntimeRenderers from '@kitajs/bench-html-preact';
 import ReactJSXRuntimeRenderers from '@kitajs/bench-html-reactjsx';
 import StringTemplateRenderers from '@kitajs/bench-html-templates';
 import TypedHtmlRenderers from '@kitajs/bench-html-typed-html';
@@ -52,8 +52,8 @@ function saveHtml(name, code) {
         vueIndentScriptAndStyle: false,
         tsdoc: true
       })
-      .then((code) => writeFileSync('./samples/' + name + '.html', code))
-      .then(() => console.log('Saved ' + name + '.html sample file.'))
+      .then((code) => writeFileSync(`./samples/${name}.html`, code))
+      .then(() => console.log(`Saved ${name}.html sample file.`))
   );
 }
 

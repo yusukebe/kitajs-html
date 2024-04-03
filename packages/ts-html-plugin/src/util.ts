@@ -1,4 +1,4 @@
-import ts, { JsxFragment } from 'typescript';
+import ts, { type JsxFragment } from 'typescript';
 import type {
   Diagnostic,
   JsxElement,
@@ -123,7 +123,6 @@ export function diagnoseJsxElement(
           !diagnostics.some((d) => d.start === safeAttribute.pos + 1 && d.file === file)
         ) {
           diagnostics.push(diagnostic(safeAttribute, 'UnusedSafe', 'Warning'));
-          continue;
         }
       }
 
@@ -354,7 +353,7 @@ export function getSafeAttribute(element: JsxOpeningElement) {
 export function proxyObject<T extends object>(obj: T): T {
   const proxy: T = Object.create(null);
 
-  for (let k of Object.keys(obj) as Array<keyof T>) {
+  for (const k of Object.keys(obj) as Array<keyof T>) {
     const x = obj[k]!;
     // @ts-expect-error - JS runtime trickery which is tricky to type tersely
     proxy[k] = (...args: Array<{}>) => x.apply(obj, args);

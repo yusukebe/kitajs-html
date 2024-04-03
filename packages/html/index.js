@@ -381,7 +381,7 @@ function contentsToString(contents, escape) {
   let result = '';
 
   for (let index = 0; index < length; index++) {
-    let content = contents[index];
+    const content = contents[index];
 
     switch (typeof content) {
       case 'string':
@@ -563,7 +563,6 @@ function compile(htmlFn, strict = true, separator = '/*\x00*/') {
     ) {
       body += html.slice(nextStart, index) + '\\`';
       nextStart = index + 1;
-      continue;
     }
   }
 

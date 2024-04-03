@@ -4,7 +4,7 @@
 //
 // This was adapted to work inside a fastify route handler.
 
-import Html, { PropsWithChildren } from '@kitajs/html';
+import Html, { type PropsWithChildren } from '@kitajs/html';
 import { Suspense, SuspenseScript } from '@kitajs/html/suspense';
 import fastify from 'fastify';
 import { JSDOM } from 'jsdom';

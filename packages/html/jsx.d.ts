@@ -230,7 +230,7 @@ declare namespace JSX {
   }
 
   interface HtmlFormTag extends HtmlTag {
-    ['accept-charset']?: undefined | string;
+    'accept-charset'?: undefined | string;
     action?: undefined | string;
     autocomplete?: undefined | string;
     enctype?: undefined | string;
@@ -359,7 +359,7 @@ declare namespace JSX {
   interface HtmlMetaTag extends HtmlTag {
     name?: undefined | string;
     property?: undefined | string;
-    ['http-equiv']?: undefined | string;
+    'http-equiv'?: undefined | string;
     content?: undefined | string;
     charset?: undefined | string;
   }

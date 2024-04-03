@@ -39,7 +39,7 @@
     "self": "file:."
   },
   "peerDependencies": {
-    "@kitajs/html": "workspace:^",
+    "@kitajs/html": "workspace:^4",
     "typescript": "^5.3.3"
   }
 }

@@ -33,14 +33,6 @@
     "tslib": "^2.6.2",
     "typescript": "^5.4.3"
   },
-  "peerDependencies": {
-    "@kitajs/ts-html-plugin": "workspace:^"
-  },
-  "peerDependenciesMeta": {
-    "@kitajs/ts-html-plugin": {
-      "optional": true
-    }
-  },
   "engines": {
     "node": ">=12"
   }

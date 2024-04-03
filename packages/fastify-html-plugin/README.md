@@ -69,8 +69,8 @@ npm install @kitajs/fastify-html-plugin
 
 > [!CAUTION]  
 > You **must have followed the `@kitajs/html`'s
-> [Installing](https://github.com/kitajs/html#installing) guide** before continuing,
-> otherwise you will be vulnerable to XSS attacks.
+> [Installing](https://github.com/kitajs/html/tree/master/packages/html#installing)
+> guide** before continuing, otherwise you will be vulnerable to XSS attacks.
 
 ```ts
 import kitaHtmlPlugin from '@kitajs/fastify-html-plugin';

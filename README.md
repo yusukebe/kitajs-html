@@ -1,4 +1,4 @@
-<p align="center">
+![image](https://github.com/kitajs/html/assets/47537704/edd85ef1-9469-475e-83f8-c6819cf2cc1b)<p align="center">
    Please consider <a href="https://github.com/sponsors/arthurfiorette" target="_blank">donating</a> to support my open source work ❤️
   <br />
   <sup>
@@ -47,5 +47,25 @@ Please go to each package's README for more information.
 ## Performance & Benchmarks
 
 See the [benchmark](./benchmarks) section for more information.
+
+<br />
+
+## Star History
+
+<a href="https://star-history.com/#kitajs/html&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kitajs/html&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kitajs/html&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kitajs/html&type=Date" />
+  </picture>
+</a>
+
+<br />
+
+## All Thanks To Our Contributors:
+
+<a href="https://github.com/kitajs/html/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kitajs/html" />
+</a>
 
 <br />

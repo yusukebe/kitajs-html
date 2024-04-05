@@ -10,7 +10,7 @@ module.exports.isTagHtml = function isTagHtml(value) {
       // remove whitespace from the start of the string
       .trimStart()
       // get the first 5 characters
-      .slice(0, 5)
+      .substring(0, 5)
       // compare to `<html`
       .toLowerCase() === '<html'
   );

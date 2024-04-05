@@ -8,58 +8,96 @@ if (!globalThis.SUSPENSE_ROOT) {
   require('@kitajs/html/suspense');
 }
 
+/** @type {import('./types/index').kAutoDoctype} */
+const kAutoDoctype = Symbol.for('fastify-kita-html.autoDoctype');
+
 /**
  * @type {import('fastify').FastifyPluginCallback<
  *   import('./types').FastifyKitaHtmlOptions
  * >}
  */
-function fastifyKitaHtml(fastify, opts, next) {
+function plugin(fastify, opts, next) {
   // Good defaults
   opts.autoDoctype ??= true;
 
+  fastify.decorateReply(kAutoDoctype, opts.autoDoctype);
   fastify.decorateReply('html', html);
 
   return next();
-
-  /** @type {import('fastify').FastifyReply['html']} */
-  function html(htmlStr) {
-    if (typeof htmlStr !== 'string') {
-      // Recursive promise handling, rejections should just rethrow
-      // just like as if it was a sync component error.
-      return htmlStr.then(html.bind(this));
-    }
-
-    // prepends doctype if the html is a full html document
-    if (opts.autoDoctype && isTagHtml(htmlStr)) {
-      htmlStr = '<!doctype html>' + htmlStr;
-    }
-
-    this.type('text/html; charset=utf-8');
-
-    // If no suspense component was used, this will not be defined.
-    const requestData = SUSPENSE_ROOT.requests.get(this.request.id);
-
-    if (!requestData) {
-      return (
-        this
-          // Nothing needs to be sent later, content length is known
-          .header('content-length', Buffer.byteLength(htmlStr))
-          .send(htmlStr)
-      );
-    }
-
-    requestData.stream.push(htmlStr);
-
-    // Content-length is optional as long as the connection is closed after the response is done
-    // https://www.rfc-editor.org/rfc/rfc7230#section-3.3.3
-
-    return this.send(requestData.stream);
-  }
 }
 
-module.exports = fp(fastifyKitaHtml, {
+/** @type {import('fastify').FastifyReply['html']} */
+function html(htmlStr) {
+  // @ts-expect-error - generics break the type inference here
+  return typeof htmlStr === 'string'
+    ? handleHtml(htmlStr, this)
+    : handleAsyncHtml(htmlStr, this);
+}
+
+/**
+ * Simple helper that can be optimized by the JS engine to avoid having async await in the
+ * main flow
+ *
+ * @template {import('fastify').FastifyReply} R
+ * @param {Promise<string>} promise
+ * @param {R} reply
+ * @returns {Promise<R>}
+ */
+async function handleAsyncHtml(promise, reply) {
+  return handleHtml(await promise, reply);
+}
+
+/**
+ * @template {import('fastify').FastifyReply} R
+ * @param {string} htmlStr
+ * @param {R} reply
+ */
+function handleHtml(htmlStr, reply) {
+  // @ts-expect-error - prepends doctype if the html is a full html document
+  if (reply[kAutoDoctype] && isTagHtml(htmlStr)) {
+    htmlStr = '<!doctype html>' + htmlStr;
+  }
+
+  reply.type('text/html; charset=utf-8');
+
+  // If no suspense component was used, this will not be defined.
+  const requestData = SUSPENSE_ROOT.requests.get(reply.request.id);
+
+  if (requestData === undefined) {
+    return (
+      reply
+        // Should be safe to use .length instead of Buffer.byteLength here
+        .header('content-length', handleHtml.length)
+        .send(htmlStr)
+    );
+  }
+
+  requestData.stream.push(htmlStr);
+
+  // Content-length is optional as long as the connection is closed after the response is done
+  // https://www.rfc-editor.org/rfc/rfc7230#section-3.3.3
+  return reply.send(requestData.stream);
+}
+
+const fastifyKitaHtml = fp(plugin, {
   fastify: '4.x',
   name: '@kitajs/fastify-html-plugin'
 });
-module.exports.default = fastifyKitaHtml;
-module.exports.fastifyKitaHtml = fastifyKitaHtml;
+
+/**
+ * These export configurations enable JS and TS developers to consume
+ *
+ * @kitajs/fastify-html-plugin in whatever way best suits their needs. Some examples of
+ * supported import syntax includes:
+ *
+ * - `const fastifyKitaHtml = require('@kitajs/fastify-html-plugin')`
+ * - `const { fastifyKitaHtml } = require('@kitajs/fastify-html-plugin')`
+ * - `import * as fastifyKitaHtml from '@kitajs/fastify-html-plugin'`
+ * - `import { fastifyKitaHtml } from '@kitajs/fastify-html-plugin'`
+ * - `import fastifyKitaHtml from '@kitajs/fastify-html-plugin'`
+ */
+module.exports = fastifyKitaHtml;
+module.exports.default = fastifyKitaHtml; // supersedes fastifyKitaHtml.default = fastifyKitaHtml
+module.exports.fastifyKitaHtml = fastifyKitaHtml; // supersedes fastifyKitaHtml.fastifyKitaHtml = fastifyKitaHtml
+
+module.exports.kAutoDoctype = kAutoDoctype;

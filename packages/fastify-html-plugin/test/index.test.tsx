@@ -49,7 +49,7 @@ describe('reply.html()', () => {
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
       error: 'Internal Server Error',
-      message: 'htmlStr.then is not a function'
+      message: 'value.trimStart is not a function'
     });
   });
 
@@ -69,7 +69,7 @@ describe('reply.html()', () => {
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
       error: 'Internal Server Error',
-      message: 'htmlStr.then is not a function'
+      message: 'value.trimStart is not a function'
     });
   });
 });

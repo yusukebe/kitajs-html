@@ -3,6 +3,12 @@ import type { FastifyPluginCallback } from 'fastify';
 declare module 'fastify' {
   interface FastifyReply {
     /**
+     * This gets assigned to every reply instance. You can manually change this value to
+     * `false` if you want to "hand pick" when or when not to add the doctype.
+     */
+    [fastifyKitaHtml.kAutoDoctype]: boolean;
+
+    /**
      * **Synchronously** waits for the component tree to resolve and sends it at once to
      * the browser.
      *
@@ -31,7 +37,10 @@ declare module 'fastify' {
      * @param html The HTML to send.
      * @returns The response.
      */
-    html(this: this, html: JSX.Element): this | Promise<this>;
+    html<H extends JSX.Element>(
+      this: this,
+      html: H
+    ): H extends Promise<string> ? Promise<void> : void;
   }
 }
 
@@ -60,6 +69,12 @@ declare namespace fastifyKitaHtml {
   }
 
   export const fastifyKitaHtml: FastifyKitaHtmlPlugin;
+
+  /**
+   * This gets assigned to every reply instance. You can manually change this value to
+   * `false` if you want to "hand pick" when or when not to add the doctype.
+   */
+  export const kAutoDoctype: unique symbol;
 
   export { fastifyKitaHtml as default };
 }

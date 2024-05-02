@@ -279,9 +279,9 @@ declare namespace JSX {
     ismap?: undefined | string;
     width?: undefined | number | string;
     height?: undefined | number | string;
-    decoding?: 'sync' | 'async' | 'auto' | AnyString;
-    loading?: 'eager' | 'lazy' | AnyString;
-    srcset?: string;
+    decoding?: undefined | 'sync' | 'async' | 'auto' | AnyString;
+    loading?: undefined | 'eager' | 'lazy' | AnyString;
+    srcset?: undefined | string;
   }
 
   interface HtmlInputTag extends HtmlTag {
@@ -459,7 +459,7 @@ declare namespace JSX {
     onclose?: undefined | string;
   }
 
-  interface HtmlSelectTag extends HtmlTag {
+  interface HtmlSelectTag extends HtmlTag, FormEvents {
     autofocus?: undefined | boolean;
     disabled?: undefined | boolean;
     form?: undefined | string;
@@ -467,6 +467,7 @@ declare namespace JSX {
     name?: undefined | string;
     required?: undefined | boolean;
     size?: undefined | string;
+    autocomplete?: undefined | string;
   }
 
   interface HtmlSourceTag extends HtmlTag {
@@ -653,7 +654,7 @@ declare namespace JSX {
      *
      * @see https://github.com/reactjs/rfcs/pull/107
      */
-    key?: never;
+    key?: undefined | never;
   }
 
   interface ElementChildrenAttribute {

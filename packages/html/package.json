@@ -15,7 +15,15 @@
   "sideEffects": [
     "register.js"
   ],
+  "exports": {
+    ".": "./index.js",
+    "./jsx-runtime": "./jsx-runtime.js",
+    "./jsx-dev-runtime": "./jsx-runtime.js",
+    "./package.json": "./package.json",
+    "./*": "./*"
+  },
   "main": "index.js",
+  "module": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "bench": "pnpm --filter \"benchmark-*\" build && pnpm --filter \"benchmark-runner\" start",

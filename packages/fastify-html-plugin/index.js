@@ -17,21 +17,20 @@ const kAutoDoctype = Symbol.for('fastify-kita-html.autoDoctype');
  * >}
  */
 function plugin(fastify, opts, next) {
-  // Good defaults
-  opts.autoDoctype ??= true;
-
-  fastify.decorateReply(kAutoDoctype, opts.autoDoctype);
+  fastify.decorateReply(kAutoDoctype, (opts.autoDoctype ??= true));
   fastify.decorateReply('html', html);
-
   return next();
 }
 
 /** @type {import('fastify').FastifyReply['html']} */
 function html(htmlStr) {
+  if (typeof htmlStr === 'string') {
+    // @ts-expect-error - generics break the type inference here
+    return handleHtml(htmlStr, this);
+  }
+
   // @ts-expect-error - generics break the type inference here
-  return typeof htmlStr === 'string'
-    ? handleHtml(htmlStr, this)
-    : handleAsyncHtml(htmlStr, this);
+  return handleAsyncHtml(htmlStr, this);
 }
 
 /**
@@ -99,5 +98,4 @@ const fastifyKitaHtml = fp(plugin, {
 module.exports = fastifyKitaHtml;
 module.exports.default = fastifyKitaHtml; // supersedes fastifyKitaHtml.default = fastifyKitaHtml
 module.exports.fastifyKitaHtml = fastifyKitaHtml; // supersedes fastifyKitaHtml.fastifyKitaHtml = fastifyKitaHtml
-
 module.exports.kAutoDoctype = kAutoDoctype;

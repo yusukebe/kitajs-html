@@ -169,11 +169,11 @@ function Suspense(props) {
 
   // Keeps string return type
   if (typeof fallback === 'string') {
-    return `<div id="B:${run}" data-sf>${fallback}</div>`;
+    return '<div id="B:' + run + '" data-sf>' + fallback + '</div>';
   }
 
   return fallback.then(function resolveCallback(resolved) {
-    return `<div id="B:${run}" data-sf>${resolved}</div>`;
+    return '<div id="B:' + run + '" data-sf>' + resolved + '</div>';
   });
 
   /**
@@ -287,7 +287,7 @@ async function renderToString(factory, rid) {
   return chunks.join('');
 }
 
-module.exports.Suspense = Suspense;
-module.exports.renderToStream = renderToStream;
-module.exports.renderToString = renderToString;
-module.exports.SuspenseScript = SuspenseScript;
+exports.Suspense = Suspense;
+exports.renderToStream = renderToStream;
+exports.renderToString = renderToString;
+exports.SuspenseScript = SuspenseScript;

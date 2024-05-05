@@ -79,4 +79,7 @@ const JsxRuntime = {
 };
 
 module.exports = JsxRuntime;
+exports.jsx = jsx;
+exports.jsxs = jsxs;
+exports.Fragment = Fragment;
 module.exports.default = JsxRuntime;

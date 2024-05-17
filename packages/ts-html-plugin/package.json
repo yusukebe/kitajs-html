@@ -12,6 +12,7 @@
   "license": "MIT",
   "author": "Arthur Fiorette <kita@arthur.place>",
   "sideEffects": false,
+  "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

@@ -15,11 +15,15 @@
   "sideEffects": [
     "register.js"
   ],
+  "type": "commonjs",
   "exports": {
     ".": "./index.js",
     "./jsx-runtime": "./jsx-runtime.js",
     "./jsx-dev-runtime": "./jsx-runtime.js",
     "./package.json": "./package.json",
+    "./suspense": "./suspense.js",
+    "./register": "./register.js",
+    "./error-boundary": "./error-boundary.js",
     "./*": "./*"
   },
   "main": "index.js",

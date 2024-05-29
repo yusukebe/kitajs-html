@@ -95,8 +95,8 @@ export function renderToStream(
 ): Readable;
 
 /**
- * Prepends the fallback into a html stream handled manually without
- * {@linkcode renderToStream}.
+ * Joins the html base template (with possible suspense's fallbacks) with the request data
+ * and returns the final Readable to be piped into the response stream.
  *
  * **This API is meant to be used by library authors and should not be used directly.**
  *
@@ -120,7 +120,7 @@ export function renderToStream(
  * @returns The same stream or another one with the fallback prepended.
  * @see {@linkcode renderToStream}
  */
-export function writeFallback(fallback: JSX.Element, stream: Readable): Readable;
+export function resolveHtmlStream(template: JSX.Element, data: RequestData): Readable;
 
 /**
  * This script needs to be loaded at the top of the page. You do not need to load it

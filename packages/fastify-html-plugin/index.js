@@ -2,11 +2,7 @@
 
 const fp = require('fastify-plugin');
 const { isTagHtml } = require('./lib/is-tag-html');
-
-// Loads the suspense component if it wasn't already loaded
-if (!globalThis.SUSPENSE_ROOT) {
-  require('@kitajs/html/suspense');
-}
+const { resolveHtmlStream } = require('@kitajs/html/suspense');
 
 /** @type {import('./types/index').kAutoDoctype} */
 const kAutoDoctype = Symbol.for('fastify-kita-html.autoDoctype');
@@ -68,11 +64,12 @@ function handleHtml(htmlStr, reply) {
       .send(htmlStr);
   }
 
-  requestData.stream.push(htmlStr);
-
   // Content-length is optional as long as the connection is closed after the response is done
   // https://www.rfc-editor.org/rfc/rfc7230#section-3.3.3
-  return reply.send(requestData.stream);
+  return reply.send(
+    // htmlStr might resolve after one of its suspense components
+    resolveHtmlStream(htmlStr, requestData)
+  );
 }
 
 const fastifyKitaHtml = fp(plugin, {

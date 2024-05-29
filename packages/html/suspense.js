@@ -1,5 +1,5 @@
 const { contentsToString, contentToString } = require('./index');
-const { Readable } = require('node:stream');
+const { Readable, PassThrough } = require('node:stream');
 
 // Avoids double initialization in case this file is not cached by
 // module bundlers.
@@ -262,42 +262,34 @@ function renderToStream(html, rid) {
     });
   }
 
-  return writeFallback(html, requestData.stream);
+  return resolveHtmlStream(html, requestData);
 }
 
-/** @type {import('./suspense').writeFallback} */
-function writeFallback(fallback, readable) {
+/** @type {import('./suspense').resolveHtmlStream} */
+function resolveHtmlStream(template, requestData) {
   // Impossible to sync templates have their
-  // streams being written before the fallback
-  if (typeof fallback === 'string') {
-    readable.push(fallback);
-    return readable;
+  // streams being written (sent = true) before the fallback
+  if (typeof template === 'string') {
+    requestData.stream.push(template);
+    return requestData.stream;
   }
 
-  // The fallback might resolve after a suspense resolves,
-  // so we need to ensure the fallback is written and sent
-  // before anything the requestData.stream might already have.
+  const prepended = new PassThrough();
 
-  const copy = new Readable({ read: noop });
+  void template.then(
+    (result) => {
+      prepended.push(result);
+      requestData.stream.pipe(prepended);
+    },
+    (error) => {
+      prepended.emit('error', error);
+    }
+  );
 
-  void fallback
-    .then(async (result) => {
-      copy.push(result);
-
-      for await (const chunk of readable) {
-        copy.push(chunk);
-      }
-
-      copy.push(null);
-    })
-    .catch((error) => {
-      copy.emit('error', error);
-    });
-
-  return copy;
+  return prepended;
 }
 
 exports.Suspense = Suspense;
 exports.renderToStream = renderToStream;
-exports.writeFallback = writeFallback;
+exports.resolveHtmlStream = resolveHtmlStream;
 exports.SuspenseScript = SuspenseScript;

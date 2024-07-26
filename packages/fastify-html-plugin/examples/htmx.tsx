@@ -8,11 +8,10 @@ import { fastifyKitaHtml } from '..';
 
 const app = fastify({ logger: true });
 
-// htmx requires body parsing
+// Htmx requires body parsing
 app.register(fastifyFormbody);
 app.register(fastifyKitaHtml, {
   // defaults
-  autoDetect: true,
   autoDoctype: true
 });
 
@@ -36,7 +35,7 @@ app.get('/', (_req, rep) => {
         </form>
 
         <div hx-boost>
-          <a href="/delay">Simulate delay</a>
+          <a href="/delay">Simulate this page with 5s delay</a>
         </div>
       </body>
     </html>
@@ -45,7 +44,7 @@ app.get('/', (_req, rep) => {
 
 // Simulates a slow response
 app.get('/delay', (req, rep) => {
-  rep.streamHtml(
+  rep.html(
     <html lang="en">
       <head>
         <title>Fastify & Kita & Htmx</title>

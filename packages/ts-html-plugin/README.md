@@ -9,15 +9,15 @@
 <br />
 
 <p align="center" >
-  <a href="https://kita.js.org" target="_blank" rel="noopener noreferrer">
-    <img src="https://kita.js.org/logo.png" width="180" alt="Kita JS logo" />
+  <a href="https://kitajs.org" target="_blank" rel="noopener noreferrer">
+    <img src="https://kitajs.org/logo.png" width="180" alt="Kita JS logo" />
   </a>
 </p>
 
 <br />
 
 <div align="center"> 
-  <a href="https://kita.js.org/discord"><img src="https://img.shields.io/discord/1216165027774595112?logo=discord&logoColor=white&color=%237289da" alt="Discord"></a>
+  <a href="https://kitajs.org/discord"><img src="https://img.shields.io/discord/1216165027774595112?logo=discord&logoColor=white&color=%237289da" alt="Discord"></a>
   <a title="MIT license" target="_blank" href="https://github.com/kitajs/html/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/kitajs/html"></a>  
   <a title="Codecov" target="_blank" href="https://app.codecov.io/gh/kitajs/html"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/kitajs/html?token=ML0KGCU0VM"></a>
   <a title="NPM Package" target="_blank" href="https://www.npmjs.com/package/@kitajs/ts-html-plugin"><img alt="Downloads" src="https://img.shields.io/npm/dw/@kitajs/ts-html-plugin?style=flat"></a>

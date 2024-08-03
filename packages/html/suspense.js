@@ -27,7 +27,7 @@ function noop() {}
 // no elements are substituted.
 const SuspenseScript = /* html */ `
       <script id="kita-html-suspense">
-        /*! Apache-2.0 https://kita.js.org */
+        /*! Apache-2.0 https://kitajs.org */
         function $KITA_RC(i){
           // simple aliases
           var d=document,q=d.querySelector.bind(d),

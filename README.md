@@ -9,15 +9,15 @@ repository with your friends and co-workers! </sup>
 <br />
 
 <p align="center" >
-  <a href="https://kita.js.org" target="_blank" rel="noopener noreferrer">
-    <img src="https://kita.js.org/logo.png" width="256" alt="Kita JS logo" />
+  <a href="https://kitajs.org" target="_blank" rel="noopener noreferrer">
+    <img src="https://kitajs.org/logo.png" width="256" alt="Kita JS logo" />
   </a>
 </p>
 
 <br />
 
 <div align="center">
-  <a href="https://kita.js.org/discord"><img src="https://img.shields.io/discord/1216165027774595112?logo=discord&logoColor=white&color=%237289da" alt="Discord"></a>
+  <a href="https://kitajs.org/discord"><img src="https://img.shields.io/discord/1216165027774595112?logo=discord&logoColor=white&color=%237289da" alt="Discord"></a>
   <a title="Codecov" target="_blank" href="https://app.codecov.io/gh/kitajs/html"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/kitajs/html?token=ML0KGCU0VM"></a>
   <a title="Last Commit" target="_blank" href="https://github.com/kitajs/html/commits/master"><img alt="Last commit" src="https://img.shields.io/github/last-commit/kitajs/html"></a>
   <a href="https://github.com/kitajs/html/stargazers"><img src="https://img.shields.io/github/stars/kitajs/html?logo=github&label=Stars" alt="Stars"></a>

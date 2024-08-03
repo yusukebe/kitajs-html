@@ -2,7 +2,7 @@
   "name": "@kitajs/html-monorepo",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://kita.js.org",
+  "homepage": "https://kitajs.org",
   "bugs": {
     "url": "https://github.com/kitajs/html/issues"
   },

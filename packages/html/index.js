@@ -526,4 +526,3 @@ exports.contentToString = contentToString;
 exports.Fragment = Fragment;
 //@ts-expect-error - global augmentation
 exports.Html = { ...exports };
-exports.default = exports.Html;

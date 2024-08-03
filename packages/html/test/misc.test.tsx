@@ -116,12 +116,9 @@ describe('Miscellaneous', () => {
     );
 
     assert.throws(
+      //prettier-ignore
       //@ts-expect-error - should warn about invalid child
-      () => (
-        <div>
-          {{}} {{}}
-        </div>
-      ),
+      () => (<div>{{}} {{}}</div>),
       /Objects are not valid as a KitaJSX child/
     );
   });

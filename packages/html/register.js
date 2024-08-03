@@ -15,10 +15,5 @@ try {
 
 // Avoids multiple registrations
 if (!root.Html) {
-  root.Html = require('./index');
-}
-
-// Removes the default export wrapper
-if (root.Html.default) {
-  root.Html = root.Html.default;
+  root.Html = require('./index').Html;
 }

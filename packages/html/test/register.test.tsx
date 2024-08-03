@@ -18,7 +18,7 @@ describe('Global instance', () => {
 
     // Literally the same object
     assert.equal(typeof Html, 'object');
-    assert.ok(Html === HtmlModule);
+    assert.deepStrictEqual(Html, HtmlModule.Html);
 
     // @ts-expect-error - Delete globalThis to test that it is added
     delete globalThis.Html;

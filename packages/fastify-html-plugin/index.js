@@ -1,11 +1,18 @@
 /// <reference path="./types/index.d.ts" />
 
 const fp = require('fastify-plugin');
-const { isTagHtml } = require('./lib/is-tag-html');
 const { resolveHtmlStream } = require('@kitajs/html/suspense');
 
 /** @type {import('./types/index').kAutoDoctype} */
 const kAutoDoctype = Symbol.for('fastify-kita-html.autoDoctype');
+
+/**
+ * Returns true if the string starts with `<html`, **ignores whitespace and casing**.
+ *
+ * @param {string} value
+ * @this {void}
+ */
+const isTagHtml = RegExp.prototype.test.bind(/^\s*<html/i);
 
 /**
  * @type {import('fastify').FastifyPluginCallback<
@@ -50,7 +57,7 @@ async function handleAsyncHtml(promise, reply) {
 function handleHtml(htmlStr, reply) {
   // @ts-expect-error - prepends doctype if the html is a full html document
   if (reply[kAutoDoctype] && isTagHtml(htmlStr)) {
-    htmlStr = '<!doctype html>' + htmlStr;
+    htmlStr = `<!doctype html>${htmlStr}`;
   }
 
   reply.type('text/html; charset=utf-8');

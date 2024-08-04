@@ -48,8 +48,10 @@ describe('reply.html()', () => {
     assert.strictEqual(res.statusCode, 500);
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
+      code: 'ERR_INVALID_ARG_TYPE',
       error: 'Internal Server Error',
-      message: 'value.trimStart is not a function'
+      message:
+        'The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received type number (12345)'
     });
   });
 
@@ -68,8 +70,10 @@ describe('reply.html()', () => {
     assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
     assert.deepStrictEqual(res.json(), {
       statusCode: 500,
+      code: 'ERR_INVALID_ARG_TYPE',
       error: 'Internal Server Error',
-      message: 'value.trimStart is not a function'
+      message:
+        'The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received type number (12345)'
     });
   });
 });

@@ -86,9 +86,9 @@ app.register(kitaHtmlPlugin);
 Every option is well documented through their respective JSDoc comments, below are the
 default options.
 
-| Name          | Description                                                                                      | Default |
-| ------------- | ------------------------------------------------------------------------------------------------ | ------- |
-| `autoDoctype` | Whether to automatically add `<!doctype html>` to a response starting with <html>, if not found. | `true`  |
+| Name          | Description                                                                                        | Default |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| `autoDoctype` | Whether to automatically add `<!doctype html>` to a response starting with `<html>`, if not found. | `true`  |
 
 <br />
 

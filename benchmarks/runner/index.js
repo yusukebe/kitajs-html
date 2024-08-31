@@ -11,6 +11,7 @@ import StringTemplateRenderers from '@kitajs/bench-html-templates';
 import TypedHtmlRenderers from '@kitajs/bench-html-typed-html';
 import VHtmlRenderers from '@kitajs/bench-html-vhtml';
 
+import * as HonoJSXRenderers from '@kitajs/bench-html-hono-jsx';
 import CommonTags from 'common-tags';
 import * as gHtml from 'ghtml';
 import * as JSXTE from 'jsxte';
@@ -43,6 +44,7 @@ group('Real World Scenario', () => {
   bench('JSXTE', () =>
     JSXTE.renderToHtml(JSXTERuntimeRenderers.RealWorldPage('Hello World!'))
   );
+  bench('hono/jsx', () => HonoJSXRenderers.RealWorldPage('Hello World!').toString());
 });
 
 group('Component Creation', () => {
@@ -71,6 +73,7 @@ group('Component Creation', () => {
   bench('JSXTE', () =>
     JSXTE.renderToHtml(JSXTERuntimeRenderers.ManyComponents('Hello World!'))
   );
+  bench('hono/jsx', () => HonoJSXRenderers.ManyComponents('Hello World').toString());
 });
 
 group('Attributes Serialization', () => {
@@ -97,6 +100,7 @@ group('Attributes Serialization', () => {
   bench('JSXTE', () =>
     JSXTE.renderToHtml(JSXTERuntimeRenderers.ManyProps('Hello World!'))
   );
+  bench('hono/jsx', () => HonoJSXRenderers.ManyProps('Hello World').toString());
 });
 
 run().catch(console.error);

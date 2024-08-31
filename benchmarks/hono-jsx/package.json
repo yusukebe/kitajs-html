@@ -1,0 +1,14 @@
+{
+  "name": "@kitajs/bench-html-hono-jsx",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "hono": "^4.5.10",
+    "typescript": "^5.5.4"
+  }
+}
